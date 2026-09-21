@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Dashboard - ICT Assist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="shared.js"></script>
+</head>
+<body class="bg-slate-100 flex min-h-screen">
+  <!-- Left Navigation Sidebar -->
+  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800">
+    <div>
+      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
+        <div>
+          <h1 class="text-sm font-bold text-white">ICT Assist</h1>
+          <p class="text-[11px] text-slate-400">Employee Portal</p>
+        </div>
+      </div>
+      <nav class="space-y-1 text-xs font-semibold">
+        <a href="employee-dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
+        <a href="new-request.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
+        <a href="ticket-status.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
+        <a href="notifications.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span></a>
+        <a href="profile.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
+      </nav>
+    </div>
+
+    <!-- Bottom Switcher -->
+    <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
+      <p class="text-[11px] text-slate-500">Switch View:</p>
+      <div class="grid grid-cols-2 gap-1">
+        <a href="coordinator-dashboard.html" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px]">Coordinator</a>
+        <a href="staff-dashboard.html" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px]">Staff</a>
+      </div>
+      <a href="login.html" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 max-w-5xl mx-auto space-y-6">
+    <!-- Hero Banner -->
+    <div class="rounded-3xl bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-8 shadow-xl flex justify-between items-center">
+      <div>
+        <span class="text-xs text-blue-300 font-semibold uppercase tracking-wider">Employee Helpdesk</span>
+        <h2 class="text-2xl font-extrabold mt-1">Good morning, A.M. Emandi 👋</h2>
+        <p class="text-xs text-blue-200 mt-1">Need technical assistance with hardware or software?</p>
+      </div>
+      <a href="new-request.html" class="bg-blue-500 hover:bg-blue-400 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition">
+        + Create New Request
+      </a>
+    </div>
+
+    <!-- Active Ticket Preview -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100 text-xs">
+        <span class="font-bold text-blue-600">#TX-2024</span>
+        <span class="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-semibold">In Progress</span>
+      </div>
+      <h3 class="text-base font-bold text-slate-800 mt-2">Printer not working - paper jam error 50.4</h3>
+      <p class="text-xs text-slate-500 mt-1">Assigned Technician: <strong>K.P. Ratnasiri (On-site)</strong></p>
+    </div>
+
+    <!-- 4 Hub Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <a href="new-request.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
+        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2"><i data-lucide="plus-circle" class="w-4 h-4"></i></div>
+        <h4 class="text-xs font-bold text-slate-800">New Request</h4>
+        <p class="text-[11px] text-slate-400 mt-0.5">Report incident</p>
+      </a>
+      <a href="ticket-status.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
+        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i data-lucide="clock" class="w-4 h-4"></i></div>
+        <h4 class="text-xs font-bold text-slate-800">Track Status</h4>
+        <p class="text-[11px] text-slate-400 mt-0.5">Live updates</p>
+      </a>
+      <a href="notifications.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
+        <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-2"><i data-lucide="bell" class="w-4 h-4"></i></div>
+        <h4 class="text-xs font-bold text-slate-800">Notifications</h4>
+        <p class="text-[11px] text-slate-400 mt-0.5">Staff alerts</p>
+      </a>
+      <a href="ticket-status.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i data-lucide="history" class="w-4 h-4"></i></div>
+        <h4 class="text-xs font-bold text-slate-800">History</h4>
+        <p class="text-[11px] text-slate-400 mt-0.5">Past tickets</p>
+      </a>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

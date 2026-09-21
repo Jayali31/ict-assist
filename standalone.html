@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICT Assist - IT Helpdesk System (Standalone)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              sidebar: '#111827',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+    .hidden-view { display: none !important; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen">
+
+  <!-- ==================== VIEW 1: LOGIN PAGE ==================== -->
+  <div id="view-login" class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-slate-200">
+      <!-- Left Hero Banner -->
+      <div class="md:col-span-5 bg-gradient-to-br from-slate-900 via-blue-950 to-blue-900 text-white p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white mb-6 shadow-lg shadow-blue-500/30">
+            <i data-lucide="monitor" class="w-6 h-6"></i>
+          </div>
+          <h1 class="text-3xl font-extrabold text-white">ICT Assist</h1>
+          <p class="text-blue-200 text-sm mt-1">Enterprise IT Service Management & Dispatch</p>
+        </div>
+        <div class="space-y-3 my-6">
+          <div class="bg-white/10 p-3 rounded-xl backdrop-blur-xs text-xs text-blue-100 flex items-start gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-blue-400 mt-0.5 shrink-0"></i>
+            <span><strong>3 Roles:</strong> Employee, Helpdesk Coordinator, and Field Technician.</span>
+          </div>
+          <div class="bg-white/10 p-3 rounded-xl backdrop-blur-xs text-xs text-blue-100 flex items-start gap-2">
+            <i data-lucide="wrench" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+            <span><strong>Live Operations:</strong> Incident logging, real-time dispatch, and status updates.</span>
+          </div>
+        </div>
+        <p class="text-[11px] text-blue-300/70">ICT Helpdesk Portal &copy; 2026</p>
+      </div>
+
+      <!-- Right Form -->
+      <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center">
+        <h2 class="text-2xl font-bold text-slate-900">Welcome back 👋</h2>
+        <p class="text-xs text-slate-500 mt-1 mb-6">Select your user role and sign in to access your dashboard.</p>
+
+        <!-- Role Selector Tabs -->
+        <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-2xl mb-6">
+          <button type="button" onclick="setLoginRole('employee')" id="login-tab-emp" class="py-2 text-xs font-semibold rounded-xl bg-white text-blue-600 shadow-xs">Employee</button>
+          <button type="button" onclick="setLoginRole('coordinator')" id="login-tab-coord" class="py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900">Coordinator</button>
+          <button type="button" onclick="setLoginRole('staff')" id="login-tab-staff" class="py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900">Staff (Tech)</button>
+        </div>
+
+        <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Work Email</label>
+            <input type="text" id="login-email" value="a.m.emandi@ictassist.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
+            <input type="password" value="password123" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+          </div>
+          <button type="submit" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-600/25 transition">
+            Sign In as Employee
+          </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-slate-100">
+          <p class="text-[11px] font-semibold text-slate-400 uppercase text-center mb-3">Quick 1-Click Demo Login</p>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <button onclick="quickLogin('employee')" class="py-2 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 rounded-xl font-medium">👤 Employee</button>
+            <button onclick="quickLogin('coordinator')" class="py-2 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 border border-slate-200 rounded-xl font-medium">📋 Coordinator</button>
+            <button onclick="quickLogin('staff')" class="py-2 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 rounded-xl font-medium">🛠️ Staff</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APPLICATION LAYOUT ==================== -->
+  <div id="view-app" class="hidden-view flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between border-r border-slate-800 shadow-xl shrink-0">
+      <div>
+        <div class="p-6 border-b border-slate-800 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
+            <i data-lucide="monitor" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h1 class="text-base font-bold text-white leading-tight">ICT Assist</h1>
+            <p id="sidebar-role-label" class="text-[11px] text-slate-400 font-medium">Employee Portal</p>
+          </div>
+        </div>
+
+        <!-- Navigation items rendered dynamically based on role -->
+        <nav id="sidebar-nav" class="p-4 space-y-1.5"></nav>
+      </div>
+
+      <!-- Quick Role Switcher and Logout -->
+      <div class="p-4 border-t border-slate-800 space-y-3">
+        <div class="bg-slate-900/90 rounded-xl p-3 border border-slate-800">
+          <p class="text-[11px] font-semibold text-slate-400 mb-2">Switch Role:</p>
+          <div class="grid grid-cols-3 gap-1">
+            <button onclick="switchRole('employee')" class="py-1 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-blue-600 transition" id="btn-switch-emp">Emp</button>
+            <button onclick="switchRole('coordinator')" class="py-1 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-blue-600 transition" id="btn-switch-coord">Coord</button>
+            <button onclick="switchRole('staff')" class="py-1 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-blue-600 transition" id="btn-switch-staff">Staff</button>
+          </div>
+        </div>
+        <button onclick="logout()" class="w-full py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 border border-rose-500/20 transition flex items-center justify-center gap-1.5">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Top Navbar -->
+      <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-30">
+        <div class="flex items-center space-x-3">
+          <h2 class="text-base font-bold text-slate-800">ICT Assist System</h2>
+          <span id="header-role-badge" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-blue-100 text-blue-700">Employee Portal</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button onclick="showTab('notifications')" class="relative p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+          <div onclick="showTab('profile')" class="flex items-center space-x-2.5 pl-3 pr-2 py-1 rounded-full border border-slate-200 hover:bg-slate-50 cursor-pointer">
+            <span id="header-user-name" class="text-xs font-bold text-slate-800">A.M. Emandi</span>
+            <div id="header-user-avatar" class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">AE</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Views Container -->
+      <main class="flex-1 p-8 max-w-6xl mx-auto w-full">
+        <!-- Tab 1: Employee Dashboard -->
+        <section id="tab-emp-dashboard" class="space-y-6">
+          <div class="rounded-3xl bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-8 shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider text-blue-300 font-semibold">Employee Helpdesk</span>
+              <h1 class="text-2xl font-extrabold mt-1">Good morning, A.M. Emandi 👋</h1>
+              <p class="text-blue-200 text-xs mt-1">Need technical assistance with hardware, software, or telephone equipment?</p>
+            </div>
+            <button onclick="showTab('new-request')" class="bg-blue-500 hover:bg-blue-400 text-white text-xs font-semibold px-5 py-3 rounded-2xl shadow-lg transition">
+              + Create New Request
+            </button>
+          </div>
+
+          <!-- Active Ticket Banner -->
+          <div id="emp-active-ticket-card" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-blue-600">#TX-2024</span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">In Progress</span>
+                <span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">High</span>
+              </div>
+              <button onclick="showTab('tickets')" class="text-xs text-blue-600 font-semibold hover:underline">Full Details &rarr;</button>
+            </div>
+            <h3 class="text-base font-bold text-slate-800 mt-2">Printer not working - paper jam error 50.4</h3>
+            <p class="text-xs text-slate-500 mt-1">Technician: <strong class="text-slate-800">K.P. Ratnasiri (On-site)</strong></p>
+          </div>
+
+          <!-- 4 Action Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div onclick="showTab('new-request')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 cursor-pointer shadow-xs transition">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2"><i data-lucide="plus-circle" class="w-5 h-5"></i></div>
+              <h4 class="text-xs font-bold text-slate-800">New Request</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Submit new ticket</p>
+            </div>
+            <div onclick="showTab('tickets')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 cursor-pointer shadow-xs transition">
+              <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i data-lucide="clock" class="w-5 h-5"></i></div>
+              <h4 class="text-xs font-bold text-slate-800">Track Request</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Active progress</p>
+            </div>
+            <div onclick="showTab('notifications')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 cursor-pointer shadow-xs transition">
+              <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2"><i data-lucide="bell" class="w-5 h-5"></i></div>
+              <h4 class="text-xs font-bold text-slate-800">Notifications</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Live dispatcher alerts</p>
+            </div>
+            <div onclick="showTab('tickets')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 cursor-pointer shadow-xs transition">
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i data-lucide="history" class="w-5 h-5"></i></div>
+              <h4 class="text-xs font-bold text-slate-800">History</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Resolved archives</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 2: New Request Form -->
+        <section id="tab-new-request" class="hidden-view space-y-4">
+          <button onclick="showTab('dashboard')" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard</button>
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-xs">
+            <h2 class="text-lg font-bold text-slate-900 pb-2 border-b border-slate-100">New Service Request</h2>
+            <form onsubmit="handleNewTicketSubmit(event)" class="mt-6 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Branch Name</label>
+                  <input type="text" id="req-branch" value="Colombo Main Office" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500" required />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Department</label>
+                  <input type="text" id="req-dept" value="Accounts & Admin" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500" required />
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Issue Category</label>
+                  <select id="req-category" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+                    <option value="Hardware">Hardware (Printers, PC, Monitor)</option>
+                    <option value="Network">Network (WiFi, VPN, Router)</option>
+                    <option value="Software">Software (Windows, Office, ERP)</option>
+                    <option value="Telephone">Telephone (VoIP, Intercom)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Priority</label>
+                  <select id="req-priority" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+                    <option value="High">High Priority (Work Stopped)</option>
+                    <option value="Medium" selected>Medium Priority</option>
+                    <option value="Low">Low Priority</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Issue Summary</label>
+                <input type="text" id="req-title" placeholder="e.g. Printer laser roller making sound and stopping" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500" required />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Detailed Description</label>
+                <textarea id="req-desc" rows="3" placeholder="Describe the fault in detail..." class="w-full px-4 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500" required></textarea>
+              </div>
+              <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl text-xs transition">Submit Request</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Tab 3: Ticket Status / History Table -->
+        <section id="tab-tickets" class="hidden-view space-y-4">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold text-slate-900">Incident & Service Tickets</h2>
+            <div class="flex gap-1 text-xs bg-slate-200 p-1 rounded-xl">
+              <button onclick="filterTickets('All')" class="px-3 py-1 rounded-lg bg-white font-semibold text-blue-600">All</button>
+              <button onclick="filterTickets('Pending')" class="px-3 py-1 rounded-lg text-slate-600">Pending</button>
+              <button onclick="filterTickets('In Progress')" class="px-3 py-1 rounded-lg text-slate-600">In Progress</button>
+              <button onclick="filterTickets('Resolved')" class="px-3 py-1 rounded-lg text-slate-600">Resolved</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase">
+                <tr>
+                  <th class="py-3 px-6">ID</th>
+                  <th class="py-3 px-4">Title</th>
+                  <th class="py-3 px-4">Category</th>
+                  <th class="py-3 px-4">Priority</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4">Assigned Tech</th>
+                </tr>
+              </thead>
+              <tbody id="tickets-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tab 4: Coordinator Dashboard -->
+        <section id="tab-coord-dashboard" class="hidden-view space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-xs uppercase text-purple-600 font-bold">Helpdesk Dispatch Console</span>
+              <h1 class="text-2xl font-extrabold text-slate-900">Coordinator Dashboard</h1>
+            </div>
+            <button onclick="showTab('reports')" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold hover:border-blue-500 transition">View Reports &rarr;</button>
+          </div>
+          <!-- 4 Stat Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+              <span class="text-xs text-slate-400 uppercase font-bold">Total</span>
+              <h3 id="coord-stat-total" class="text-2xl font-extrabold text-slate-900 mt-1">7</h3>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+              <span class="text-xs text-slate-400 uppercase font-bold">Resolved</span>
+              <h3 id="coord-stat-resolved" class="text-2xl font-extrabold text-emerald-600 mt-1">12</h3>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+              <span class="text-xs text-slate-400 uppercase font-bold">Pending</span>
+              <h3 id="coord-stat-pending" class="text-2xl font-extrabold text-amber-500 mt-1">34</h3>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
+              <span class="text-xs text-slate-400 uppercase font-bold">In Progress</span>
+              <h3 id="coord-stat-inprogress" class="text-2xl font-extrabold text-purple-600 mt-1">3</h3>
+            </div>
+          </div>
+          <!-- Pending Assignments Queue -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
+            <h3 class="text-sm font-bold text-slate-800 mb-3">Pending Incident Assignments</h3>
+            <div id="coord-pending-list" class="divide-y divide-slate-100"></div>
+          </div>
+        </section>
+
+        <!-- Tab 5: Reports & Analytics -->
+        <section id="tab-reports" class="hidden-view space-y-6">
+          <h2 class="text-xl font-bold text-slate-900">Reports & Department Analytics</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+              <h3 class="text-sm font-bold text-slate-800 mb-4">Requests by Category</h3>
+              <div class="space-y-4 text-xs">
+                <div>
+                  <div class="flex justify-between mb-1"><span>Hardware</span><strong>18 Requests</strong></div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden"><div class="bg-blue-600 h-full w-[70%]"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1"><span>Network</span><strong>14 Requests</strong></div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[55%]"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1"><span>Software</span><strong>12 Requests</strong></div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden"><div class="bg-amber-500 h-full w-[45%]"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1"><span>Telephone</span><strong>7 Requests</strong></div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden"><div class="bg-purple-500 h-full w-[30%]"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+              <h3 class="text-sm font-bold text-slate-800 mb-4">Technician Performance Leaderboard</h3>
+              <div class="space-y-3 text-xs">
+                <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-xl">
+                  <span><strong>K.P. Ratnasiri</strong> (Hardware)</span>
+                  <span class="font-bold text-emerald-600">56 Resolved</span>
+                </div>
+                <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-xl">
+                  <span><strong>A.S. Fernando</strong> (Network)</span>
+                  <span class="font-bold text-emerald-600">42 Resolved</span>
+                </div>
+                <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-xl">
+                  <span><strong>M.E. Perera</strong> (Software)</span>
+                  <span class="font-bold text-emerald-600">38 Resolved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 6: Staff / Tech Dashboard -->
+        <section id="tab-staff-dashboard" class="hidden-view space-y-6">
+          <div class="flex justify-between items-center bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
+            <div>
+              <span class="text-xs uppercase text-emerald-600 font-bold">Field Technician Workbench</span>
+              <h1 class="text-2xl font-extrabold text-slate-900 mt-1">Good morning, K.P. Ratnasiri 🛠️</h1>
+              <p class="text-xs text-slate-400">Specialization: Hardware & Diagnostics</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500 font-medium">Status:</span>
+              <button onclick="toggleStaffStatus()" id="staff-status-btn" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300">
+                Available
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Task Card -->
+          <div id="staff-active-card" class="rounded-3xl bg-gradient-to-br from-blue-900 via-slate-900 to-indigo-950 text-white p-6 shadow-xl space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-[11px] font-bold uppercase tracking-wider bg-blue-500/30 text-blue-300 px-3 py-0.5 rounded-full">ACTIVE TASK</span>
+              <span class="text-xs font-bold text-rose-400">High Priority</span>
+            </div>
+            <h3 class="text-lg font-bold" id="staff-active-title">#TX-2024 Printer not working</h3>
+            <p class="text-xs text-blue-200">Paper jam in main office network printer. Showing error 50.4.</p>
+            <div class="pt-2 flex justify-between items-center">
+              <span class="text-xs text-blue-300">Location: Colombo Main Office</span>
+              <button onclick="resolveCurrentTask()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-semibold shadow-md">
+                Mark as Resolved
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 7: Notifications View -->
+        <section id="tab-notifications" class="hidden-view space-y-4">
+          <h2 class="text-lg font-bold text-slate-900">Notifications & Alerts</h2>
+          <div class="space-y-3">
+            <div class="p-4 bg-white rounded-2xl border border-blue-200 shadow-xs flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-blue-600 mt-1.5 shrink-0"></span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Technician assigned to ticket #TX-2024</p>
+                <p class="text-xs text-slate-500">K.P. Ratnasiri will visit your branch today at 10:15 AM.</p>
+              </div>
+            </div>
+            <div class="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs flex items-start gap-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">Work started on ticket #TX-2024</p>
+                <p class="text-xs text-slate-500">Technician is on-site at Colombo Main Office.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 8: Profile View -->
+        <section id="tab-profile" class="hidden-view space-y-6">
+          <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-3xl p-8 text-center shadow-xl">
+            <div id="profile-avatar" class="w-20 h-20 rounded-full bg-white/20 text-2xl font-bold flex items-center justify-center mx-auto mb-3">AE</div>
+            <h2 id="profile-name" class="text-xl font-bold">A.M. Emandi</h2>
+            <p id="profile-role" class="text-xs text-blue-200 capitalize">Employee &bull; Accounts & Admin</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT STATE & LOGIC ==================== -->
+  <script>
+    // State
+    let currentRole = 'employee';
+    let currentTab = 'dashboard';
+    let staffAvailable = true;
+
+    let tickets = [
+      { id: 'TX-2024', title: 'Printer not working', category: 'Hardware', priority: 'High', department: 'Telecom & Admin', branch: 'Colombo Main Office', status: 'In Progress', assignedTo: 'K.P. Ratnasiri' },
+      { id: 'TX-2025', title: 'Server room AC filters maintenance', category: 'Hardware', priority: 'Medium', department: 'Admin', branch: 'Colombo Main Office', status: 'Pending', assignedTo: null },
+      { id: 'TX-2026', title: 'VPN Connection failing across subnet', category: 'Network', priority: 'High', department: 'Finance', branch: 'Kandy Branch', status: 'Pending', assignedTo: null },
+      { id: 'TX-2021', title: 'Windows 11 update crash & Office suite', category: 'Software', priority: 'Low', department: 'HR', branch: 'Colombo Main Office', status: 'Resolved', assignedTo: 'M.E. Perera' },
+    ];
+
+    const technicians = ['K.P. Ratnasiri', 'A.S. Fernando', 'M.E. Perera', 'N.L. Silva'];
+
+    // Login handlers
+    function setLoginRole(role) {
+      currentRole = role;
+      document.getElementById('login-tab-emp').className = role === 'employee' ? 'py-2 text-xs font-semibold rounded-xl bg-white text-blue-600 shadow-xs' : 'py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900';
+      document.getElementById('login-tab-coord').className = role === 'coordinator' ? 'py-2 text-xs font-semibold rounded-xl bg-white text-blue-600 shadow-xs' : 'py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900';
+      document.getElementById('login-tab-staff').className = role === 'staff' ? 'py-2 text-xs font-semibold rounded-xl bg-white text-blue-600 shadow-xs' : 'py-2 text-xs font-semibold rounded-xl text-slate-600 hover:text-slate-900';
+      
+      const emailInput = document.getElementById('login-email');
+      const btn = document.getElementById('login-btn');
+      if (role === 'employee') { emailInput.value = 'a.m.emandi@ictassist.com'; btn.innerText = 'Sign In as Employee'; }
+      if (role === 'coordinator') { emailInput.value = 'coordinator@ictassist.com'; btn.innerText = 'Sign In as Coordinator'; }
+      if (role === 'staff') { emailInput.value = 'ratnasiri@ictassist.com'; btn.innerText = 'Sign In as Staff (Tech)'; }
+    }
+
+    function quickLogin(role) {
+      setLoginRole(role);
+      handleLoginSubmit({ preventDefault: () => {} });
+    }
+
+    function handleLoginSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      document.getElementById('view-login').classList.add('hidden-view');
+      document.getElementById('view-app').classList.remove('hidden-view');
+      switchRole(currentRole);
+    }
+
+    function logout() {
+      document.getElementById('view-app').classList.add('hidden-view');
+      document.getElementById('view-login').classList.remove('hidden-view');
+    }
+
+    function switchRole(role) {
+      currentRole = role;
+      document.getElementById('sidebar-role-label').innerText = role === 'employee' ? 'Employee Portal' : role === 'coordinator' ? 'Coordinator Dispatch' : 'Staff Technician';
+      document.getElementById('header-role-badge').innerText = role.toUpperCase();
+      
+      const nameEl = document.getElementById('header-user-name');
+      const avEl = document.getElementById('header-user-avatar');
+      const profName = document.getElementById('profile-name');
+      const profAv = document.getElementById('profile-avatar');
+      const profRole = document.getElementById('profile-role');
+
+      if (role === 'employee') {
+        nameEl.innerText = 'A.M. Emandi'; avEl.innerText = 'AE';
+        profName.innerText = 'A.M. Emandi'; profAv.innerText = 'AE'; profRole.innerText = 'Employee • Accounts';
+      } else if (role === 'coordinator') {
+        nameEl.innerText = 'Helpdesk Coordinator'; avEl.innerText = 'HC';
+        profName.innerText = 'Operations Dispatcher'; profAv.innerText = 'HC'; profRole.innerText = 'Helpdesk Dispatch Manager';
+      } else {
+        nameEl.innerText = 'K.P. Ratnasiri'; avEl.innerText = 'KR';
+        profName.innerText = 'K.P. Ratnasiri'; profAv.innerText = 'KR'; profRole.innerText = 'Field Technician • Hardware';
+      }
+
+      renderSidebar();
+      showTab('dashboard');
+      renderTicketsTable();
+      renderCoordinatorQueue();
+    }
+
+    function renderSidebar() {
+      const nav = document.getElementById('sidebar-nav');
+      let items = [];
+      if (currentRole === 'employee') {
+        items = [
+          { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+          { id: 'new-request', label: 'New Request', icon: 'plus-circle' },
+          { id: 'tickets', label: 'Ticket Status', icon: 'clock' },
+          { id: 'notifications', label: 'Notifications', icon: 'bell' },
+          { id: 'profile', label: 'Profile', icon: 'user' },
+        ];
+      } else if (currentRole === 'coordinator') {
+        items = [
+          { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+          { id: 'tickets', label: 'All Tickets', icon: 'clock' },
+          { id: 'reports', label: 'Reports', icon: 'bar-chart-3' },
+          { id: 'notifications', label: 'Notifications', icon: 'bell' },
+          { id: 'profile', label: 'Profile', icon: 'user' },
+        ];
+      } else {
+        items = [
+          { id: 'dashboard', label: 'Active Tasks', icon: 'layout-dashboard' },
+          { id: 'tickets', label: 'Task Queue', icon: 'check-square' },
+          { id: 'notifications', label: 'Notifications', icon: 'bell' },
+          { id: 'profile', label: 'Profile', icon: 'user' },
+        ];
+      }
+
+      nav.innerHTML = items.map(item => `
+        <button onclick="showTab('${item.id}')" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl font-medium text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="${item.icon}" class="w-4 h-4"></i>
+          <span>${item.label}</span>
+        </button>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function showTab(tabId) {
+      currentTab = tabId;
+      const allTabs = ['tab-emp-dashboard', 'tab-new-request', 'tab-tickets', 'tab-coord-dashboard', 'tab-reports', 'tab-staff-dashboard', 'tab-notifications', 'tab-profile'];
+      allTabs.forEach(id => document.getElementById(id).classList.add('hidden-view'));
+
+      if (tabId === 'dashboard') {
+        if (currentRole === 'employee') document.getElementById('tab-emp-dashboard').classList.remove('hidden-view');
+        else if (currentRole === 'coordinator') document.getElementById('tab-coord-dashboard').classList.remove('hidden-view');
+        else document.getElementById('tab-staff-dashboard').classList.remove('hidden-view');
+      } else if (tabId === 'new-request') {
+        document.getElementById('tab-new-request').classList.remove('hidden-view');
+      } else if (tabId === 'tickets') {
+        document.getElementById('tab-tickets').classList.remove('hidden-view');
+        renderTicketsTable();
+      } else if (tabId === 'reports') {
+        document.getElementById('tab-reports').classList.remove('hidden-view');
+      } else if (tabId === 'notifications') {
+        document.getElementById('tab-notifications').classList.remove('hidden-view');
+      } else if (tabId === 'profile') {
+        document.getElementById('tab-profile').classList.remove('hidden-view');
+      }
+      lucide.createIcons();
+    }
+
+    function renderTicketsTable(filter = 'All') {
+      const tbody = document.getElementById('tickets-table-body');
+      let list = tickets;
+      if (filter !== 'All') list = tickets.filter(t => t.status === filter);
+
+      tbody.innerHTML = list.map(t => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-3 px-6 font-mono font-bold text-blue-600">#${t.id}</td>
+          <td class="py-3 px-4 font-semibold text-slate-800">${t.title}</td>
+          <td class="py-3 px-4 text-slate-500">${t.category}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[11px] font-bold ${t.priority === 'High' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600'}">${t.priority}</span></td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${t.status === 'Resolved' ? 'bg-emerald-50 text-emerald-700' : t.status === 'In Progress' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}">${t.status}</span></td>
+          <td class="py-3 px-4 text-slate-600">${t.assignedTo || '<span class="text-slate-400 italic">Unassigned</span>'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterTickets(status) {
+      renderTicketsTable(status);
+    }
+
+    function renderCoordinatorQueue() {
+      const pending = tickets.filter(t => t.status === 'Pending');
+      document.getElementById('coord-stat-total').innerText = tickets.length;
+      document.getElementById('coord-stat-resolved').innerText = tickets.filter(t => t.status === 'Resolved').length;
+      document.getElementById('coord-stat-pending').innerText = pending.length;
+      document.getElementById('coord-stat-inprogress').innerText = tickets.filter(t => t.status === 'In Progress').length;
+
+      const container = document.getElementById('coord-pending-list');
+      if (pending.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 py-6 text-center">🎉 No pending assignments!</p>`;
+        return;
+      }
+      container.innerHTML = pending.map(t => `
+        <div class="py-3 flex justify-between items-center text-xs">
+          <div>
+            <p class="font-bold text-slate-800">#${t.id} ${t.title}</p>
+            <p class="text-slate-400 text-[11px]">${t.branch} • ${t.department} • Priority: <span class="text-rose-600 font-semibold">${t.priority}</span></p>
+          </div>
+          <button onclick="assignTicketToStaff('${t.id}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-xs transition">
+            Assign Technician
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function assignTicketToStaff(ticketId) {
+      const tech = technicians[Math.floor(Math.random() * technicians.length)];
+      tickets = tickets.map(t => {
+        if (t.id === ticketId) {
+          return { ...t, status: 'In Progress', assignedTo: tech };
+        }
+        return t;
+      });
+      alert(`Technician ${tech} assigned to ticket #${ticketId}!`);
+      renderCoordinatorQueue();
+      renderTicketsTable();
+    }
+
+    function handleNewTicketSubmit(e) {
+      e.preventDefault();
+      const newId = `TX-${2027 + tickets.length}`;
+      const newTicket = {
+        id: newId,
+        title: document.getElementById('req-title').value,
+        category: document.getElementById('req-category').value,
+        priority: document.getElementById('req-priority').value,
+        department: document.getElementById('req-dept').value,
+        branch: document.getElementById('req-branch').value,
+        status: 'Pending',
+        assignedTo: null
+      };
+      tickets.unshift(newTicket);
+      alert(`Ticket #${newId} submitted successfully!`);
+      document.getElementById('req-title').value = '';
+      document.getElementById('req-desc').value = '';
+      showTab('tickets');
+    }
+
+    function toggleStaffStatus() {
+      staffAvailable = !staffAvailable;
+      const btn = document.getElementById('staff-status-btn');
+      if (staffAvailable) {
+        btn.innerText = 'Available';
+        btn.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300';
+      } else {
+        btn.innerText = 'Busy';
+        btn.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-300';
+      }
+    }
+
+    function resolveCurrentTask() {
+      tickets = tickets.map(t => {
+        if (t.id === 'TX-2024') return { ...t, status: 'Resolved' };
+        return t;
+      });
+      alert('Task #TX-2024 has been marked as Resolved and closed!');
+      document.getElementById('staff-active-card').innerHTML = `<p class="text-xs text-blue-200 py-4 text-center">🎉 Task #TX-2024 completed! No other active tasks.</p>`;
+      renderTicketsTable();
+    }
+
+    // Initialize
+    lucide.createIcons();
+  </script>
+</body>
+</html>
