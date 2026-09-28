@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assign Staff - ICT Assist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="shared.js"></script>
+</head>
+<body class="bg-slate-100 flex min-h-screen">
+  <!-- Left Sidebar (Matching Mockup Screen 8) -->
+  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0">
+    <div>
+      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
+        <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center text-white">
+          <i data-lucide="monitor" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-white">ICT Assist</h1>
+          <p class="text-[11px] text-slate-400">Coordinator Dispatch</p>
+        </div>
+      </div>
+      <nav class="space-y-1 text-xs font-semibold">
+        <a href="coordinator-dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="ticket-status.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="clock" class="w-4 h-4"></i>
+          <span>All Tickets</span>
+        </a>
+        <a href="assign-staff.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-purple-600 text-white">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Assign Staff</span>
+        </a>
+        <a href="reports.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span>Reports & Stats</span>
+        </a>
+        <a href="notifications.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+          <span>Notifications</span>
+        </a>
+      </nav>
+    </div>
+    <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
+      <a href="login.html" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area (Matching Screen 8) -->
+  <main class="flex-1 p-8 max-w-3xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Technician Dispatch</span>
+        <h2 class="text-2xl font-extrabold text-slate-900 mt-0.5">Assign Staff</h2>
+        <p class="text-xs text-slate-500">Allocate specialized field technicians to unassigned incident requests.</p>
+      </div>
+      <a href="coordinator-dashboard.html" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard
+      </a>
+    </div>
+
+    <!-- Ticket Summary Card (Screen 8 Top) -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono font-bold text-blue-600" id="ticket-id-display">#TX-2024</span>
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200" id="ticket-priority-display">High</span>
+          <span class="px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200" id="ticket-category-display">Hardware</span>
+        </div>
+        <span class="text-xs text-slate-400" id="ticket-date-display">Created: 2024-09-18</span>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900" id="ticket-title-display">Printer not working</h3>
+      <p class="text-xs text-slate-500" id="ticket-desc-display">Paper jam in main office network laser printer. Continuous error 50.4 displayed on control panel.</p>
+      <p class="text-xs text-slate-400">Branch: <strong class="text-slate-700" id="ticket-branch-display">Colombo Main Office</strong> &bull; Dept: <strong class="text-slate-700" id="ticket-dept-display">Telecom & Admin</strong></p>
+    </div>
+
+    <!-- Staff Selection List (Screen 8 Center) -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-4">
+      <h3 class="text-sm font-bold text-slate-800">Available Technicians</h3>
+      
+      <div class="space-y-3" id="tech-list-container">
+        <!-- Tech 1 -->
+        <label class="flex items-center justify-between p-4 rounded-2xl border-2 border-purple-600 bg-purple-50/40 cursor-pointer transition">
+          <div class="flex items-center gap-3">
+            <input type="radio" name="technician" value="K.P. Ratnasiri" checked class="w-4 h-4 text-purple-600 focus:ring-purple-500 cursor-pointer" />
+            <div class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center text-xs">KP</div>
+            <div>
+              <p class="text-xs font-bold text-slate-900">K.P. Ratnasiri</p>
+              <p class="text-[11px] text-slate-500">Hardware Specialist</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Free</span>
+        </label>
+
+        <!-- Tech 2 -->
+        <label class="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-purple-300 cursor-pointer transition">
+          <div class="flex items-center gap-3">
+            <input type="radio" name="technician" value="A.S. Fernando" class="w-4 h-4 text-purple-600 focus:ring-purple-500 cursor-pointer" />
+            <div class="w-9 h-9 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-xs">AF</div>
+            <div>
+              <p class="text-xs font-bold text-slate-900">A.S. Fernando</p>
+              <p class="text-[11px] text-slate-500">Network Specialist</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Free</span>
+        </label>
+
+        <!-- Tech 3 -->
+        <label class="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-purple-300 cursor-pointer transition">
+          <div class="flex items-center gap-3">
+            <input type="radio" name="technician" value="M.E. Perera" class="w-4 h-4 text-purple-600 focus:ring-purple-500 cursor-pointer" />
+            <div class="w-9 h-9 rounded-xl bg-amber-600 text-white font-bold flex items-center justify-center text-xs">MP</div>
+            <div>
+              <p class="text-xs font-bold text-slate-900">M.E. Perera</p>
+              <p class="text-[11px] text-slate-500">Software Specialist</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Free</span>
+        </label>
+      </div>
+
+      <!-- Action Button (Screen 8 Bottom) -->
+      <div class="pt-4">
+        <button onclick="confirmAssignment()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-600/30 text-xs transition flex items-center justify-center gap-2">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Confirm Assignment</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Load ticket info from URL parameter or default to first pending ticket
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetTicketId = urlParams.get('id');
+    const allTickets = getTickets();
+    const activeTicket = (targetTicketId ? allTickets.find(t => t.id === targetTicketId) : null) || 
+                         allTickets.find(t => t.status === 'Pending') || 
+                         allTickets[0];
+
+    if (activeTicket) {
+      document.getElementById('ticket-id-display').innerText = '#' + activeTicket.id;
+      document.getElementById('ticket-title-display').innerText = activeTicket.title;
+      document.getElementById('ticket-priority-display').innerText = activeTicket.priority;
+      document.getElementById('ticket-category-display').innerText = activeTicket.category;
+      document.getElementById('ticket-desc-display').innerText = activeTicket.description || 'Inspection required.';
+      document.getElementById('ticket-branch-display').innerText = activeTicket.branch;
+      document.getElementById('ticket-dept-display').innerText = activeTicket.department;
+    }
+
+    function confirmAssignment() {
+      const selectedRadio = document.querySelector('input[name="technician"]:checked');
+      if (!selectedRadio) {
+        alert('Please select a technician first!');
+        return;
+      }
+      const techName = selectedRadio.value;
+      if (activeTicket) {
+        updateTicket(activeTicket.id, {
+          status: 'In Progress',
+          assignedTo: techName
+        });
+        alert(`Success! Ticket #${activeTicket.id} has been assigned to ${techName}.`);
+        window.location.href = 'coordinator-dashboard.html';
+      }
+    }
+  </script>
+</body>
+</html>
