@@ -15,19 +15,24 @@
         <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
         <div>
           <h1 class="text-sm font-bold text-white">ICT Assist</h1>
-          <p class="text-[11px] text-slate-400">Employee Portal</p>
+          <p class="text-[11px] text-slate-400">Service Desk Portal</p>
         </div>
       </div>
-      <nav class="space-y-1 text-xs font-semibold">
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">Employee</p>
+      <nav class="space-y-1 text-xs font-semibold mb-4">
         <a href="employee-dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
         <a href="new-request.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
         <a href="ticket-status.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
+      </nav>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">General</p>
+      <nav class="space-y-1 text-xs font-semibold">
         <a href="notifications.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span></a>
         <a href="profile.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
       </nav>
     </div>
 
-    <!-- Bottom Switcher -->
+    <!-- Demo Login Switcher -->
+        <!-- Bottom Switcher -->
     <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
       <p class="text-[11px] text-slate-500">Switch View:</p>
       <div class="grid grid-cols-2 gap-1">
@@ -39,53 +44,142 @@
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-1 p-8 max-w-5xl mx-auto space-y-6">
+  <div class="flex-1 flex flex-col">
+    <!-- Top Header Bar -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+      <h2 class="text-sm font-bold text-slate-800">Dashboard</h2>
+      <div class="flex items-center space-x-4">
+        <div class="relative">
+          <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+          <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">4</span>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">AD</div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-8 max-w-5xl mx-auto w-full space-y-6">
     <!-- Hero Banner -->
-    <div class="rounded-3xl bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-8 shadow-xl flex justify-between items-center">
+    <div class="rounded-3xl bg-[#0f1e4d] text-white p-8 shadow-xl flex justify-between items-center">
       <div>
-        <span class="text-xs text-blue-300 font-semibold uppercase tracking-wider">Employee Helpdesk</span>
-        <h2 class="text-2xl font-extrabold mt-1">Good morning, A.M. Emandi 👋</h2>
-        <p class="text-xs text-blue-200 mt-1">Need technical assistance with hardware or software?</p>
+        <span class="text-xs text-blue-300 font-semibold">Good morning,</span>
+        <h2 class="text-2xl font-extrabold mt-1">A.M.De silva</h2>
+        <p class="text-xs text-blue-200 mt-1">4 open · 2 in progress · 11 resolved</p>
       </div>
-      <a href="new-request.html" class="bg-blue-500 hover:bg-blue-400 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition">
-        + Create New Request
+      <a href="new-request.html" class="bg-white hover:bg-slate-100 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition flex items-center space-x-1.5">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Submit New Request</span>
       </a>
     </div>
 
-    <!-- Active Ticket Preview -->
-    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs">
-      <div class="flex justify-between items-center pb-3 border-b border-slate-100 text-xs">
-        <span class="font-bold text-blue-600">#TX-2024</span>
-        <span class="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-semibold">In Progress</span>
+    <!-- Most Recent Ticket -->
+    <div>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Your Most Recent Ticket</p>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold text-blue-600">#TK-2024</span>
+            <h3 class="text-sm font-bold text-slate-800 mt-1">Printer not working</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Finance Dept · Submitted 2 hrs ago</p>
+          </div>
+          <span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold text-[11px]">In Progress</span>
+        </div>
+        <a href="ticket-status.html" class="inline-block mt-3 text-xs font-semibold text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50">View Details</a>
       </div>
-      <h3 class="text-base font-bold text-slate-800 mt-2">Printer not working - paper jam error 50.4</h3>
-      <p class="text-xs text-slate-500 mt-1">Assigned Technician: <strong>K.P. Ratnasiri (On-site)</strong></p>
     </div>
 
-    <!-- 4 Hub Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <a href="new-request.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
-        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2"><i data-lucide="plus-circle" class="w-4 h-4"></i></div>
-        <h4 class="text-xs font-bold text-slate-800">New Request</h4>
-        <p class="text-[11px] text-slate-400 mt-0.5">Report incident</p>
-      </a>
-      <a href="ticket-status.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
-        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i data-lucide="clock" class="w-4 h-4"></i></div>
-        <h4 class="text-xs font-bold text-slate-800">Track Status</h4>
-        <p class="text-[11px] text-slate-400 mt-0.5">Live updates</p>
-      </a>
-      <a href="notifications.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
-        <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-2"><i data-lucide="bell" class="w-4 h-4"></i></div>
-        <h4 class="text-xs font-bold text-slate-800">Notifications</h4>
-        <p class="text-[11px] text-slate-400 mt-0.5">Staff alerts</p>
-      </a>
-      <a href="ticket-status.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs block">
-        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i data-lucide="history" class="w-4 h-4"></i></div>
-        <h4 class="text-xs font-bold text-slate-800">History</h4>
-        <p class="text-[11px] text-slate-400 mt-0.5">Past tickets</p>
-      </a>
+    <!-- Announcements -->
+    <div>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Announcements</p>
+      <div class="space-y-3">
+        <div class="bg-white p-4 rounded-xl border-l-4 border-amber-400 shadow-xs">
+          <p class="text-xs text-slate-700"><strong>Email server maintenance</strong> today, 2:00 PM – 4:00 PM. You may be briefly signed out of Outlook.</p>
+          <p class="text-[11px] text-slate-400 mt-1">Posted this morning</p>
+        </div>
+        <div class="bg-white p-4 rounded-xl border-l-4 border-blue-400 shadow-xs">
+          <p class="text-xs text-slate-700"><strong>Wi-Fi upgrade</strong> at Colombo Head Office this weekend. Expect brief outages on Saturday.</p>
+          <p class="text-[11px] text-slate-400 mt-1">Posted yesterday</p>
+        </div>
+      </div>
     </div>
-  </main>
+
+    <!-- Quick Help -->
+ 
+<div>
+  <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Quick Help</p>
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100">
+
+    <details class="group px-4 py-3">
+      <summary class="flex items-center justify-between cursor-pointer list-none">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><i data-lucide="printer" class="w-4 h-4 text-slate-600"></i></div>
+          <span class="text-xs font-semibold text-slate-700">Printer not printing?</span>
+        </div>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
+      </summary>
+      <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
+        Check the printer has paper and isn't showing an error light. Try restarting it from the power switch. Still stuck? Submit a request under "Printer" category.
+      </p>
+    </details>
+
+    <details class="group px-4 py-3">
+      <summary class="flex items-center justify-between cursor-pointer list-none">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><i data-lucide="wifi" class="w-4 h-4 text-blue-500"></i></div>
+          <span class="text-xs font-semibold text-slate-700">Can't connect to Wi-Fi?</span>
+        </div>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
+      </summary>
+      <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
+        Forget the network on your device and reconnect using the password on the noticeboard. If it still fails after two tries, submit a "Network" request.
+      </p>
+    </details>
+
+    <details class="group px-4 py-3">
+      <summary class="flex items-center justify-between cursor-pointer list-none">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center"><i data-lucide="lock" class="w-4 h-4 text-amber-500"></i></div>
+          <span class="text-xs font-semibold text-slate-700">Forgot your password?</span>
+        </div>
+        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
+      </summary>
+      <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
+        Use "Forgot password?" on the sign-in screen to reset it yourself. If you don't receive the reset email within 5 minutes, contact the ICT helpdesk below.
+      </p>
+    </details>
+
+  </div>
+</div>
+
+    <!-- Quick Actions -->
+    <div>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Quick Actions</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <a href="new-request.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center">
+          <div class="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
+          <h4 class="text-xs font-bold text-slate-800">New Request</h4>
+        </a>
+        <a href="ticket-status.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center">
+          <div class="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i data-lucide="ticket" class="w-4 h-4"></i></div>
+          <h4 class="text-xs font-bold text-slate-800">My Tickets</h4>
+        </a>
+        <a href="notifications.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center">
+          <div class="w-9 h-9 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i data-lucide="bell" class="w-4 h-4"></i></div>
+          <h4 class="text-xs font-bold text-slate-800">Notifications</h4>
+        </a>
+        <a href="ticket-status.html" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center">
+          <div class="w-9 h-9 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-2"><i data-lucide="history" class="w-4 h-4"></i></div>
+          <h4 class="text-xs font-bold text-slate-800">History</h4>
+        </a>
+      </div>
+    </div>
+
+    <!-- Urgent Banner -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 text-center text-xs text-slate-500">
+      Urgent issue? Call the ICT Helpdesk <strong class="text-slate-700">011 234 5678</strong>
+    </div>
+
+    <p class="text-center text-[11px] text-slate-400 pt-2">ICT Assist v1.0 (Web) · ICT Unit</p>
+    </main>
+  </div>
   <script>lucide.createIcons();</script>
 </body>
 </html>
