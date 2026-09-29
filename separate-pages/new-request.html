@@ -1,110 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>New Request - ICT Assist</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="shared.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICT Assist – New Request</title>
+<style>
+  :root{
+    --navy:#0d1830; --blue:#1d4ed8; --blue-soft:#e8f0fe; --ink:#1e293b;
+    --label:#475f82; --bg:#f5f6fa; --line:#e2e8f0; --red:#ef4444; --amber:#fbbf24; --green:#4ade80;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
+
+  /* Sidebar */
+  .sidebar{width:230px;background:var(--navy);color:#fff;padding:28px 12px;flex-shrink:0}
+  .brand{display:flex;align-items:center;gap:12px;padding:0 8px;margin-bottom:34px}
+  .brand-icon{width:40px;height:40px;border-radius:10px;background:#2a3550;display:grid;place-items:center;font-size:18px}
+  .brand h1{font-size:17px;font-weight:700}
+  .brand small{font-size:11px;color:#cbd5e1}
+  .role{font-size:13px;font-weight:600;color:#94a3b8;padding:0 10px;margin-bottom:14px}
+  .nav a{display:flex;align-items:center;gap:10px;padding:11px 16px;margin-bottom:6px;border-radius:10px;color:#e2e8f0;text-decoration:none;font-size:14px;font-weight:500}
+  .nav a:hover{background:rgba(255,255,255,.07)}
+  .nav a.active{background:var(--blue);color:#fff}
+  .nav a:focus-visible{outline:2px solid #93c5fd;outline-offset:2px}
+
+  /* Main */
+  .main{flex:1;min-width:0}
+  .topbar{background:#fff;height:50px;padding:0 28px 0 34px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(15,23,42,.12)}
+  .topbar h2{font-size:20px;font-weight:700}
+  .top-right{display:flex;align-items:center;gap:14px}
+  .bell{position:relative;font-size:22px;background:none;border:0;cursor:pointer}
+  .bell .badge{position:absolute;top:-6px;right:-6px;background:#dc2626;color:#fff;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:grid;place-items:center}
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+
+  form{padding:26px 34px 40px;max-width:940px}
+  label,.label{display:block;font-size:14px;font-weight:600;color:var(--label);margin-bottom:8px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-bottom:26px;max-width:640px}
+  .field{width:100%;height:40px;padding:0 24px;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit;font-size:14px;color:var(--ink)}
+  .field:focus,textarea:focus{outline:2px solid var(--blue);outline-offset:1px}
+  .group{margin-bottom:26px}
+
+  /* Chips & priority */
+  .chips,.prio{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{padding:0 20px;height:34px;border:0;border-radius:999px;background:var(--blue-soft);color:var(--blue);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--blue);color:#fff}
+  .pbtn{width:135px;height:34px;border:0;border-radius:8px;font:inherit;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+  .pbtn i{width:11px;height:11px;border-radius:50%;display:block}
+  .pbtn[data-p="High"]{background:#fee2e2;color:var(--red)} .pbtn[data-p="High"] i{background:var(--red)}
+  .pbtn[data-p="Medium"]{background:#e2e8f0;color:#475569} .pbtn[data-p="Medium"] i{background:var(--amber)}
+  .pbtn[data-p="Low"]{background:#e2e8f0;color:#475569} .pbtn[data-p="Low"] i{background:var(--green)}
+  .pbtn[aria-pressed="true"]{background:var(--blue);color:#fff}
+
+  textarea{width:100%;max-width:590px;height:76px;padding:12px 24px;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit;font-size:13px;color:var(--ink);resize:vertical;display:block}
+
+  /* Upload */
+  .upload{width:100%;max-width:590px;height:103px;border:1px solid var(--line);border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:#94a3b8;font-size:11px;text-align:center;overflow:hidden}
+  .upload span:first-child{font-size:20px}
+  .upload img{max-height:100%;max-width:100%}
+  .upload input{display:none}
+
+  .submit{margin-top:14px;height:38px;padding:0 36px;border:0;border-radius:8px;background:var(--blue);color:#fff;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .submit:hover{background:#1e40af}
+  .toast{margin-top:14px;font-size:14px;font-weight:600;color:#15803d}
+
+  @media (max-width:760px){
+    body{flex-direction:column}
+    .sidebar{width:100%;padding:16px}
+    .nav{display:flex;flex-wrap:wrap;gap:6px}
+    .nav a{margin:0}
+    .row{grid-template-columns:1fr;gap:20px}
+    form{padding:20px 16px 32px}
+  }
+</style>
 </head>
-<body class="bg-slate-100 flex min-h-screen">
-  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800">
-    <div>
-      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
-        <div>
-          <h1 class="text-sm font-bold text-white">ICT Assist</h1>
-          <p class="text-[11px] text-slate-400">Employee Portal</p>
-        </div>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">🖥️</div>
+    <div><h1>ICT Assist</h1><small>Service Desk Portal</small></div>
+  </div>
+  <div class="role">Employee</div>
+  <nav class="nav">
+    <a href="#">🗂️ Dashboard</a>
+    <a href="#" class="active" aria-current="page">👷 New Request</a>
+    <a href="#">📊 Ticket Status</a>
+    <a href="#">🔔 Notifications</a>
+    <a href="#">👤 Profile</a>
+  </nav>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <h2>New Request</h2>
+    <div class="top-right">
+      <button class="bell" aria-label="Notifications, 3 unread">🔔<span class="badge">3</span></button>
+      <div class="avatar" aria-label="Account">AN</div>
+    </div>
+  </header>
+
+  <form id="requestForm">
+    <div class="row">
+      <div><label for="branch">Branch Name</label>
+        <input class="field" id="branch" value="Colombo Head Office"></div>
+      <div><label for="dept">Department</label>
+        <input class="field" id="dept" value="Finance"></div>
+    </div>
+
+    <div class="group">
+      <span class="label">Issue Category</span>
+      <div class="chips" id="category">
+        <button type="button" class="chip" aria-pressed="true">🖨️ Printer</button>
+        <button type="button" class="chip" aria-pressed="false">💻 Hardware</button>
+        <button type="button" class="chip" aria-pressed="false">🌐 Network</button>
+        <button type="button" class="chip" aria-pressed="false">📱 Software</button>
+        <button type="button" class="chip" aria-pressed="false">📞 Telephone</button>
       </div>
-      <nav class="space-y-1 text-xs font-semibold">
-        <a href="employee-dashboard.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
-        <a href="new-request.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
-        <a href="ticket-status.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
-        <a href="notifications.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span></a>
-        <a href="profile.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
-      </nav>
     </div>
-  </aside>
 
-  <main class="flex-1 p-8 max-w-4xl mx-auto space-y-4">
-    <a href="employee-dashboard.html" class="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard</a>
-    
-    <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-xs">
-      <h2 class="text-lg font-bold text-slate-900 pb-2 border-b border-slate-100">Submit New Incident Request</h2>
-      
-      <form onsubmit="handleFormSubmit(event)" class="mt-6 space-y-4 text-xs">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block font-bold uppercase text-slate-600 mb-1">Branch Name</label>
-            <input type="text" id="branch" value="Colombo Main Office" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500" required />
-          </div>
-          <div>
-            <label class="block font-bold uppercase text-slate-600 mb-1">Department</label>
-            <input type="text" id="dept" value="Accounts & Admin" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500" required />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block font-bold uppercase text-slate-600 mb-1">Category</label>
-            <select id="category" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500">
-              <option value="Hardware">Hardware (Printer, PC, Network Cable)</option>
-              <option value="Network">Network (Wi-Fi, Router, Switch)</option>
-              <option value="Software">Software (OS, Antivirus, MS Office)</option>
-              <option value="Telephone">Telephone (VoIP, Extension line)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-bold uppercase text-slate-600 mb-1">Priority</label>
-            <select id="priority" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500">
-              <option value="High">High (Immediate work stoppage)</option>
-              <option value="Medium" selected>Medium Priority</option>
-              <option value="Low">Low Priority</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-bold uppercase text-slate-600 mb-1">Issue Title</label>
-          <input type="text" id="title" placeholder="e.g. Laser printer paper feed jammed" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500" required />
-        </div>
-
-        <div>
-          <label class="block font-bold uppercase text-slate-600 mb-1">Detailed Description</label>
-          <textarea id="desc" rows="3" placeholder="Provide details, room number, or error messages..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500" required></textarea>
-        </div>
-
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition">
-          Submit Incident Request
-        </button>
-      </form>
+    <div class="group">
+      <span class="label">Priority</span>
+      <div class="prio" id="priority">
+        <button type="button" class="pbtn" data-p="High" aria-pressed="false"><i></i>High</button>
+        <button type="button" class="pbtn" data-p="Medium" aria-pressed="true"><i></i>Medium</button>
+        <button type="button" class="pbtn" data-p="Low" aria-pressed="false"><i></i>Low</button>
+      </div>
     </div>
-  </main>
 
-  <script>
-    lucide.createIcons();
+    <div class="group">
+      <label for="desc">Description</label>
+      <textarea id="desc">The printer on 3rd floor is not responding. Tried restarting but same issue persists.</textarea>
+    </div>
 
-    function handleFormSubmit(e) {
-      e.preventDefault();
-      const currentList = getTickets();
-      const newId = 'TX-' + (2027 + currentList.length);
-      const ticket = {
-        id: newId,
-        title: document.getElementById('title').value,
-        category: document.getElementById('category').value,
-        priority: document.getElementById('priority').value,
-        department: document.getElementById('dept').value,
-        branch: document.getElementById('branch').value,
-        status: 'Pending',
-        assignedTo: null,
-        createdDate: new Date().toISOString().split('T')[0],
-        description: document.getElementById('desc').value
-      };
-      addTicket(ticket);
-      alert('Ticket #' + newId + ' created successfully! Redirecting to Ticket Status...');
-      window.location.href = 'ticket-status.html';
-    }
-  </script>
+    <div class="group">
+      <span class="label">Attach Photo (optional)</span>
+      <label class="upload" id="drop">
+        <input type="file" accept="image/*" id="photo">
+        <span>📷</span><span>Click to upload image</span>
+      </label>
+    </div>
+
+    <button class="submit" type="submit">Submit Request</button>
+    <p class="toast" id="toast" role="status" hidden>Request submitted.</p>
+  </form>
+</div>
+
+<script>
+  // Single-select groups (category & priority)
+  function singleSelect(id){
+    const box = document.getElementById(id);
+    box.addEventListener('click', e=>{
+      const b = e.target.closest('button'); if(!b) return;
+      box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    });
+  }
+  singleSelect('category'); singleSelect('priority');
+
+  // Photo preview
+  const photo = document.getElementById('photo'), drop = document.getElementById('drop');
+  photo.addEventListener('change', ()=>{
+    const f = photo.files[0]; if(!f) return;
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(f); img.alt = 'Selected photo';
+    drop.querySelectorAll('span,img').forEach(n=>n.remove());
+    drop.appendChild(img);
+  });
+
+  // Submit
+  document.getElementById('requestForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const data = {
+      branch: branch.value, department: dept.value,
+      category: document.querySelector('#category [aria-pressed="true"]').textContent.trim(),
+      priority: document.querySelector('#priority [aria-pressed="true"]').dataset.p,
+      description: desc.value
+    };
+    console.log('New request:', data); // replace with fetch('/api/requests', …)
+    document.getElementById('toast').hidden = false;
+  });
+</script>
 </body>
 </html>
