@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - ICT Assist Helpdesk</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 border border-slate-200">
+    
+    <!-- Left Hero Banner -->
+    <div class="md:col-span-5 bg-gradient-to-br from-slate-900 via-blue-950 to-blue-900 text-white p-8 md:p-10 flex flex-col justify-between relative overflow-hidden">
+      <div class="relative z-10">
+        <div class="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white mb-6 shadow-xl shadow-blue-500/30">
+          <i data-lucide="monitor" class="w-7 h-7"></i>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">ICT Assist</h1>
+        <p class="text-blue-200 text-sm mt-2 leading-relaxed">
+          Enterprise IT Service Management &amp; Automated Incident Tracking Portal.
+        </p>
+      </div>
+
+      <div class="relative z-10 my-8 space-y-3">
+        <div class="bg-white/10 p-3.5 rounded-xl backdrop-blur-xs text-xs text-blue-100 flex items-start gap-2.5 border border-white/10">
+          <i data-lucide="shield-check" class="w-4 h-4 text-blue-400 mt-0.5 shrink-0"></i>
+          <span><strong>Role-Based Access:</strong> Portals for Employee, Coordinator, and Staff.</span>
+        </div>
+        <div class="bg-white/10 p-3.5 rounded-xl backdrop-blur-xs text-xs text-blue-100 flex items-start gap-2.5 border border-white/10">
+          <i data-lucide="wrench" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+          <span><strong>Real-time Dispatch:</strong> Live technician assignment and resolution tracking.</span>
+        </div>
+      </div>
+
+      <div class="relative z-10 text-[11px] text-blue-300/80 font-medium">
+        ICT Helpdesk &amp; Support System &copy; 2026
+      </div>
+
+      <!-- Background Glow Effect -->
+      <div class="absolute -top-16 -left-16 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+
+    <!-- Right Login Form -->
+    <div class="md:col-span-7 p-8 md:p-12 flex flex-col justify-center">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-900">Welcome back 👋</h2>
+        <p class="text-xs text-slate-500 mt-1">
+          Please enter your credentials and select your role to sign in.
+        </p>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="error-box" class="hidden mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5 transition">
+        <i data-lucide="alert-circle" class="w-4 h-4 text-red-500 shrink-0"></i>
+        <span id="error-message">Invalid email or password.</span>
+      </div>
+
+      <!-- Role Selector Tabs -->
+      <div class="mb-5">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+          Select Your Role
+        </label>
+        <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-2xl text-xs font-semibold">
+          <button
+            type="button"
+            id="tab-emp"
+            onclick="selectRole('employee')"
+            class="py-2.5 rounded-xl bg-white text-blue-600 shadow-xs font-bold transition"
+          >
+            Employee
+          </button>
+          <button
+            type="button"
+            id="tab-coord"
+            onclick="selectRole('coordinator')"
+            class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition"
+          >
+            Coordinator
+          </button>
+          <button
+            type="button"
+            id="tab-staff"
+            onclick="selectRole('staff')"
+            class="py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition"
+          >
+            Staff (Tech)
+          </button>
+        </div>
+      </div>
+
+      <!-- Login Form with Username/Email and Password -->
+      <form id="login-form" method="POST" action="index.php" onsubmit="handleLogin(event)" class="space-y-4">
+        <!-- Work Email / Username Input -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+            Work Email or Username
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </span>
+            <input
+              type="text"
+              name="email"
+              id="username-input"
+              value="a.m.emandi@ictassist.com"
+              placeholder="e.g. employee@ictassist.com"
+              required
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-800"
+            />
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-600">
+              Password
+            </label>
+            <a href="#forgot" onclick="alert('Demo notice: For test accounts, please use password: Ict@12345'); return false;" class="text-xs text-blue-600 hover:underline font-medium">
+              Forgot?
+            </a>
+          </div>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+            </span>
+            <input
+              type="password"
+              name="password"
+              id="password-input"
+              value="Ict@12345"
+              placeholder="••••••••"
+              required
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-800"
+            />
+          </div>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="flex items-center justify-between text-xs text-slate-600 pt-1">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="checkbox" name="remember" checked class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" />
+            <span>Remember this device</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="submit-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/25 transition transform active:scale-[0.99] flex items-center justify-center space-x-2"
+        >
+          <span id="btn-text">Sign In as Employee</span>
+          <i id="btn-icon" data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- Quick 1-Click Test Demo Logins -->
+      <div class="mt-8 pt-6 border-t border-slate-100">
+        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-center mb-3">
+          Quick 1-Click Intern Demo Logins
+        </p>
+        <div class="grid grid-cols-3 gap-2 text-xs">
+          <button
+            type="button"
+            onclick="quickLogin('employee')"
+            class="py-2 px-2 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 rounded-xl text-slate-600 text-center font-medium transition"
+          >
+            👤 Employee
+          </button>
+          <button
+            type="button"
+            onclick="quickLogin('coordinator')"
+            class="py-2 px-2 bg-slate-50 hover:bg-purple-50 hover:text-purple-600 border border-slate-200 rounded-xl text-slate-600 text-center font-medium transition"
+          >
+            📋 Coordinator
+          </button>
+          <button
+            type="button"
+            onclick="quickLogin('staff')"
+            class="py-2 px-2 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 rounded-xl text-slate-600 text-center font-medium transition"
+          >
+            🛠️ Staff (Tech)
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Selected role state
+    let selectedRole = 'employee';
+
+    function selectRole(role) {
+      selectedRole = role;
+
+      const tabEmp = document.getElementById('tab-emp');
+      const tabCoord = document.getElementById('tab-coord');
+      const tabStaff = document.getElementById('tab-staff');
+      const emailInput = document.getElementById('username-input');
+      const passwordInput = document.getElementById('password-input');
+      const btnText = document.getElementById('btn-text');
+      const submitBtn = document.getElementById('submit-btn');
+      const errorBox = document.getElementById('error-box');
+
+      // Clear any previous error box when role is switched
+      if (errorBox) errorBox.classList.add('hidden');
+
+      // Reset all tab styles
+      [tabEmp, tabCoord, tabStaff].forEach(tab => {
+        tab.className = "py-2.5 rounded-xl text-slate-600 hover:text-slate-900 transition";
+      });
+
+      if (role === 'employee') {
+        tabEmp.className = "py-2.5 rounded-xl bg-white text-blue-600 shadow-xs font-bold transition";
+        emailInput.value = "a.m.emandi@ictassist.com";
+        passwordInput.value = "Ict@12345";
+        btnText.innerText = "Sign In as Employee";
+        submitBtn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/25 transition flex items-center justify-center space-x-2";
+      } else if (role === 'coordinator') {
+        tabCoord.className = "py-2.5 rounded-xl bg-white text-purple-600 shadow-xs font-bold transition";
+        emailInput.value = "coordinator@ictassist.com";
+        passwordInput.value = "Ict@12345";
+        btnText.innerText = "Sign In as Coordinator";
+        submitBtn.className = "w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-purple-600/25 transition flex items-center justify-center space-x-2";
+      } else if (role === 'staff') {
+        tabStaff.className = "py-2.5 rounded-xl bg-white text-emerald-600 shadow-xs font-bold transition";
+        emailInput.value = "ratnasiri@ictassist.com";
+        passwordInput.value = "Ict@12345";
+        btnText.innerText = "Sign In as Staff (Technician)";
+        submitBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-emerald-600/25 transition flex items-center justify-center space-x-2";
+      }
+    }
+
+    function quickLogin(role) {
+      selectRole(role);
+      handleLogin();
+    }
+
+    async function handleLogin(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const form = document.getElementById('login-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const errorBox = document.getElementById('error-box');
+
+      if (errorBox) errorBox.classList.add('hidden');
+
+      // Check if running on local file system without server
+      if (window.location.protocol === 'file:') {
+        alert('Please open this page via Apache / XAMPP (e.g. http://localhost/ict-assist/login.html) to connect with the PHP backend and database.');
+        window.location.href = 'dashboard.php';
+        return;
+      }
+
+      // Show loading indicator
+      const originalText = btnText.innerText;
+      btnText.innerText = 'Signing in...';
+      submitBtn.disabled = true;
+
+      try {
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+
+        const response = await fetch('index.php', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          btnText.innerText = 'Redirecting to Dashboard...';
+          window.location.href = data.redirect || 'dashboard.php';
+        } else {
+          showError(data.error || 'Invalid email or password.');
+          btnText.innerText = originalText;
+          submitBtn.disabled = false;
+        }
+      } catch (err) {
+        console.warn('Fetch auth encountered an issue, falling back to standard submit:', err);
+        // Fallback: standard POST form submission to index.php
+        form.submit();
+      }
+    }
+
+    function showError(msg) {
+      const errorBox = document.getElementById('error-box');
+      const errorMessage = document.getElementById('error-message');
+      if (errorBox && errorMessage) {
+        errorMessage.innerText = msg;
+        errorBox.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      } else {
+        alert(msg);
+      }
+    }
+
+    // Check if user is already logged in, redirect straight to dashboard
+    if (window.location.protocol !== 'file:') {
+      fetch('index.php?action=check_session', {
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.logged_in) {
+          window.location.href = 'dashboard.php';
+        }
+      })
+      .catch(() => {});
+    }
+
+    // Check for error in query parameter e.g. login.html?error=...
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+      showError(urlParams.get('error'));
+    }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>

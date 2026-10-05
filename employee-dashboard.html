@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Dashboard - ICT Assist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="shared.js"></script>
+  <script>
+    // If running via HTTP/HTTPS web server, seamlessly forward to dynamic PHP dashboard
+    if (window.location.protocol !== 'file:') {
+      window.location.replace('dashboard.php');
+    }
+  </script>
+</head>
+<body class="bg-slate-100 flex min-h-screen">
+  <!-- Left Navigation Sidebar -->
+  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0">
+    <div>
+      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
+        <div>
+          <h1 class="text-sm font-bold text-white">ICT Assist</h1>
+          <p class="text-[11px] text-slate-400">Service Desk Portal</p>
+        </div>
+      </div>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">Employee</p>
+      <nav class="space-y-1 text-xs font-semibold mb-4">
+        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
+        <a href="new_request.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
+        <a href="dashboard.php#tickets-section" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
+      </nav>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">General</p>
+      <nav class="space-y-1 text-xs font-semibold">
+        <a href="notifications.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span></a>
+        <a href="profile.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
+      </nav>
+    </div>
+
+    <!-- Bottom Switcher -->
+    <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
+      <p class="text-[11px] text-slate-500">Switch View:</p>
+      <div class="grid grid-cols-2 gap-1">
+        <a href="switch_view.php?role=coordinator" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Coordinator</a>
+        <a href="switch_view.php?role=staff" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Staff</a>
+      </div>
+      <a href="logout.php" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <!-- Top Header Bar -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+      <h2 class="text-sm font-bold text-slate-800">Dashboard</h2>
+      <div class="flex items-center space-x-4">
+        <a href="notifications.php" class="relative text-slate-400 hover:text-slate-600">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">4</span>
+        </a>
+        <a href="profile.php" class="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">AD</a>
+      </div>
+    </header>
+
+    <main class="flex-1 p-8 max-w-5xl mx-auto w-full space-y-6">
+      <!-- Hero Banner -->
+      <div class="rounded-3xl bg-[#0f1e4d] text-white p-8 shadow-xl flex justify-between items-center">
+        <div>
+          <span class="text-xs text-blue-300 font-semibold">Good morning,</span>
+          <h2 class="text-2xl font-extrabold mt-1">A.M.De silva</h2>
+          <p class="text-xs text-blue-200 mt-1">4 open · 2 in progress · 11 resolved</p>
+        </div>
+        <a href="new_request.php" class="bg-white hover:bg-slate-100 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition flex items-center space-x-1.5">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Submit New Request</span>
+        </a>
+      </div>
+
+      <!-- Most Recent Ticket -->
+      <div>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Your Most Recent Ticket</p>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs font-bold text-blue-600">#TK-2024</span>
+              <h3 class="text-sm font-bold text-slate-800 mt-1">Printer not working</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Finance Dept · Submitted 2 hrs ago</p>
+            </div>
+            <span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold text-[11px]">In Progress</span>
+          </div>
+          <a href="ticket.php?id=2024" class="inline-block mt-3 text-xs font-semibold text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50">View Details</a>
+        </div>
+      </div>
+
+      <!-- Announcements -->
+      <div>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Announcements</p>
+        <div class="space-y-3">
+          <div class="bg-white p-4 rounded-xl border-l-4 border-amber-400 shadow-xs">
+            <p class="text-xs text-slate-700"><strong>Email server maintenance</strong> today, 2:00 PM – 4:00 PM. You may be briefly signed out of Outlook.</p>
+            <p class="text-[11px] text-slate-400 mt-1">Posted this morning</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border-l-4 border-blue-400 shadow-xs">
+            <p class="text-xs text-slate-700"><strong>Wi-Fi upgrade</strong> at Colombo Head Office this weekend. Expect brief outages on Saturday.</p>
+            <p class="text-[11px] text-slate-400 mt-1">Posted yesterday</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Help -->
+      <div>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Quick Help</p>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100">
+          <details class="group px-4 py-3">
+            <summary class="flex items-center justify-between cursor-pointer list-none">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><i data-lucide="printer" class="w-4 h-4 text-slate-600"></i></div>
+                <span class="text-xs font-semibold text-slate-700">Printer not printing?</span>
+              </div>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
+            </summary>
+            <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
+              Check the printer has paper and isn't showing an error light. Try restarting it from the power switch. Still stuck? Submit a request under "Printer" category.
+            </p>
+          </details>
+
+          <details class="group px-4 py-3">
+            <summary class="flex items-center justify-between cursor-pointer list-none">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><i data-lucide="wifi" class="w-4 h-4 text-blue-500"></i></div>
+                <span class="text-xs font-semibold text-slate-700">Can't connect to Wi-Fi?</span>
+              </div>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
+            </summary>
+            <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
+              Forget the network on your device and reconnect using the password on the noticeboard. If it still fails after two tries, submit a "Network" request.
+            </p>
+          </details>
+
+          <details class="group px-4 py-3">
+            <summary class="flex items-center justify-between cursor-pointer list-none">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center"><i data-lucide="lock" class="w-4 h-4 text-amber-500"></i></div>
+                <span class="text-xs font-semibold text-slate-700">Forgot your password?</span>
+              </div>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
+            </summary>
+            <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
+              Use "Forgot password?" on the sign-in screen to reset it yourself. If you don't receive the reset email within 5 minutes, contact the ICT helpdesk below.
+            </p>
+          </details>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Quick Actions</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <a href="new_request.php" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
+            <div class="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
+            <h4 class="text-xs font-bold text-slate-800">New Request</h4>
+          </a>
+          <a href="dashboard.php#tickets-section" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
+            <div class="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i data-lucide="ticket" class="w-4 h-4"></i></div>
+            <h4 class="text-xs font-bold text-slate-800">My Tickets</h4>
+          </a>
+          <a href="notifications.php" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
+            <div class="w-9 h-9 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i data-lucide="bell" class="w-4 h-4"></i></div>
+            <h4 class="text-xs font-bold text-slate-800">Notifications</h4>
+          </a>
+          <a href="dashboard.php#tickets-section" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
+            <div class="w-9 h-9 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-2"><i data-lucide="history" class="w-4 h-4"></i></div>
+            <h4 class="text-xs font-bold text-slate-800">History</h4>
+          </a>
+        </div>
+      </div>
+
+      <!-- Urgent Banner -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
+        <i data-lucide="phone-call" class="w-4 h-4 text-rose-500"></i>
+        <span>Urgent issue? Call the ICT Helpdesk <strong class="text-slate-700">011 234 5678</strong></span>
+      </div>
+
+      <p class="text-center text-[11px] text-slate-400 pt-2">ICT Assist v1.0 (Web) · ICT Unit</p>
+    </main>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
