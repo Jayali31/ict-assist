@@ -1,1 +1,288 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.replace('profile.php');</script></head><body><p>Redirecting to <a href="profile.php">Profile</a>...</p></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - ICT Assist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    // Forward to dynamic profile.php when running on web server
+    if (window.location.protocol !== 'file:') {
+      window.location.replace('profile.php');
+    }
+  </script>
+</head>
+<body class="bg-slate-100 flex min-h-screen text-slate-800">
+
+  <!-- Left Sidebar -->
+  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0 select-none">
+    <div>
+      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
+        <div id="side-logo" class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md">
+          <i data-lucide="monitor" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-white tracking-tight">ICT Assist</h1>
+          <p id="side-sub" class="text-[11px] text-slate-400">Employee Portal</p>
+        </div>
+      </div>
+      <p id="side-role-label" class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">Employee</p>
+      <nav class="space-y-1 text-xs font-semibold mb-4">
+        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
+        <a href="ticket_status.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
+      </nav>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">General</p>
+      <nav class="space-y-1 text-xs font-semibold">
+        <a href="notifications.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span><span class="ml-auto bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">3</span></a>
+        <a href="profile.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs shadow-xs"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
+      </nav>
+    </div>
+    <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
+      <a href="logout.php" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+    <!-- Top Bar -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 md:px-8 sticky top-0 z-20">
+      <h2 class="text-sm font-bold text-slate-800">Profile</h2>
+      <div class="flex items-center space-x-4">
+        <a href="notifications.php" class="relative text-amber-500 hover:text-amber-600 transition" title="Notifications">
+          <i data-lucide="bell" class="w-5 h-5 fill-amber-400 text-amber-500"></i>
+          <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">3</span>
+        </a>
+        <div class="flex items-center space-x-2 text-slate-700">
+          <div id="top-avatar" class="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shadow-xs">JD</div>
+          <span id="top-name" class="text-xs font-semibold hidden sm:inline">M.M.J.C.Dewmini</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-6 md:p-8 max-w-xl mx-auto w-full space-y-6">
+
+      <!-- Card 1: Top Hero Profile Banner (Exact visual match to image) -->
+      <div id="hero-banner" class="rounded-3xl bg-gradient-to-r from-[#0b1b3d] via-[#0f2d6b] to-[#154fc7] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-blue-900/40">
+        <!-- Large Circular Avatar -->
+        <div id="hero-avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-800/80 border-2 border-white/20 flex items-center justify-center text-white font-extrabold text-2xl sm:text-3xl shrink-0 shadow-lg tracking-wider">
+          JD
+        </div>
+
+        <!-- User Information -->
+        <div class="min-w-0 flex-1">
+          <h2 id="hero-name" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight truncate leading-tight">
+            M.M.J.C.Dewmini
+          </h2>
+          <div class="mt-1.5 flex items-center gap-2 flex-wrap">
+            <span id="hero-role-badge" class="inline-block px-3 py-0.5 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-xs text-white border border-white/10">
+              Employee
+            </span>
+            <span id="hero-status-pill" class="hidden px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/30 text-emerald-200 border border-emerald-400/30">
+              ● Free
+            </span>
+          </div>
+          <p id="hero-dept" class="text-xs text-blue-200 mt-2 font-medium truncate">
+            Ministry of Health · Colombo Main Office
+          </p>
+        </div>
+
+        <!-- Glow Effect -->
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-blue-400/20 rounded-full blur-2xl pointer-events-none"></div>
+      </div>
+
+      <!-- Card 2: Action Menu List (Exact visual match to image) -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 overflow-hidden divide-y divide-slate-100">
+        
+        <!-- 1. My Information -->
+        <button type="button" onclick="toggleSection('sec-info')" class="w-full text-left p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/80 transition cursor-pointer group">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
+              <i data-lucide="user" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-slate-800">My Information</span>
+              <p class="text-[11px] text-slate-400">View and update personal details</p>
+            </div>
+          </div>
+          <span class="text-slate-400 font-bold text-base group-hover:translate-x-0.5 transition">&gt;</span>
+        </button>
+
+        <div id="sec-info" class="hidden bg-slate-50/60 p-5 border-t border-slate-100">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Full Name</label>
+              <input type="text" id="info-fullname" value="M.M.J.C.Dewmini" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Work Email</label>
+              <input type="email" id="info-email" value="a.m.emandi@ictassist.com" disabled class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 text-xs">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Phone Number</label>
+              <input type="text" id="info-phone" value="+94 77 123 4567" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Department</label>
+              <input type="text" id="info-dept" value="Ministry of Health" disabled class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 text-xs">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. My Ticket History -->
+        <a href="ticket_status.php" class="w-full text-left p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/80 transition cursor-pointer group">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
+              <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span id="ticket-menu-title" class="text-sm font-semibold text-slate-800">My Ticket History</span>
+              <p id="ticket-menu-sub" class="text-[11px] text-slate-400">View and track all incident requests</p>
+            </div>
+          </div>
+          <span class="text-slate-400 font-bold text-base group-hover:translate-x-0.5 transition">&gt;</span>
+        </a>
+
+        <!-- 3. Notification Settings -->
+        <button type="button" onclick="toggleSection('sec-notif')" class="w-full text-left p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/80 transition cursor-pointer group">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
+              <i data-lucide="bell" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-slate-800">Notification Settings</span>
+              <p class="text-[11px] text-slate-400">Manage email, SMS, and alert preferences</p>
+            </div>
+          </div>
+          <span class="text-slate-400 font-bold text-base group-hover:translate-x-0.5 transition">&gt;</span>
+        </button>
+
+        <div id="sec-notif" class="hidden bg-slate-50/60 p-5 border-t border-slate-100 text-xs space-y-2">
+          <label class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200">
+            <span>Email notifications</span>
+            <input type="checkbox" checked class="rounded border-slate-300 text-blue-600">
+          </label>
+          <label class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200">
+            <span>SMS notifications</span>
+            <input type="checkbox" class="rounded border-slate-300 text-blue-600">
+          </label>
+          <label class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200">
+            <span>Ticket status changes</span>
+            <input type="checkbox" checked class="rounded border-slate-300 text-blue-600">
+          </label>
+        </div>
+
+        <!-- 4. Change Password -->
+        <button type="button" onclick="toggleSection('sec-pwd')" class="w-full text-left p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/80 transition cursor-pointer group">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
+              <i data-lucide="lock" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-slate-800">Change Password</span>
+              <p class="text-[11px] text-slate-400">Update security credentials for your account</p>
+            </div>
+          </div>
+          <span class="text-slate-400 font-bold text-base group-hover:translate-x-0.5 transition">&gt;</span>
+        </button>
+
+        <div id="sec-pwd" class="hidden bg-slate-50/60 p-5 border-t border-slate-100 space-y-2 text-xs">
+          <input type="password" placeholder="Current Password" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white">
+          <input type="password" placeholder="New Password" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white">
+          <button class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl text-xs">Update Password</button>
+        </div>
+
+        <!-- 5. Sign Out -->
+        <a href="logout.php" class="w-full text-left p-4 sm:p-5 flex items-center justify-between hover:bg-rose-50/50 transition cursor-pointer group">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
+              <i data-lucide="log-out" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="text-sm font-semibold text-rose-600">Sign Out</span>
+              <p class="text-[11px] text-rose-400">Safely terminate your current portal session</p>
+            </div>
+          </div>
+          <span class="text-rose-500 font-bold text-base group-hover:translate-x-0.5 transition">&gt;</span>
+        </a>
+
+      </div>
+
+      <!-- 3 Roles Preview Switcher -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs text-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="font-bold text-slate-700">Preview 3 Roles:</span>
+            <span class="text-slate-400 ml-1">Switch view dynamically to see how profile adapts</span>
+          </div>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button type="button" onclick="switchStaticRole('employee')" class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-lg font-semibold border border-blue-200">👤 Employee</button>
+            <button type="button" onclick="switchStaticRole('coordinator')" class="px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-semibold">📋 Coordinator</button>
+            <button type="button" onclick="switchStaticRole('staff')" class="px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-semibold">🛠️ Staff (Tech)</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const isHidden = el.classList.contains('hidden');
+      ['sec-info', 'sec-notif', 'sec-pwd'].forEach(s => {
+        const other = document.getElementById(s);
+        if (other) other.classList.add('hidden');
+      });
+      if (isHidden) el.classList.remove('hidden');
+    }
+
+    function switchStaticRole(role) {
+      const heroAvatar = document.getElementById('hero-avatar');
+      const topAvatar = document.getElementById('top-avatar');
+      const heroName = document.getElementById('hero-name');
+      const topName = document.getElementById('top-name');
+      const heroBadge = document.getElementById('hero-role-badge');
+      const heroStatus = document.getElementById('hero-status-pill');
+      const heroDept = document.getElementById('hero-dept');
+      const ticketTitle = document.getElementById('ticket-menu-title');
+      const ticketSub = document.getElementById('ticket-menu-sub');
+
+      if (role === 'employee') {
+        heroAvatar.textContent = 'JD';
+        topAvatar.textContent = 'JD';
+        heroName.textContent = 'M.M.J.C.Dewmini';
+        topName.textContent = 'M.M.J.C.Dewmini';
+        heroBadge.textContent = 'Employee';
+        heroStatus.classList.add('hidden');
+        heroDept.textContent = 'Ministry of Health · Colombo Main Office';
+        ticketTitle.textContent = 'My Ticket History';
+        ticketSub.textContent = 'View and track all incident requests';
+      } else if (role === 'coordinator') {
+        heroAvatar.textContent = 'SJ';
+        topAvatar.textContent = 'SJ';
+        heroName.textContent = 'Sarah Jayasinghe';
+        topName.textContent = 'Sarah Jayasinghe';
+        heroBadge.textContent = 'Coordinator';
+        heroStatus.classList.add('hidden');
+        heroDept.textContent = 'ICT Support & Dispatch · Headquarters';
+        ticketTitle.textContent = 'All Tickets & Incident Queue';
+        ticketSub.textContent = 'Manage and dispatch queue incidents';
+      } else if (role === 'staff') {
+        heroAvatar.textContent = 'KR';
+        topAvatar.textContent = 'KR';
+        heroName.textContent = 'K.P. Ratnasiri';
+        topName.textContent = 'K.P. Ratnasiri';
+        heroBadge.textContent = 'Staff (Technician)';
+        heroStatus.classList.remove('hidden');
+        heroDept.textContent = 'Hardware Maintenance · Field Services';
+        ticketTitle.textContent = 'My Assigned Tasks History';
+        ticketSub.textContent = 'View assigned incidents and progress';
+      }
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -68,9 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     q("INSERT INTO ticket_updates(ticket_id, author_id, note) VALUES(?, ?, ?)", 
       [$id, $u['id'], 'Ticket submitted by ' . $u['name']]);
 
+    // Notify coordinators
     foreach (q("SELECT id FROM users WHERE role='coordinator'")->fetchAll() as $c) {
       notify($c['id'], $id, "New ticket #TX-$id", "$title ($pri priority)", $pri === 'High' ? 'warning' : 'info');
     }
+
+    // Notify staff (technicians) like the other roles
+    foreach (q("SELECT id FROM users WHERE role='staff'")->fetchAll() as $s) {
+      notify($s['id'], $id, "New ticket #TX-$id", "$title ($pri priority)", $pri === 'High' ? 'warning' : 'info');
+    }
+
+    // Notify submitting employee
+    notify($u['id'], $id, "Ticket #TX-$id submitted", "Your request '$title' was received by ICT support.", 'info');
 
     $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
            || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)

@@ -18,5 +18,6 @@ if (isset($users[$target])) {
     ];
   }
 }
-header('Location: dashboard.php');
+$from = $_GET['from'] ?? 'dashboard.php';
+header("Location: $from");
 exit;

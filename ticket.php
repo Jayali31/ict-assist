@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     q("UPDATE tickets SET status=?, resolved_at=IF(?='Resolved',NOW(),NULL) WHERE id=?", [$st,$st,$id]);
     q("INSERT INTO ticket_updates(ticket_id,author_id,note,new_status) VALUES(?,?,?,?)", [$id,$u['id'],$note,$st]);
     notify($t['uid'], $id, "Status update on #TX-$id: $st", $note, $st=='Resolved' ? 'success' : 'info');
+    foreach (q("SELECT id FROM users WHERE role='coordinator'")->fetchAll() as $c) {
+      notify($c['id'], $id, "Ticket #TX-$id updated to $st by ".$u['name'], $note, $st=='Resolved' ? 'success' : 'info');
+    }
   }
   header("Location: ticket.php?id=$id"); exit;
 }
