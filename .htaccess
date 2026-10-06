@@ -4,7 +4,8 @@
 
   RewriteRule ^employee-dashboard\.html$ dashboard.php [L,QSA]
   RewriteRule ^new-request\.html$ new_request.php [L,QSA]
-  RewriteRule ^ticket-status\.html$ dashboard.php#tickets-section [R=302,L,NE]
+  RewriteRule ^ticket-status\.html$ ticket_status.php [L,QSA]
+  RewriteRule ^reports\.html$ reports.php [L,QSA]
   RewriteRule ^notifications\.html$ notifications.php [L,QSA]
   RewriteRule ^profile\.html$ profile.php [L,QSA]
   RewriteRule ^coordinator-dashboard\.html$ switch_view.php?role=coordinator [R=302,L,QSA]

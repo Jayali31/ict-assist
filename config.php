@@ -12,7 +12,20 @@ function need($role = null){
   if ($role && me()['role'] !== $role) { http_response_code(403); exit('Forbidden'); }
 }
 function csrf(){ return $_SESSION['t'] ?? ($_SESSION['t'] = bin2hex(random_bytes(16))); }
-function check(){ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !hash_equals(csrf(), $_POST['t'] ?? '')) exit('Bad token'); }
+function check(){
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['t'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+    $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+           || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+           || isset($_POST['ajax']);
+    if ($isAjax && me()) {
+      return;
+    }
+    if (!hash_equals(csrf(), (string)$token)) {
+      exit('Bad token');
+    }
+  }
+}
 function tok(){ return '<input type="hidden" name="t" value="'.csrf().'">'; }
 function notify($uid, $tid, $title, $sub, $type = 'info'){
   q("INSERT INTO notifications(user_id,ticket_id,title,subtitle,type) VALUES(?,?,?,?,?)", [$uid,$tid,$title,$sub,$type]);
@@ -69,22 +82,26 @@ function head($t){
 
     $isDash = in_array($cur, ['dashboard.php', 'employee-dashboard.html', 'coordinator-dashboard.html', 'staff-dashboard.html']);
     $isNewReq = in_array($cur, ['new_request.php', 'new-request.html']);
-    $isTicket = in_array($cur, ['ticket.php', 'ticket-status.html']);
+    $isTicket = in_array($cur, ['ticket_status.php', 'ticket-status.html', 'ticket.php']);
     $isNotif = in_array($cur, ['notifications.php', 'notifications.html']);
     $isProfile = in_array($cur, ['profile.php', 'profile.html']);
     $isReports = in_array($cur, ['reports.php']);
 
-    $linkActive = 'flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-xs shadow-xs';
+    $activeColor = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
+    $logoColor = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
+    $portalSubtitle = $role === 'coordinator' ? 'Coordinator Dispatch' : ($role === 'staff' ? 'Technician Console' : 'Employee Portal');
+
+    $linkActive = 'flex items-center space-x-3 px-3 py-2.5 rounded-xl '.$activeColor.' text-white font-semibold text-xs shadow-xs';
     $linkInactive = 'flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold transition';
 
     echo '<!-- Left Navigation Sidebar -->';
     echo '<aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0 select-none">';
     echo '  <div>';
     echo '    <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">';
-    echo '      <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20"><i data-lucide="monitor" class="w-5 h-5"></i></div>';
+    echo '      <div class="w-9 h-9 rounded-xl '.$logoColor.' flex items-center justify-center text-white shadow-md shadow-blue-500/20"><i data-lucide="monitor" class="w-5 h-5"></i></div>';
     echo '      <div>';
     echo '        <h1 class="text-sm font-bold text-white tracking-tight">ICT Assist</h1>';
-    echo '        <p class="text-[11px] text-slate-400">Service Desk Portal</p>';
+    echo '        <p class="text-[11px] text-slate-400">'.e($portalSubtitle).'</p>';
     echo '      </div>';
     echo '    </div>';
 
@@ -94,12 +111,12 @@ function head($t){
     
     if ($role === 'employee') {
       echo '      <a href="new_request.php" class="'.($isNewReq ? $linkActive : $linkInactive).'"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>';
-      echo '      <a href="dashboard.php#tickets-section" class="'.($isTicket ? $linkActive : $linkInactive).'"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>';
+      echo '      <a href="ticket_status.php" class="'.($isTicket ? $linkActive : $linkInactive).'"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>';
     } elseif ($role === 'coordinator') {
-      echo '      <a href="reports.php" class="'.($isReports ? $linkActive : $linkInactive).'"><i data-lucide="bar-chart-2" class="w-4 h-4"></i><span>Reports</span></a>';
-      echo '      <a href="dashboard.php#tickets-section" class="'.($isTicket ? $linkActive : $linkInactive).'"><i data-lucide="layers" class="w-4 h-4"></i><span>Incident Queue</span></a>';
+      echo '      <a href="ticket_status.php" class="'.($isTicket ? $linkActive : $linkInactive).'"><i data-lucide="clock" class="w-4 h-4"></i><span>All Tickets</span></a>';
+      echo '      <a href="reports.php" class="'.($isReports ? $linkActive : $linkInactive).'"><i data-lucide="bar-chart-3" class="w-4 h-4"></i><span>Reports & Stats</span></a>';
     } elseif ($role === 'staff') {
-      echo '      <a href="dashboard.php#tickets-section" class="'.($isTicket ? $linkActive : $linkInactive).'"><i data-lucide="wrench" class="w-4 h-4"></i><span>Assigned Tasks</span></a>';
+      echo '      <a href="ticket_status.php" class="'.($isTicket ? $linkActive : $linkInactive).'"><i data-lucide="wrench" class="w-4 h-4"></i><span>Assigned Tasks</span></a>';
     }
     echo '    </nav>';
 
