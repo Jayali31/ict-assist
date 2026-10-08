@@ -69,12 +69,49 @@ function head($t){
   echo '<meta charset="UTF-8">';
   echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
   echo '<title>'.e($t).' - ICT Assist</title>';
+  echo '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">';
   echo '<script src="https://cdn.tailwindcss.com"></script>';
   echo '<script src="https://unpkg.com/lucide@latest"></script>';
   echo '<script src="shared.js"></script>';
   echo '<link rel="stylesheet" href="assets/style.css">';
+  echo '<script>';
+  echo 'tailwind.config = { theme: { extend: {';
+  echo '  fontFamily: { sans: [\'"DM Sans"\', \'system-ui\', \'sans-serif\'], display: [\'"Space Grotesk"\', \'sans-serif\'] },';
+  echo '  colors: { neon: \'#1D5BDB\', pink: \'#F59E0B\', lime: \'#059669\' }';
+  echo '} } };';
+  echo '</script>';
+  echo '<style>';
+  echo 'body { background: #F4F6FB; }';
+  echo '.card { background: #fff; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(15,23,42,.06); }';
+  echo '.pulse-dot { animation: pulse 2s ease-in-out infinite; }';
+  echo '@keyframes pulse { 50% { opacity: .35; } }';
+  echo '@media (prefers-reduced-motion: reduce) { .pulse-dot { animation: none; } }';
+  echo '.reveal { opacity: 0; transform: translateY(14px); animation: up .6s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: var(--d, 0s); }';
+  echo '@keyframes up { to { opacity: 1; transform: none; } }';
+  echo '.lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }';
+  echo '.lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(29,91,219,.25); }';
+  echo '.float-a { animation: floaty 5s ease-in-out infinite; }';
+  echo '.float-b { animation: floaty 6.5s ease-in-out infinite reverse; }';
+  echo '@keyframes floaty { 50% { transform: translateY(-8px); } }';
+  echo '.ping-ring { animation: ping 2s cubic-bezier(0,0,.2,1) infinite; }';
+  echo '@keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }';
+  echo '.sec-title { display: flex; align-items: center; gap: .6rem; font-family: \'Space Grotesk\', sans-serif; font-weight: 700; color: #0f172a; font-size: 1rem; margin-bottom: .75rem; }';
+  echo '.sec-title::before { content: \'\'; width: 4px; height: 18px; border-radius: 4px; background: linear-gradient(#1D5BDB, #60A5FA); }';
+  echo '@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; animation: none; } .float-a, .float-b, .ping-ring { animation: none; } .lift:hover { transform: none; } }';
+  echo '.flow { stroke-dasharray: 4 10; animation: flow 1.6s linear infinite; }';
+  echo '@keyframes flow { to { stroke-dashoffset: -28; } }';
+  echo '.orbit { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; animation: orbit var(--t, 28s) linear infinite; }';
+  echo '@keyframes orbit { from { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); } to { transform: rotate(calc(var(--a) + 360deg)) translateX(var(--r)) rotate(calc(-1 * (var(--a) + 360deg))); } }';
+  echo '.spin-slow { transform-origin: 190px 160px; animation: spin 40s linear infinite; }';
+  echo '@keyframes spin { to { transform: rotate(360deg); } }';
+  echo '.chip-link { transition: all .2s ease; }';
+  echo '.chip-link:hover { background: #fff; color: #1D5BDB; transform: translateY(-2px); }';
+  echo '@media (prefers-reduced-motion: reduce) { .flow, .orbit, .spin-slow { animation: none; } .orbit { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); } }';
+  echo 'summary::-webkit-details-marker { display: none; }';
+  echo 'a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid #1D5BDB; outline-offset: 2px; }';
+  echo '</style>';
   echo '</head>';
-  echo '<body class="bg-slate-100 flex min-h-screen text-slate-800">';
+  echo '<body class="font-sans text-slate-700 min-h-screen lg:flex">';
 
   if ($u) {
     $role = $u['role'];
@@ -87,26 +124,25 @@ function head($t){
     $isProfile = in_array($cur, ['profile.php', 'profile.html']);
     $isReports = in_array($cur, ['reports.php']);
 
-    $activeColor = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
-    $logoColor = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
-    $portalSubtitle = $role === 'coordinator' ? 'Coordinator Dispatch' : ($role === 'staff' ? 'Technician Console' : 'Employee Portal');
+    $activeBg = $role === 'coordinator' ? 'bg-purple-600 text-white' : ($role === 'staff' ? 'bg-emerald-600 text-white' : 'bg-neon text-white');
+    $portalSubtitle = $role === 'coordinator' ? 'Coordinator Portal' : ($role === 'staff' ? 'Technician Portal' : 'Service Desk Portal');
 
-    $linkActive = 'flex items-center space-x-3 px-3 py-2.5 rounded-xl '.$activeColor.' text-white font-semibold text-xs shadow-xs';
-    $linkInactive = 'flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-xs font-semibold transition';
+    $linkActive = 'flex items-center gap-3 px-3 py-2.5 rounded-xl '.$activeBg.' font-medium text-sm shadow-xs';
+    $linkInactive = 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 font-medium text-sm transition';
 
     echo '<!-- Left Navigation Sidebar -->';
-    echo '<aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0 select-none">';
+    echo '<aside id="sidebar" class="hidden lg:flex fixed lg:sticky top-0 z-40 h-screen w-64 bg-[#0B1530] border-r border-white/10 flex-col justify-between p-4 shrink-0 overflow-y-auto select-none">';
     echo '  <div>';
-    echo '    <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">';
-    echo '      <div class="w-9 h-9 rounded-xl '.$logoColor.' flex items-center justify-center text-white shadow-md shadow-blue-500/20"><i data-lucide="monitor" class="w-5 h-5"></i></div>';
+    echo '    <div class="p-3 flex items-center gap-3 mb-6">';
+    echo '      <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>';
     echo '      <div>';
-    echo '        <h1 class="text-sm font-bold text-white tracking-tight">ICT Assist</h1>';
-    echo '        <p class="text-[11px] text-slate-400">'.e($portalSubtitle).'</p>';
+    echo '        <h1 class="font-display text-lg font-bold text-white leading-tight">ICT Assist</h1>';
+    echo '        <p class="text-xs text-slate-400">'.e($portalSubtitle).'</p>';
     echo '      </div>';
     echo '    </div>';
 
-    echo '    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">'.e($roleDisplay).'</p>';
-    echo '    <nav class="space-y-1 text-xs font-semibold mb-4">';
+    echo '    <p class="text-xs font-bold text-slate-400 px-3 mb-2">'.e($roleDisplay).'</p>';
+    echo '    <nav class="space-y-1 text-sm font-medium mb-6">';
     echo '      <a href="dashboard.php" class="'.($isDash ? $linkActive : $linkInactive).'"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>';
     
     if ($role === 'employee') {
@@ -120,59 +156,65 @@ function head($t){
     }
     echo '    </nav>';
 
-    echo '    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">General</p>';
-    echo '    <nav class="space-y-1 text-xs font-semibold">';
-    echo '      <a href="notifications.php" class="'.($isNotif ? $linkActive : $linkInactive).'"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span>'.($n ? '<span class="ml-auto bg-rose-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">'.$n.'</span>' : '').'</a>';
+    echo '    <p class="text-xs font-bold text-slate-400 px-3 mb-2">General</p>';
+    echo '    <nav class="space-y-1 text-sm font-medium">';
+    echo '      <a href="notifications.php" class="'.($isNotif ? $linkActive : $linkInactive).'"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span>'.($n ? '<span class="ml-auto bg-red-600 text-white text-[11px] font-bold rounded-full px-1.5">'.$n.'</span>' : '').'</a>';
     echo '      <a href="profile.php" class="'.($isProfile ? $linkActive : $linkInactive).'"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>';
     echo '    </nav>';
     echo '  </div>';
 
     echo '  <!-- Bottom Switcher -->';
-    echo '  <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">';
-    echo '    <p class="text-[11px] text-slate-500">Switch View:</p>';
-    echo '    <div class="grid grid-cols-2 gap-1">';
+    echo '  <div class="space-y-2 pt-4 border-t border-white/10 text-sm">';
+    echo '    <p class="text-xs text-slate-400">Switch view</p>';
+    echo '    <div class="grid grid-cols-2 gap-2">';
     if ($role === 'employee') {
-      echo '      <a href="switch_view.php?role=coordinator" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Coordinator</a>';
-      echo '      <a href="switch_view.php?role=staff" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Staff</a>';
+      echo '      <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-neon text-white text-xs font-medium transition">Coordinator</a>';
+      echo '      <a href="switch_view.php?role=staff" class="py-2 bg-white/10 text-center rounded-lg hover:bg-neon text-white text-xs font-medium transition">Staff</a>';
     } elseif ($role === 'coordinator') {
-      echo '      <a href="switch_view.php?role=employee" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Employee</a>';
-      echo '      <a href="switch_view.php?role=staff" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Staff</a>';
+      echo '      <a href="switch_view.php?role=employee" class="py-2 bg-white/10 text-center rounded-lg hover:bg-purple-600 text-white text-xs font-medium transition">Employee</a>';
+      echo '      <a href="switch_view.php?role=staff" class="py-2 bg-white/10 text-center rounded-lg hover:bg-purple-600 text-white text-xs font-medium transition">Staff</a>';
     } else {
-      echo '      <a href="switch_view.php?role=employee" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Employee</a>';
-      echo '      <a href="switch_view.php?role=coordinator" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Coordinator</a>';
+      echo '      <a href="switch_view.php?role=employee" class="py-2 bg-white/10 text-center rounded-lg hover:bg-emerald-600 text-white text-xs font-medium transition">Employee</a>';
+      echo '      <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-emerald-600 text-white text-xs font-medium transition">Coordinator</a>';
     }
     echo '    </div>';
-    echo '    <a href="logout.php" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium">Sign Out</a>';
+    echo '    <a href="logout.php" class="flex items-center justify-center gap-2 p-2 text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium"><i data-lucide="log-out" class="w-4 h-4"></i>Sign Out</a>';
     echo '  </div>';
     echo '</aside>';
 
     echo '<!-- Main Layout Container -->';
-    echo '<div class="flex-1 flex flex-col min-w-0 min-h-screen">';
+    echo '<div class="flex-1 flex flex-col min-w-0">';
     echo '  <!-- Top Header Bar -->';
-    echo '  <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 md:px-8 sticky top-0 z-20">';
-    echo '    <h2 class="text-sm font-bold text-slate-800">'.e($t).'</h2>';
-    echo '    <div class="flex items-center space-x-4">';
-    echo '      <a href="notifications.php" class="relative text-slate-400 hover:text-slate-600 transition" title="Notifications">';
+    echo '  <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30">';
+    echo '    <div class="flex items-center gap-3">';
+    echo '      <button id="menuBtn" class="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100" aria-label="Open menu"><i data-lucide="menu" class="w-5 h-5"></i></button>';
+    echo '      <h2 class="font-display text-base font-bold text-slate-900">'.e($t).'</h2>';
+    echo '    </div>';
+    echo '    <div class="flex items-center gap-4">';
+    echo '      <span class="hidden sm:flex items-center gap-2 text-xs text-slate-400"><span class="pulse-dot w-2 h-2 rounded-full bg-emerald-500"></span>All systems running</span>';
+    echo '      <a href="notifications.php" class="relative text-amber-500 hover:text-amber-600 transition" aria-label="Notifications">';
     echo '        <i data-lucide="bell" class="w-5 h-5"></i>';
     if ($n > 0) {
-      echo '        <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">'.$n.'</span>';
+      echo '        <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">'.$n.'</span>';
     }
     echo '      </a>';
-    echo '      <a href="profile.php" class="flex items-center space-x-2 text-slate-700 hover:text-blue-600 transition">';
-    echo '        <div class="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shadow-xs">'.e($initials).'</div>';
-    echo '        <span class="text-xs font-semibold hidden sm:inline">'.e($u['name']).'</span>';
-    echo '      </a>';
+    echo '      <a href="profile.php" class="w-9 h-9 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center transition" aria-label="Profile">'.e($initials).'</a>';
     echo '    </div>';
     echo '  </header>';
   }
 
-  echo '  <main class="flex-1 p-6 md:p-8 max-w-5xl mx-auto w-full space-y-6">';
+  echo '  <main class="flex-1 p-4 sm:p-8 max-w-6xl mx-auto w-full space-y-6">';
 }
 
 function foot(){
   echo '  </main>';
   echo '</div>';
-  echo '<script>if(window.lucide) lucide.createIcons();</script>';
+  echo '<script>';
+  echo 'if(window.lucide) lucide.createIcons();';
+  echo 'const sb = document.getElementById("sidebar");';
+  echo 'const mb = document.getElementById("menuBtn");';
+  echo 'if (mb && sb) { mb.addEventListener("click", () => sb.classList.toggle("hidden")); }';
+  echo '</script>';
   echo '</body></html>';
 }
 

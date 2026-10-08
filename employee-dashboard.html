@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Employee Dashboard - ICT Assist</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="shared.js"></script>
@@ -11,178 +13,310 @@
     if (window.location.protocol !== 'file:') {
       window.location.replace('dashboard.php');
     }
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['"DM Sans"', 'system-ui', 'sans-serif'], display: ['"Space Grotesk"', 'sans-serif'] },
+      colors: { neon: '#1D5BDB', pink: '#F59E0B', lime: '#059669' }
+    } } };
   </script>
+  <style>
+    body { background: #F4F6FB; }
+    .card { background: #fff; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(15,23,42,.06); }
+    .pulse-dot { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
+    @media (prefers-reduced-motion: reduce) { .pulse-dot { animation: none; } }
+    .reveal { opacity: 0; transform: translateY(14px); animation: up .6s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: var(--d, 0s); }
+    @keyframes up { to { opacity: 1; transform: none; } }
+    .lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(29,91,219,.25); }
+    .float-a { animation: floaty 5s ease-in-out infinite; }
+    .float-b { animation: floaty 6.5s ease-in-out infinite reverse; }
+    @keyframes floaty { 50% { transform: translateY(-8px); } }
+    .ping-ring { animation: ping 2s cubic-bezier(0,0,.2,1) infinite; }
+    @keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }
+    .sec-title { display: flex; align-items: center; gap: .6rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #0f172a; font-size: 1rem; margin-bottom: .75rem; }
+    .sec-title::before { content: ''; width: 4px; height: 18px; border-radius: 4px; background: linear-gradient(#1D5BDB, #60A5FA); }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; animation: none; } .float-a, .float-b, .ping-ring { animation: none; } .lift:hover { transform: none; } }
+    .flow { stroke-dasharray: 4 10; animation: flow 1.6s linear infinite; }
+    @keyframes flow { to { stroke-dashoffset: -28; } }
+    .orbit { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; animation: orbit var(--t, 28s) linear infinite; }
+    @keyframes orbit {
+      from { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); }
+      to   { transform: rotate(calc(var(--a) + 360deg)) translateX(var(--r)) rotate(calc(-1 * (var(--a) + 360deg))); }
+    }
+    .spin-slow { transform-origin: 190px 160px; animation: spin 40s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .chip-link { transition: all .2s ease; }
+    .chip-link:hover { background: #fff; color: #1D5BDB; transform: translateY(-2px); }
+    @media (prefers-reduced-motion: reduce) { .flow, .orbit, .spin-slow { animation: none; } .orbit { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); } }
+    summary::-webkit-details-marker { display: none; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid #1D5BDB; outline-offset: 2px; }
+  </style>
 </head>
-<body class="bg-slate-100 flex min-h-screen">
+<body class="font-sans text-slate-700 min-h-screen lg:flex">
+
   <!-- Left Navigation Sidebar -->
-  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0">
+  <aside id="sidebar" class="hidden lg:flex fixed lg:sticky top-0 z-40 h-screen w-64 bg-[#0B1530] border-r border-white/10 flex-col justify-between p-4 shrink-0 overflow-y-auto">
     <div>
-      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
+      <div class="p-3 flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
         <div>
-          <h1 class="text-sm font-bold text-white">ICT Assist</h1>
-          <p class="text-[11px] text-slate-400">Service Desk Portal</p>
+          <h1 class="font-display text-lg font-bold text-white leading-tight">ICT Assist</h1>
+          <p class="text-xs text-slate-400">Service Desk Portal</p>
         </div>
       </div>
-      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">Employee</p>
-      <nav class="space-y-1 text-xs font-semibold mb-4">
-        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
-        <a href="new_request.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
-        <a href="dashboard.php#tickets-section" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
+      <p class="text-xs font-bold text-slate-400 px-3 mb-2">Employee</p>
+      <nav class="space-y-1 text-sm font-medium mb-6">
+        <a href="dashboard.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-neon text-white"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
+        <a href="new_request.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
+        <a href="dashboard.php#tickets-section" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
       </nav>
-      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1">General</p>
-      <nav class="space-y-1 text-xs font-semibold">
-        <a href="notifications.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span></a>
-        <a href="profile.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
+      <p class="text-xs font-bold text-slate-400 px-3 mb-2">General</p>
+      <nav class="space-y-1 text-sm font-medium">
+        <a href="notifications.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span><span class="ml-auto bg-red-600 text-white text-[11px] font-bold rounded-full px-1.5">4</span></a>
+        <a href="profile.php" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
       </nav>
     </div>
 
     <!-- Bottom Switcher -->
-    <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
-      <p class="text-[11px] text-slate-500">Switch View:</p>
-      <div class="grid grid-cols-2 gap-1">
-        <a href="switch_view.php?role=coordinator" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Coordinator</a>
-        <a href="switch_view.php?role=staff" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Staff</a>
+    <div class="space-y-2 pt-4 border-t border-white/10 text-sm">
+      <a href="profile.php" class="flex items-center gap-3 p-3 mb-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition">
+        <span class="w-10 h-10 rounded-full bg-neon text-white text-xs font-bold flex items-center justify-center">AD</span>
+        <span class="leading-tight min-w-0"><span class="block text-sm font-bold text-white truncate">A.M.De silva</span><span class="block text-xs text-slate-400">Employee</span></span>
+      </a>
+      <p class="text-xs text-slate-400">Switch view</p>
+      <div class="grid grid-cols-2 gap-2">
+        <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-neon text-white text-xs font-medium transition">Coordinator</a>
+        <a href="switch_view.php?role=staff" class="py-2 bg-white/10 text-center rounded-lg hover:bg-neon text-white text-xs font-medium transition">Staff</a>
       </div>
-      <a href="logout.php" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium">Sign Out</a>
+      <a href="logout.php" class="flex items-center justify-center gap-2 p-2 text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium"><i data-lucide="log-out" class="w-4 h-4"></i>Sign Out</a>
     </div>
   </aside>
 
   <!-- Main Content -->
   <div class="flex-1 flex flex-col min-w-0">
     <!-- Top Header Bar -->
-    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
-      <h2 class="text-sm font-bold text-slate-800">Dashboard</h2>
-      <div class="flex items-center space-x-4">
-        <a href="notifications.php" class="relative text-slate-400 hover:text-slate-600">
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30">
+      <div class="flex items-center gap-3">
+        <button id="menuBtn" class="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100" aria-label="Open menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+        <h2 class="font-display text-base font-bold text-slate-900">Dashboard</h2>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="hidden sm:flex items-center gap-2 text-xs text-slate-400"><span class="pulse-dot w-2 h-2 rounded-full bg-emerald-500"></span>All systems running</span>
+        <a href="notifications.php" class="relative text-amber-500 hover:text-amber-600" aria-label="Notifications">
           <i data-lucide="bell" class="w-5 h-5"></i>
-          <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">4</span>
+          <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">4</span>
         </a>
-        <a href="profile.php" class="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">AD</a>
+        <a href="profile.php" class="w-9 h-9 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center" aria-label="Profile">AD</a>
       </div>
     </header>
 
-    <main class="flex-1 p-8 max-w-5xl mx-auto w-full space-y-6">
+    <main class="flex-1 p-4 sm:p-8 max-w-6xl mx-auto w-full space-y-6">
+
       <!-- Hero Banner -->
-      <div class="rounded-3xl bg-[#0f1e4d] text-white p-8 shadow-xl flex justify-between items-center">
-        <div>
-          <span class="text-xs text-blue-300 font-semibold">Good morning,</span>
-          <h2 class="text-2xl font-extrabold mt-1">A.M.De silva</h2>
-          <p class="text-xs text-blue-200 mt-1">4 open · 2 in progress · 11 resolved</p>
-        </div>
-        <a href="new_request.php" class="bg-white hover:bg-slate-100 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition flex items-center space-x-1.5">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i><span>Submit New Request</span>
-        </a>
-      </div>
+      <section class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#05080F] via-[#0B1A45] to-[#1F5AE6] shadow-lg p-6 sm:p-10 min-h-[380px] flex items-center">
+        <!-- Background photo: fades in from the right (replace the URL with your own image if you like) -->
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=70" alt="" class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-40 mix-blend-screen" style="-webkit-mask-image:linear-gradient(to right,transparent,#000 60%);mask-image:linear-gradient(to right,transparent,#000 60%)" onerror="this.remove()">
+        <div class="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-blue-400/30 blur-3xl"></div>
 
-      <!-- Most Recent Ticket -->
-      <div>
-        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Your Most Recent Ticket</p>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-xs font-bold text-blue-600">#TK-2024</span>
-              <h3 class="text-sm font-bold text-slate-800 mt-1">Printer not working</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Finance Dept · Submitted 2 hrs ago</p>
+        <div class="relative max-w-xl z-10">
+          <span class="inline-flex items-center gap-2 text-xs font-medium text-blue-100 bg-white/10 border border-white/20 rounded-full px-3 py-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>ICT Helpdesk is online</span>
+          <span id="today" class="hidden sm:inline-flex ml-2 text-xs text-blue-200"></span>
+          <p id="greeting" class="text-sm font-medium text-slate-200 mt-4">Good morning,</p>
+          <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mt-1">A.M.De silva</h2>
+          <p class="text-slate-200 mt-3">Tech trouble? Send a request and track it right here.</p>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <a href="new_request.php" class="inline-flex items-center gap-2 bg-white text-neon font-bold text-sm px-6 py-3.5 rounded-xl shadow-md hover:bg-slate-100 transition"><i data-lucide="plus" class="w-4 h-4"></i>Submit New Request</a>
+            <a href="dashboard.php#tickets-section" class="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-medium text-sm px-6 py-3.5 rounded-xl hover:bg-white/20 transition">My tickets</a>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 mt-6">
+            <span class="text-xs text-blue-200 mr-1">Common issues:</span>
+            <a href="new_request.php" class="chip-link inline-flex items-center gap-1.5 text-xs font-medium text-white bg-white/10 border border-white/20 rounded-full px-3 py-1.5"><i data-lucide="printer" class="w-3.5 h-3.5"></i>Printer</a>
+            <a href="new_request.php" class="chip-link inline-flex items-center gap-1.5 text-xs font-medium text-white bg-white/10 border border-white/20 rounded-full px-3 py-1.5"><i data-lucide="wifi" class="w-3.5 h-3.5"></i>Wi-Fi</a>
+            <a href="new_request.php" class="chip-link inline-flex items-center gap-1.5 text-xs font-medium text-white bg-white/10 border border-white/20 rounded-full px-3 py-1.5"><i data-lucide="lock" class="w-3.5 h-3.5"></i>Password</a>
+            <a href="new_request.php" class="chip-link inline-flex items-center gap-1.5 text-xs font-medium text-white bg-white/10 border border-white/20 rounded-full px-3 py-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i>Email</a>
+          </div>
+        </div>
+
+        <!-- Creative visual: helpdesk chip with orbiting service icons -->
+        <div class="hidden lg:block absolute right-4 top-1/2 -translate-y-1/2 w-[380px] h-[320px]" aria-hidden="true">
+          <svg viewBox="0 0 380 320" class="w-full h-full" fill="none">
+            <defs>
+              <linearGradient id="chip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient>
+              <radialGradient id="aura"><stop offset="0" stop-color="#60A5FA" stop-opacity=".55"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></radialGradient>
+              <filter id="gl"><feGaussianBlur stdDeviation="6"/></filter>
+            </defs>
+            <circle cx="190" cy="160" r="150" fill="url(#aura)"/>
+            <circle class="spin-slow" cx="190" cy="160" r="112" stroke="#93C5FD" stroke-opacity=".45" stroke-width="1.5" stroke-dasharray="3 9"/>
+            <circle cx="190" cy="160" r="72" stroke="#93C5FD" stroke-opacity=".3" stroke-width="1"/>
+            <g transform="translate(20,20)" stroke="#60A5FA" stroke-opacity=".8" stroke-width="2" stroke-linecap="round">
+              <path class="flow" d="M0 70h70l20 20h40M0 140h60l15-15h55M0 210h80l20-20h30M340 60h-80l-20 20h-40M340 150h-70l-15-15h-45M340 220h-90l-20-20h-30"/>
+              <path class="flow" d="M150 0v60M190 0v40l-20 20M150 280v-60M190 280v-45l-15-15"/>
+            </g>
+            <g transform="translate(20,20)">
+              <rect x="105" y="85" width="130" height="110" rx="22" fill="#3B82F6" opacity=".55" filter="url(#gl)"/>
+              <rect x="105" y="85" width="130" height="110" rx="22" fill="url(#chip)" stroke="#BFDBFE" stroke-opacity=".6" stroke-width="2"/>
+              <rect x="125" y="105" width="90" height="70" rx="12" fill="#0B1A45" opacity=".55"/>
+              <path d="M148 140l16 16 30-34" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </svg>
+          <!-- orbiting service icons -->
+          <div class="orbit" style="--a:-90deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white flex items-center justify-center shadow-lg"><i data-lucide="headphones" class="w-[18px] h-[18px]"></i></span></div>
+          <div class="orbit" style="--a:-18deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-sky-200 flex items-center justify-center shadow-lg"><i data-lucide="wifi" class="w-[18px] h-[18px]"></i></span></div>
+          <div class="orbit" style="--a:54deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white flex items-center justify-center shadow-lg"><i data-lucide="printer" class="w-[18px] h-[18px]"></i></span></div>
+          <div class="orbit" style="--a:126deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-amber-300 flex items-center justify-center shadow-lg"><i data-lucide="lock" class="w-[18px] h-[18px]"></i></span></div>
+          <div class="orbit" style="--a:198deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-emerald-300 flex items-center justify-center shadow-lg"><i data-lucide="mail" class="w-[18px] h-[18px]"></i></span></div>
+          <!-- floating status cards -->
+          <div class="float-a absolute top-0 right-0 bg-white/10 backdrop-blur border border-white/25 rounded-xl px-3 py-2 text-white text-xs shadow-lg">
+            <p class="font-semibold flex items-center gap-1.5"><i data-lucide="printer" class="w-3.5 h-3.5"></i>#TK-2024</p><p class="text-blue-100">In progress</p>
+          </div>
+          <div class="float-b absolute -bottom-2 -left-6 bg-white/10 backdrop-blur border border-white/25 rounded-xl px-3 py-2 text-white text-xs shadow-lg">
+            <p class="font-semibold flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-300"></i>11 resolved</p><p class="text-blue-100">Fast support</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats -->
+      <section class="grid grid-cols-3 gap-4">
+        <div class="reveal lift card rounded-2xl p-5" style="--d:0.1s">
+          <div class="flex items-center justify-between">
+            <span class="w-11 h-11 rounded-xl bg-blue-50 text-neon flex items-center justify-center"><i data-lucide="inbox" class="w-5 h-5"></i></span>
+            <span class="font-display text-4xl font-bold text-slate-900">4</span>
+          </div>
+          <p class="text-sm font-medium text-slate-600 mt-3">Open</p>
+          <div class="h-1.5 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-neon" style="width:24%"></div></div>
+        </div>
+        <div class="reveal lift card rounded-2xl p-5" style="--d:0.2s">
+          <div class="flex items-center justify-between">
+            <span class="w-11 h-11 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center"><i data-lucide="loader" class="w-5 h-5"></i></span>
+            <span class="font-display text-4xl font-bold text-slate-900">2</span>
+          </div>
+          <p class="text-sm font-medium text-slate-600 mt-3">In progress</p>
+          <div class="h-1.5 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-amber-400" style="width:12%"></div></div>
+        </div>
+        <div class="reveal lift card rounded-2xl p-5" style="--d:0.3s">
+          <div class="flex items-center justify-between">
+            <span class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i data-lucide="check-circle-2" class="w-5 h-5"></i></span>
+            <span class="font-display text-4xl font-bold text-slate-900">11</span>
+          </div>
+          <p class="text-sm font-medium text-slate-600 mt-3">Resolved</p>
+          <div class="h-1.5 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-emerald-500" style="width:65%"></div></div>
+        </div>
+      </section>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Most Recent Ticket -->
+          <section id="tickets-section" class="reveal lift card rounded-3xl p-6" style="--d:.4s">
+            <div class="flex justify-between items-start gap-4">
+              <div class="flex gap-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-neon flex items-center justify-center shrink-0"><i data-lucide="printer" class="w-6 h-6"></i></div>
+                <div>
+                  <p class="text-xs font-bold text-neon">#TK-2024 · Your most recent ticket</p>
+                  <h3 class="text-lg font-bold text-slate-900">Printer not working</h3>
+                  <p class="text-sm text-slate-500">Finance Dept · Submitted 2 hrs ago</p>
+                </div>
+              </div>
+              <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold text-xs whitespace-nowrap">In Progress</span>
             </div>
-            <span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-semibold text-[11px]">In Progress</span>
-          </div>
-          <a href="ticket.php?id=2024" class="inline-block mt-3 text-xs font-semibold text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50">View Details</a>
-        </div>
-      </div>
+            <ol class="relative grid grid-cols-4 mt-7 text-center text-xs font-medium">
+              <div class="absolute top-4 left-[12.5%] right-[12.5%] h-0.5 bg-slate-200"><div class="h-full bg-gradient-to-r from-neon to-amber-400" style="width:66%"></div></div>
+              <li class="relative"><span class="mx-auto w-8 h-8 rounded-full bg-neon text-white flex items-center justify-center ring-4 ring-white"><i data-lucide="check" class="w-4 h-4"></i></span><span class="block mt-2 text-neon">Submitted</span></li>
+              <li class="relative"><span class="mx-auto w-8 h-8 rounded-full bg-neon text-white flex items-center justify-center ring-4 ring-white"><i data-lucide="user-check" class="w-4 h-4"></i></span><span class="block mt-2 text-neon">Assigned</span></li>
+              <li class="relative"><span class="mx-auto w-8 h-8 rounded-full bg-amber-400 text-white flex items-center justify-center ring-4 ring-white"><span class="ping-ring absolute inset-0 rounded-full bg-amber-400/60"></span><i data-lucide="wrench" class="relative w-4 h-4"></i></span><span class="block mt-2 text-amber-600">In progress</span></li>
+              <li class="relative"><span class="mx-auto w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center ring-4 ring-white"><i data-lucide="flag" class="w-4 h-4"></i></span><span class="block mt-2 text-slate-500">Resolved</span></li>
+            </ol>
+            <a href="ticket.php?id=2024" class="inline-flex items-center gap-2 mt-5 text-sm font-bold text-neon border border-neon hover:bg-blue-50 px-4 py-2 rounded-lg transition">View Details<i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+          </section>
 
-      <!-- Announcements -->
-      <div>
-        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Announcements</p>
-        <div class="space-y-3">
-          <div class="bg-white p-4 rounded-xl border-l-4 border-amber-400 shadow-xs">
-            <p class="text-xs text-slate-700"><strong>Email server maintenance</strong> today, 2:00 PM – 4:00 PM. You may be briefly signed out of Outlook.</p>
-            <p class="text-[11px] text-slate-400 mt-1">Posted this morning</p>
-          </div>
-          <div class="bg-white p-4 rounded-xl border-l-4 border-blue-400 shadow-xs">
-            <p class="text-xs text-slate-700"><strong>Wi-Fi upgrade</strong> at Colombo Head Office this weekend. Expect brief outages on Saturday.</p>
-            <p class="text-[11px] text-slate-400 mt-1">Posted yesterday</p>
-          </div>
-        </div>
-      </div>
+          <!-- Quick Actions -->
+          <section>
+            <h3 class="sec-title">Quick actions</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <a href="new_request.php" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.5s">
+                <span class="mx-auto w-12 h-12 rounded-2xl bg-blue-50 text-neon flex items-center justify-center transition group-hover:scale-110"><i data-lucide="plus" class="w-6 h-6"></i></span>
+                <p class="text-sm font-bold text-slate-900 mt-3">New Request</p><p class="text-xs text-slate-500">Report a problem</p></a>
+              <a href="dashboard.php#tickets-section" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.6s">
+                <span class="mx-auto w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="ticket" class="w-6 h-6"></i></span>
+                <p class="text-sm font-bold text-slate-900 mt-3">My Tickets</p><p class="text-xs text-slate-500">Track progress</p></a>
+              <a href="notifications.php" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.7s">
+                <span class="mx-auto w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="bell" class="w-6 h-6"></i></span>
+                <p class="text-sm font-bold text-slate-900 mt-3">Notifications</p><p class="text-xs text-slate-500">See updates</p></a>
+              <a href="dashboard.php#tickets-section" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.8s">
+                <span class="mx-auto w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="history" class="w-6 h-6"></i></span>
+                <p class="text-sm font-bold text-slate-900 mt-3">History</p><p class="text-xs text-slate-500">Past requests</p></a>
+            </div>
+          </section>
 
-      <!-- Quick Help -->
-      <div>
-        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Quick Help</p>
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100">
-          <details class="group px-4 py-3">
-            <summary class="flex items-center justify-between cursor-pointer list-none">
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><i data-lucide="printer" class="w-4 h-4 text-slate-600"></i></div>
-                <span class="text-xs font-semibold text-slate-700">Printer not printing?</span>
+          <!-- Quick Help -->
+          <section>
+            <h3 class="sec-title">Quick help</h3>
+            <div class="card rounded-2xl divide-y divide-slate-100">
+              <details class="group px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer list-none">
+                  <span class="flex items-center gap-3 text-sm font-bold text-slate-900"><span class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center"><i data-lucide="printer" class="w-4 h-4 text-neon"></i></span>Printer not printing?</span>
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+                </summary>
+                <p class="text-sm text-slate-500 mt-3 pl-12 leading-relaxed">Check the printer has paper and isn't showing an error light. Try restarting it from the power switch. Still stuck? Submit a request under "Printer" category.</p>
+              </details>
+              <details class="group px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer list-none">
+                  <span class="flex items-center gap-3 text-sm font-bold text-slate-900"><span class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center"><i data-lucide="wifi" class="w-4 h-4 text-pink"></i></span>Can't connect to Wi-Fi?</span>
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+                </summary>
+                <p class="text-sm text-slate-500 mt-3 pl-12 leading-relaxed">Forget the network on your device and reconnect using the password on the noticeboard. If it still fails after two tries, submit a "Network" request.</p>
+              </details>
+              <details class="group px-5 py-4">
+                <summary class="flex items-center justify-between cursor-pointer list-none">
+                  <span class="flex items-center gap-3 text-sm font-bold text-slate-900"><span class="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center"><i data-lucide="lock" class="w-4 h-4 text-lime"></i></span>Forgot your password?</span>
+                  <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform group-open:rotate-180"></i>
+                </summary>
+                <p class="text-sm text-slate-500 mt-3 pl-12 leading-relaxed">Use "Forgot password?" on the sign-in screen to reset it yourself. If you don't receive the reset email within 5 minutes, contact the ICT helpdesk below.</p>
+              </details>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right column -->
+        <aside class="space-y-6">
+          <section>
+            <h3 class="sec-title">Announcements</h3>
+            <div class="space-y-3">
+              <div class="reveal lift card rounded-2xl p-4 flex gap-3 border-l-2 border-l-amber-400" style="--d:.5s">
+                <i data-lucide="mail" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+                <div><p class="text-sm text-slate-600"><span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-1.5 py-0.5 rounded mr-1 align-middle">TODAY</span><strong class="text-slate-900">Email server maintenance</strong> today, 2:00 PM – 4:00 PM. You may be briefly signed out of Outlook.</p><p class="text-xs text-slate-500 mt-1">Posted this morning</p></div>
               </div>
-              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
-            </summary>
-            <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
-              Check the printer has paper and isn't showing an error light. Try restarting it from the power switch. Still stuck? Submit a request under "Printer" category.
-            </p>
-          </details>
-
-          <details class="group px-4 py-3">
-            <summary class="flex items-center justify-between cursor-pointer list-none">
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><i data-lucide="wifi" class="w-4 h-4 text-blue-500"></i></div>
-                <span class="text-xs font-semibold text-slate-700">Can't connect to Wi-Fi?</span>
+              <div class="reveal lift card rounded-2xl p-4 flex gap-3 border-l-2 border-l-neon" style="--d:.6s">
+                <i data-lucide="wifi" class="w-5 h-5 text-neon shrink-0 mt-0.5"></i>
+                <div><p class="text-sm text-slate-600"><strong class="text-slate-900">Wi-Fi upgrade</strong> at Colombo Head Office this weekend. Expect brief outages on Saturday.</p><p class="text-xs text-slate-500 mt-1">Posted yesterday</p></div>
               </div>
-              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
-            </summary>
-            <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
-              Forget the network on your device and reconnect using the password on the noticeboard. If it still fails after two tries, submit a "Network" request.
-            </p>
-          </details>
+            </div>
+          </section>
 
-          <details class="group px-4 py-3">
-            <summary class="flex items-center justify-between cursor-pointer list-none">
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center"><i data-lucide="lock" class="w-4 h-4 text-amber-500"></i></div>
-                <span class="text-xs font-semibold text-slate-700">Forgot your password?</span>
-              </div>
-              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-300 transition-transform group-open:rotate-180"></i>
-            </summary>
-            <p class="text-xs text-slate-500 mt-3 pl-11 leading-relaxed">
-              Use "Forgot password?" on the sign-in screen to reset it yourself. If you don't receive the reset email within 5 minutes, contact the ICT helpdesk below.
-            </p>
-          </details>
-        </div>
+          <!-- Urgent Banner -->
+          <section class="reveal relative overflow-hidden rounded-3xl p-6 text-center bg-gradient-to-br from-[#0B1530] to-[#1F5AE6] text-white shadow-lg" style="--d:.7s">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-blue-400/30 blur-2xl"></div>
+            <div class="relative w-14 h-14 mx-auto mb-3">
+              <span class="ping-ring absolute inset-0 rounded-full bg-rose-400/60"></span>
+              <span class="relative w-14 h-14 rounded-full bg-rose-500 text-white flex items-center justify-center"><i data-lucide="phone-call" class="w-6 h-6"></i></span>
+            </div>
+            <p class="relative text-sm text-blue-100">Urgent issue? Call the ICT Helpdesk</p>
+            <a href="tel:0112345678" class="relative inline-block font-display text-2xl font-bold text-white hover:text-amber-300 transition mt-1">011 234 5678</a>
+          </section>
+        </aside>
       </div>
 
-      <!-- Quick Actions -->
-      <div>
-        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Quick Actions</p>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <a href="new_request.php" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
-            <div class="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2"><i data-lucide="plus" class="w-4 h-4"></i></div>
-            <h4 class="text-xs font-bold text-slate-800">New Request</h4>
-          </a>
-          <a href="dashboard.php#tickets-section" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
-            <div class="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i data-lucide="ticket" class="w-4 h-4"></i></div>
-            <h4 class="text-xs font-bold text-slate-800">My Tickets</h4>
-          </a>
-          <a href="notifications.php" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
-            <div class="w-9 h-9 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i data-lucide="bell" class="w-4 h-4"></i></div>
-            <h4 class="text-xs font-bold text-slate-800">Notifications</h4>
-          </a>
-          <a href="dashboard.php#tickets-section" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 shadow-xs flex flex-col items-center text-center transition">
-            <div class="w-9 h-9 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-2"><i data-lucide="history" class="w-4 h-4"></i></div>
-            <h4 class="text-xs font-bold text-slate-800">History</h4>
-          </a>
-        </div>
-      </div>
-
-      <!-- Urgent Banner -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-4 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
-        <i data-lucide="phone-call" class="w-4 h-4 text-rose-500"></i>
-        <span>Urgent issue? Call the ICT Helpdesk <strong class="text-slate-700">011 234 5678</strong></span>
-      </div>
-
-      <p class="text-center text-[11px] text-slate-400 pt-2">ICT Assist v1.0 (Web) · ICT Unit</p>
+      <p class="text-center text-xs text-slate-500 pt-2">ICT Assist v1.0 (Web) · ICT Unit</p>
     </main>
   </div>
-  <script>lucide.createIcons();</script>
+
+  <script>
+    lucide.createIcons();
+    const h = new Date().getHours();
+    document.getElementById('greeting').textContent = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+    document.getElementById('today').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+    const sb = document.getElementById('sidebar');
+    document.getElementById('menuBtn').addEventListener('click', () => sb.classList.toggle('hidden'));
+  </script>
 </body>
 </html>
