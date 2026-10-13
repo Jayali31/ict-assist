@@ -315,131 +315,168 @@ head('New Request');
     }
   }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .request-page { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-head { font-family: 'Bricolage Grotesque', sans-serif; }
+  .tile input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .tile > div { transition: all .18s ease; }
+  .tile input:focus-visible + div { outline: 3px solid #93c5fd; outline-offset: 2px; }
+  .cat input:checked + div { background: #2563eb; color: #fff; border-color: #2563eb; transform: translateY(-3px); box-shadow: 0 12px 24px -10px rgba(37,99,235,.7); }
+  .cat input:checked + div .ico { background: rgba(255,255,255,.18); color: #fff; }
+  .pri-high input:checked + div { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+  .pri-medium input:checked + div { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+  .pri-low input:checked + div { background: #dcfce7; border-color: #22c55e; color: #166534; }
+  .field:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.15); }
+  .drop.over { border-color: #2563eb; background: #eff6ff; }
+  @media (prefers-reduced-motion: reduce) { .request-page *, .request-page *::before, .request-page *::after { transition: none !important; } }
+</style>
 
-<div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-xs">
-  <div class="mb-6">
-    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Service Request Portal</span>
-    <h2 class="text-xl font-extrabold text-slate-800 mt-0.5">Submit an IT Incident or Request</h2>
-    <p class="text-xs text-slate-500 mt-1">Please provide the details below so our support coordinators can dispatch a technician.</p>
-  </div>
-
+<div class="request-page max-w-3xl mx-auto space-y-4">
   <?php if (!empty($err)): ?>
-  <div class="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+  <div class="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2" role="alert">
     <i data-lucide="alert-circle" class="w-4 h-4 text-red-500 shrink-0"></i>
     <span><?= e($err) ?></span>
   </div>
   <?php endif; ?>
 
-  <form id="requestForm" method="POST" action="new_request.php" enctype="multipart/form-data" class="nr-form">
+  <form id="requestForm" action="new_request.php" method="POST" enctype="multipart/form-data" class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8 space-y-8">
     <?= tok() ?>
     <input type="hidden" name="category" id="category-input" value="Printer">
     <input type="hidden" name="category_id" id="category-id-input" value="1">
     <input type="hidden" name="priority" id="priority-input" value="Medium">
 
-    <!-- Row: Branch & Dept -->
-    <div class="nr-row">
-      <div>
-        <label for="branch">Branch Name</label>
-        <input class="nr-field bg-slate-50 text-slate-600" id="branch" value="<?= e($info['branch'] ?: 'Colombo Head Office') ?>" readonly>
+    <section>
+      <h3 class="font-head font-bold text-lg mb-4">Where are you?</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label for="branch" class="block text-sm font-semibold">Branch name
+          <span class="relative mt-1.5 block"><i data-lucide="building-2" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input id="branch" readonly value="<?= e($info['branch'] ?: 'Colombo Main Office') ?>" class="field w-full border border-slate-300 rounded-xl pl-10 pr-3 py-3 font-medium bg-slate-50 text-slate-600"></span>
+        </label>
+        <label for="dept" class="block text-sm font-semibold">Department
+          <span class="relative mt-1.5 block"><i data-lucide="briefcase" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input id="dept" readonly value="<?= e($info['dept'] ?: 'Accounts & Finance') ?>" class="field w-full border border-slate-300 rounded-xl pl-10 pr-3 py-3 font-medium bg-slate-50 text-slate-600"></span>
+        </label>
       </div>
-      <div>
-        <label for="dept">Department</label>
-        <input class="nr-field bg-slate-50 text-slate-600" id="dept" value="<?= e($info['dept'] ?: 'Finance') ?>" readonly>
+    </section>
+
+    <fieldset>
+      <legend class="font-head font-bold text-lg mb-4">What kind of problem is it?</legend>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <label class="tile cat relative"><input type="radio" name="category_choice" value="Printer" data-id="1" checked><div class="border border-slate-200 bg-slate-50 rounded-2xl py-4 flex flex-col items-center gap-2 text-sm font-semibold"><span class="ico w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center"><i data-lucide="printer" class="w-5 h-5"></i></span>Printer</div></label>
+        <label class="tile cat relative"><input type="radio" name="category_choice" value="Hardware" data-id="1"><div class="border border-slate-200 bg-slate-50 rounded-2xl py-4 flex flex-col items-center gap-2 text-sm font-semibold"><span class="ico w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center"><i data-lucide="cpu" class="w-5 h-5"></i></span>Hardware</div></label>
+        <label class="tile cat relative"><input type="radio" name="category_choice" value="Network" data-id="2"><div class="border border-slate-200 bg-slate-50 rounded-2xl py-4 flex flex-col items-center gap-2 text-sm font-semibold"><span class="ico w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center"><i data-lucide="wifi" class="w-5 h-5"></i></span>Network</div></label>
+        <label class="tile cat relative"><input type="radio" name="category_choice" value="Software" data-id="3"><div class="border border-slate-200 bg-slate-50 rounded-2xl py-4 flex flex-col items-center gap-2 text-sm font-semibold"><span class="ico w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center"><i data-lucide="app-window" class="w-5 h-5"></i></span>Software</div></label>
+        <label class="tile cat relative"><input type="radio" name="category_choice" value="Telephone" data-id="4"><div class="border border-slate-200 bg-slate-50 rounded-2xl py-4 flex flex-col items-center gap-2 text-sm font-semibold"><span class="ico w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center"><i data-lucide="phone" class="w-5 h-5"></i></span>Telephone</div></label>
       </div>
-    </div>
+    </fieldset>
 
-    <!-- Category Chips -->
-    <div class="nr-group">
-      <span class="label">Issue Category</span>
-      <div class="chips" id="category-chips">
-        <button type="button" class="chip" data-name="Printer" data-id="1" aria-pressed="true">🖨️ Printer</button>
-        <button type="button" class="chip" data-name="Hardware" data-id="1" aria-pressed="false">💻 Hardware</button>
-        <button type="button" class="chip" data-name="Network" data-id="2" aria-pressed="false">🌐 Network</button>
-        <button type="button" class="chip" data-name="Software" data-id="3" aria-pressed="false">📱 Software</button>
-        <button type="button" class="chip" data-name="Telephone" data-id="4" aria-pressed="false">📞 Telephone</button>
+    <fieldset>
+      <legend class="font-head font-bold text-lg mb-1">How urgent is it?</legend>
+      <p id="priHint" class="text-sm text-slate-500 mb-4">Medium: we aim to respond within 4 hours.</p>
+      <div class="grid grid-cols-3 gap-3">
+        <label class="tile pri-high relative"><input type="radio" name="priority_choice" value="High"><div class="border-2 border-slate-200 bg-slate-50 rounded-2xl py-3.5 text-center font-bold text-sm text-slate-500"><span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 mr-1.5"></span>High</div></label>
+        <label class="tile pri-medium relative"><input type="radio" name="priority_choice" value="Medium" checked><div class="border-2 border-slate-200 bg-slate-50 rounded-2xl py-3.5 text-center font-bold text-sm text-slate-500"><span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 mr-1.5"></span>Medium</div></label>
+        <label class="tile pri-low relative"><input type="radio" name="priority_choice" value="Low"><div class="border-2 border-slate-200 bg-slate-50 rounded-2xl py-3.5 text-center font-bold text-sm text-slate-500"><span class="inline-block w-2.5 h-2.5 rounded-full bg-green-500 mr-1.5"></span>Low</div></label>
       </div>
-    </div>
+    </fieldset>
 
-    <!-- Priority Selector -->
-    <div class="nr-group">
-      <span class="label">Priority</span>
-      <div class="prio" id="priority-group">
-        <button type="button" class="pbtn" data-p="High" aria-pressed="false"><i></i>High</button>
-        <button type="button" class="pbtn" data-p="Medium" aria-pressed="true"><i></i>Medium</button>
-        <button type="button" class="pbtn" data-p="Low" aria-pressed="false"><i></i>Low</button>
-      </div>
-    </div>
+    <section>
+      <div class="flex items-end justify-between mb-4"><label for="desc" class="font-head font-bold text-lg">Describe what happened</label><span id="count" class="text-xs text-slate-400">0 / 500</span></div>
+      <textarea id="desc" name="description" rows="4" maxlength="500" required placeholder="What stopped working, and what have you already tried?" class="field w-full border border-slate-300 rounded-xl px-4 py-3 text-sm resize-y">The printer on 3rd floor is not responding. Tried restarting but same issue persists.</textarea>
+    </section>
 
-    <!-- Description -->
-    <div class="nr-group">
-      <label for="desc">Description</label>
-      <textarea name="description" id="desc" rows="3" required placeholder="Describe the issue you are experiencing...">The printer on 3rd floor is not responding. Tried restarting but same issue persists.</textarea>
-    </div>
-
-    <!-- File Upload -->
-    <div class="nr-group">
-      <span class="label">Attach Photo (optional)</span>
-      <label class="upload" id="drop">
-        <input type="file" name="photo" accept="image/*,.pdf" id="photo">
-        <span id="upload-icon">📷</span>
-        <span id="upload-label">Click to upload image</span>
+    <section>
+      <h3 class="font-head font-bold text-lg mb-1">Add a photo <span class="text-sm font-medium text-slate-400">(optional)</span></h3>
+      <p class="text-sm text-slate-500 mb-4">An error message or a photo of the device helps the technician arrive prepared.</p>
+      <label id="drop" class="drop block border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center cursor-pointer hover:border-blue-600 hover:bg-blue-50/50 transition">
+        <input id="photo" name="photo" type="file" accept="image/*" class="sr-only">
+        <span id="dropEmpty"><span class="mx-auto w-12 h-12 rounded-full bg-blue-50 text-blue-600 grid place-items-center mb-2"><i data-lucide="image-plus" class="w-6 h-6"></i></span>
+          <span class="block text-sm font-semibold">Drop an image here or <span class="text-blue-600 underline">browse</span></span><span class="block text-xs text-slate-400 mt-1">PNG or JPG</span></span>
+        <span id="dropFull" class="hidden items-center gap-4 text-left"><img id="thumb" alt="Selected photo preview" class="w-20 h-20 rounded-xl object-cover"><span class="min-w-0"><span id="fname" class="block text-sm font-semibold truncate"></span><button type="button" id="remove" class="text-xs text-red-600 font-semibold mt-1">Remove photo</button></span></span>
       </label>
-    </div>
+    </section>
 
-    <!-- Submit Button & Toast Feedback -->
-    <div class="flex items-center gap-4">
-      <button class="submit" id="submit-btn" type="submit">
-        <span id="btn-text">Submit Request</span>
-        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-      </button>
-      <p class="toast hidden" id="toast" role="status">
-        <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Request submitted! Redirecting...</span>
-      </p>
+    <div class="flex flex-wrap items-center gap-4">
+      <button type="submit" id="submit-btn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-xl inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition"><span id="btn-text">Send request</span><i data-lucide="send" class="w-4 h-4"></i></button>
+      <p class="toast hidden text-sm font-semibold text-green-700" id="toast" role="status">Request submitted! Redirecting...</p>
     </div>
   </form>
+
+  <div class="bg-white rounded-2xl border border-slate-200 p-4 text-sm text-slate-600 flex gap-3"><i data-lucide="lightbulb" class="w-5 h-5 text-amber-500 shrink-0"></i><p>Include the floor, room and device name so the technician can find it quickly.</p></div>
 </div>
 
 <script>
-  // Category Selection
-  const catInput = document.getElementById('category-input');
-  const catIdInput = document.getElementById('category-id-input');
-  const catChips = document.getElementById('category-chips');
-
-  catChips.addEventListener('click', e => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    catChips.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === btn));
-    catInput.value = btn.dataset.name;
-    catIdInput.value = btn.dataset.id;
+  const categoryInput = document.getElementById('category-input');
+  const categoryIdInput = document.getElementById('category-id-input');
+  document.querySelectorAll('[name="category_choice"]').forEach(input => {
+    input.addEventListener('change', () => {
+      categoryInput.value = input.value;
+      categoryIdInput.value = input.dataset.id;
+    });
   });
 
-  // Priority Selection
-  const prioInput = document.getElementById('priority-input');
-  const prioGroup = document.getElementById('priority-group');
+  const priorityInput = document.getElementById('priority-input');
+  const priorityHints = {
+    High: 'Respond within 1 hour. Use for anything stopping work for a whole team.',
+    Medium: 'Respond within 4 hours.',
+    Low: 'Respond within 2 working days.'
+  };
+  const updateFormPreview = () => {
+    const priority = document.querySelector('[name="priority_choice"]:checked').value;
+    const hint = priorityHints[priority];
+    document.getElementById('priHint').textContent = priority + ': ' + hint.charAt(0).toLowerCase() + hint.slice(1).replace(/^respond/, 'we aim to respond');
+    priorityInput.value = priority;
+    document.getElementById('count').textContent = document.getElementById('desc').value.length + ' / 500';
+  };
+  document.querySelectorAll('[name="priority_choice"]').forEach(input => input.addEventListener('change', updateFormPreview));
+  document.getElementById('desc').addEventListener('input', updateFormPreview);
+  updateFormPreview();
 
-  prioGroup.addEventListener('click', e => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    prioGroup.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === btn));
-    prioInput.value = btn.dataset.p;
-  });
-
-  // Photo Preview
   const photo = document.getElementById('photo');
   const drop = document.getElementById('drop');
-  photo.addEventListener('change', () => {
-    const f = photo.files[0];
-    if (!f) return;
-    if (f.type.startsWith('image/')) {
-      const img = document.createElement('img');
-      img.src = URL.createObjectURL(f);
-      img.alt = 'Selected photo';
-      drop.querySelectorAll('span,img').forEach(n => n.remove());
-      drop.appendChild(img);
-    } else {
-      document.getElementById('upload-icon').textContent = '📄';
-      document.getElementById('upload-label').textContent = f.name;
-    }
+  let previewUrl = null;
+  const showFile = file => {
+    if (!file) return;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(file);
+    document.getElementById('thumb').src = previewUrl;
+    document.getElementById('fname').textContent = file.name;
+    document.getElementById('dropEmpty').classList.add('hidden');
+    document.getElementById('dropFull').classList.remove('hidden');
+    document.getElementById('dropFull').classList.add('flex');
+  };
+  const clearFile = () => {
+    photo.value = '';
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+    document.getElementById('thumb').removeAttribute('src');
+    document.getElementById('dropFull').classList.add('hidden');
+    document.getElementById('dropFull').classList.remove('flex');
+    document.getElementById('dropEmpty').classList.remove('hidden');
+  };
+
+  photo.addEventListener('change', () => showFile(photo.files[0]));
+  ['dragenter', 'dragover'].forEach(eventName => drop.addEventListener(eventName, event => {
+    event.preventDefault();
+    drop.classList.add('over');
+  }));
+  ['dragleave', 'drop'].forEach(eventName => drop.addEventListener(eventName, event => {
+    event.preventDefault();
+    drop.classList.remove('over');
+  }));
+  drop.addEventListener('drop', event => {
+    const file = event.dataTransfer.files[0];
+    if (!file) return;
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    photo.files = transfer.files;
+    showFile(file);
+  });
+  document.getElementById('remove').addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    clearFile();
   });
 
   // AJAX Submission with Instant Toast Feedback and Redirect
@@ -479,7 +516,7 @@ head('New Request');
       } else {
         alert(data.error || 'Failed to submit request.');
         submitBtn.disabled = false;
-        btnText.textContent = 'Submit Request';
+        btnText.textContent = 'Send request';
       }
     } catch (err) {
       console.warn('AJAX submit issue, submitting normally:', err);

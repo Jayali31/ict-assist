@@ -32,101 +32,123 @@ head('Ticket Status');
 ?>
 
 <div class="space-y-4">
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .ticket-status-page { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .ticket-status-page .font-head { font-family: 'Bricolage Grotesque', sans-serif; }
+  @media (prefers-reduced-motion: reduce) {
+    .ticket-status-page *, .ticket-status-page *::before, .ticket-status-page *::after { transition: none !important; }
+  }
+</style>
+
+<div class="ticket-status-page">
+  <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h2 class="text-lg font-bold text-slate-900">Incident Ticket Status</h2>
-      <p class="text-xs text-slate-500">Track and filter the current status of all support incidents.</p>
+      <h2 class="font-head font-extrabold text-2xl md:text-3xl text-slate-900">Incident ticket status</h2>
+      <p class="text-sm text-slate-500 mt-1">Track and filter the current status of all support incidents.</p>
     </div>
-    <div class="flex gap-1 text-xs bg-slate-200 p-1 rounded-xl" id="filter-tabs">
-      <button type="button" onclick="setFilter('All')" id="btn-All" class="px-3 py-1 rounded-lg bg-white font-semibold text-blue-600 shadow-xs transition">All (<?= count($ticketsData) ?>)</button>
-      <button type="button" onclick="setFilter('Pending')" id="btn-Pending" class="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Pending</button>
-      <button type="button" onclick="setFilter('In Progress')" id="btn-InProgress" class="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">In Progress</button>
-      <button type="button" onclick="setFilter('Resolved')" id="btn-Resolved" class="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Resolved</button>
-    </div>
+    <div id="tabs" class="flex flex-wrap gap-1 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm" role="tablist" aria-label="Filter tickets by status"></div>
   </div>
 
-  <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase tracking-wider text-[10px]">
-          <tr>
-            <th class="py-3 px-6">ID</th>
-            <th class="py-3 px-4">Title</th>
-            <th class="py-3 px-4">Category</th>
-            <th class="py-3 px-4">Priority</th>
-            <th class="py-3 px-4">Status</th>
-            <th class="py-3 px-4">Assigned Tech</th>
-          </tr>
-        </thead>
-        <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
-      </table>
-    </div>
+  <div class="overflow-x-auto mt-4 -mx-2 px-2">
+    <table class="w-full min-w-[920px] border-separate border-spacing-y-3 text-sm">
+      <thead>
+        <tr class="text-left text-xs font-semibold text-slate-400">
+          <th class="px-5 pb-1 font-semibold">Ticket</th>
+          <th class="px-3 pb-1 font-semibold">Issue</th>
+          <th class="px-3 pb-1 font-semibold">Category</th>
+          <th class="px-3 pb-1 font-semibold">Priority</th>
+          <th class="px-3 pb-1 font-semibold w-48">Status</th>
+          <th class="px-5 pb-1 font-semibold">Assigned tech</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <div id="empty" class="hidden text-center py-14 bg-white rounded-3xl border border-dashed border-slate-300">
+    <i data-lucide="inbox" class="w-10 h-10 mx-auto text-slate-300"></i>
+    <p class="font-head font-bold mt-3">No tickets here</p>
+    <p class="text-sm text-slate-500">Try another status.</p>
   </div>
 </div>
 
 <script>
-  const allTickets = <?= json_encode($ticketsData) ?>;
+const tickets = <?= json_encode($ticketsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+const catIcon = { Printer: 'printer', Hardware: 'cpu', Network: 'wifi', Software: 'app-window', Telephone: 'phone' };
+const priorities = {
+  High: { hex: '#ef4444', pill: 'bg-red-50 text-red-700', dot: 'bg-red-500' },
+  Medium: { hex: '#fbbf24', pill: 'bg-amber-50 text-amber-800', dot: 'bg-amber-400' },
+  Low: { hex: '#22c55e', pill: 'bg-green-50 text-green-700', dot: 'bg-green-500' }
+};
+const statuses = {
+  Pending: { pill: 'bg-blue-50 text-blue-700', fill: 'bg-blue-600', step: 1 },
+  'In Progress': { pill: 'bg-amber-50 text-amber-800', fill: 'bg-amber-400', step: 3 },
+  Resolved: { pill: 'bg-emerald-50 text-emerald-700', fill: 'bg-emerald-500', step: 4 }
+};
+const statusFilters = ['All', 'Pending', 'In Progress', 'Resolved'];
+let activeFilter = 'All';
 
-  function renderTable(filter = 'All') {
-    const list = filter === 'All' ? allTickets : allTickets.filter(t => t.status === filter);
-    const tbody = document.getElementById('table-body');
-    
-    if (list.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-xs text-slate-400">No tickets found for "${filter}".</td></tr>`;
-      return;
-    }
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[character]);
+}
 
-    tbody.innerHTML = list.map(t => `
-      <tr class="hover:bg-slate-50 transition cursor-pointer" onclick="window.location.href='ticket.php?id=${t.id}'">
-        <td class="py-3.5 px-6 font-mono font-bold text-blue-600 hover:underline">#${escapeHtml(t.ticket_no)}</td>
-        <td class="py-3.5 px-4 font-semibold text-slate-800">
-          <a href="ticket.php?id=${t.id}" class="hover:text-blue-600">${escapeHtml(t.title)}</a>
-          <div class="text-[10px] text-slate-400">${escapeHtml(t.branch)} · ${t.created_at}</div>
-        </td>
-        <td class="py-3.5 px-4 text-slate-500">${escapeHtml(t.category)}</td>
-        <td class="py-3.5 px-4">
-          <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-            t.priority === 'High' ? 'bg-rose-50 text-rose-600 border border-rose-100' :
-            t.priority === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-            'bg-slate-100 text-slate-600 border border-slate-200'
-          }">${escapeHtml(t.priority)}</span>
-        </td>
-        <td class="py-3.5 px-4">
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-            t.status === 'Resolved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
-            t.status === 'In Progress' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-            'bg-blue-50 text-blue-700 border border-blue-100'
-          }">${escapeHtml(t.status)}</span>
-        </td>
-        <td class="py-3.5 px-4 text-slate-600">
-          ${t.assignedTo ? escapeHtml(t.assignedTo) : '<span class="text-slate-400 italic">Unassigned</span>'}
-        </td>
-      </tr>
-    `).join('');
-  }
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = statusFilters.map(status => {
+    const count = status === 'All' ? tickets.length : tickets.filter(ticket => ticket.status === status).length;
+    const selected = status === activeFilter;
+    return `<button type="button" role="tab" aria-selected="${selected}" data-filter="${status}" class="px-4 py-2 rounded-xl text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-300 ${selected ? 'bg-slate-900 text-white shadow' : 'text-slate-500 hover:bg-slate-100'}">${status}<span class="ml-2 text-xs ${selected ? 'text-blue-300' : 'text-slate-400'}">${count}</span></button>`;
+  }).join('');
+}
 
-  function setFilter(filter) {
-    const tabs = ['All', 'Pending', 'In Progress', 'Resolved'];
-    tabs.forEach(tab => {
-      const id = 'btn-' + tab.replace(' ', '');
-      const btn = document.getElementById(id);
-      if (btn) {
-        if (tab === filter) {
-          btn.className = 'px-3 py-1 rounded-lg bg-white font-semibold text-blue-600 shadow-xs transition';
-        } else {
-          btn.className = 'px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition';
-        }
-      }
-    });
-    renderTable(filter);
-  }
+function renderRows() {
+  const rows = tickets.filter(ticket => activeFilter === 'All' || ticket.status === activeFilter);
+  document.getElementById('empty').classList.toggle('hidden', rows.length > 0);
+  document.getElementById('rows').innerHTML = rows.map(ticket => {
+    const priority = priorities[ticket.priority] || priorities.Medium;
+    const status = statuses[ticket.status] || statuses.Pending;
+    const cell = 'bg-white py-4 border-y border-slate-200 group-hover:bg-blue-50/60 transition';
+    const progress = [1, 2, 3, 4].map(step =>
+      `<span class="h-1.5 flex-1 rounded-full ${step <= status.step ? status.fill : 'bg-slate-200'}"></span>`
+    ).join('');
+    const ticketUrl = `ticket.php?id=${encodeURIComponent(ticket.id)}`;
+    const assigned = ticket.assignedTo
+      ? `<span class="inline-flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-slate-900 text-white text-[11px] font-bold grid place-items-center">${escapeHtml(ticket.assignedTo.split(/[ .]+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase())}</span>${escapeHtml(ticket.assignedTo)}</span>`
+      : '<span class="inline-flex items-center gap-2 text-xs italic text-slate-400 border border-dashed border-slate-300 rounded-full px-3 py-1.5"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i>Unassigned</span>';
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+    return `<tr class="group">
+      <td class="${cell} pl-5 pr-3 rounded-l-2xl" style="border-left:5px solid ${priority.hex}">
+        <a href="${ticketUrl}" class="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg hover:underline">#${escapeHtml(ticket.ticket_no)}</a></td>
+      <td class="${cell} px-3">
+        <a href="${ticketUrl}" class="font-semibold text-slate-900 hover:text-blue-700">${escapeHtml(ticket.title)}</a>
+        <p class="text-xs text-slate-400 mt-0.5">${escapeHtml(ticket.branch)} &middot; ${escapeHtml(ticket.created_at)}</p></td>
+      <td class="${cell} px-3">
+        <span class="inline-flex items-center gap-2 text-slate-600"><span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 grid place-items-center"><i data-lucide="${catIcon[ticket.category] || 'ticket'}" class="w-4 h-4"></i></span>${escapeHtml(ticket.category)}</span></td>
+      <td class="${cell} px-3">
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full ${priority.pill}"><span class="w-2 h-2 rounded-full ${priority.dot}"></span>${escapeHtml(ticket.priority)}</span></td>
+      <td class="${cell} px-3">
+        <span class="inline-block text-xs font-bold px-3 py-1 rounded-full ${status.pill}">${escapeHtml(ticket.status)}</span>
+        <div class="flex gap-1 mt-2 w-32" aria-hidden="true">${progress}</div></td>
+      <td class="${cell} pl-3 pr-5 rounded-r-2xl border-r border-slate-200">${assigned}</td>
+    </tr>`;
+  }).join('');
+  if (window.lucide) lucide.createIcons();
+}
 
-  renderTable('All');
+function render() {
+  renderTabs();
+  renderRows();
+}
+
+document.getElementById('tabs').addEventListener('click', event => {
+  const button = event.target.closest('[data-filter]');
+  if (!button) return;
+  activeFilter = button.dataset.filter;
+  render();
+});
+
+render();
 </script>
 
 <?php foot(); ?>

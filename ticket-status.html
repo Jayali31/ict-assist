@@ -1,119 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Ticket Status - ICT Assist</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="shared.js"></script>
-  <script>
-    // If running via HTTP/HTTPS, seamlessly forward to dynamic PHP version
-    if (window.location.protocol !== 'file:') {
-      window.location.replace('ticket_status.php');
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Status | ICT Assist</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@0.383.0/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { head: ['"Bricolage Grotesque"','sans-serif'] },
+  colors: { navy: '#0b1530', brand: '#1d5bdb', page: '#f4f6fb' }
+}}};
+</script>
+<style>
+  body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
 </head>
-<body class="bg-slate-100 flex min-h-screen">
-  <aside class="w-64 bg-[#111827] text-slate-300 min-h-screen flex flex-col justify-between p-4 border-r border-slate-800 shrink-0 select-none">
-    <div>
-      <div class="p-3 border-b border-slate-800 flex items-center space-x-3 mb-4">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white"><i data-lucide="monitor" class="w-5 h-5"></i></div>
-        <div>
-          <h1 class="text-sm font-bold text-white">ICT Assist</h1>
-          <p class="text-[11px] text-slate-400">Employee Portal</p>
-        </div>
+<body class="bg-page text-slate-800 min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="hidden md:flex w-64 shrink-0 bg-[#0b1530] flex-col sticky top-0 h-screen" style="font-family:'DM Sans','Plus Jakarta Sans',sans-serif">
+  <div class="flex items-center gap-3 px-7 pt-5 pb-2">
+    <div class="w-10 h-10 rounded-xl bg-[#242d45] grid place-items-center"><i data-lucide="monitor" class="w-5 h-5 text-white" stroke-width="1.75"></i></div>
+    <div><p class="font-bold text-white text-[17px] leading-tight">ICT Assist</p><p class="text-xs text-slate-400 leading-tight mt-0.5">Service Desk Portal</p></div>
+  </div>
+  <nav class="px-4 text-[15px] font-medium text-slate-400 flex-1 mt-4">
+    <p class="px-3 pt-4 pb-2.5 text-xs font-bold">Employee</p>
+    <div class="space-y-1">
+      <a href="dashboard.html" class="flex items-center gap-3 px-3 h-10 rounded-xl hover:bg-white/5"><i data-lucide="layout-grid" class="w-4 h-4"></i>Dashboard</a>
+      <a href="new-request.html" class="flex items-center gap-3 px-3 h-10 rounded-xl hover:bg-white/5"><i data-lucide="plus-circle" class="w-4 h-4"></i>New Request</a>
+      <a href="ticket-status.html" class="flex items-center gap-3 px-3 h-10 rounded-xl bg-[#1d5bdb] text-white font-semibold"><i data-lucide="clock" class="w-4 h-4"></i>Ticket Status</a>
+    </div>
+    <p class="px-3 pt-7 pb-2.5 text-xs font-bold">General</p>
+    <div class="space-y-1">
+      <a href="notifications.html" class="flex items-center gap-3 px-3 h-10 rounded-xl hover:bg-white/5"><i data-lucide="bell" class="w-4 h-4"></i>Notifications<span class="ml-auto bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full grid place-items-center">3</span></a>
+      <a href="profile.html" class="flex items-center gap-3 px-3 h-10 rounded-xl hover:bg-white/5"><i data-lucide="user" class="w-4 h-4"></i>Profile</a>
+    </div>
+  </nav>
+  <div class="px-4 pb-5">
+    <div class="border-t border-[#242d45] pt-3">
+      <p class="text-xs text-slate-400 mb-2">Switch view</p>
+      <div class="grid grid-cols-2 gap-2 text-xs font-bold text-white">
+        <a href="coordinator.html" class="bg-[#242d45] text-center py-2 rounded-lg hover:bg-[#2d3856]">Coordinator</a>
+        <a href="staff.html" class="bg-[#242d45] text-center py-2 rounded-lg hover:bg-[#2d3856]">Staff</a>
       </div>
-      <nav class="space-y-1 text-xs font-semibold">
-        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
-        <a href="new_request.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>New Request</span></a>
-        <a href="ticket_status.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white"><i data-lucide="clock" class="w-4 h-4"></i><span>Ticket Status</span></a>
-        <a href="notifications.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="bell" class="w-4 h-4"></i><span>Notifications</span></a>
-        <a href="profile.php" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"><i data-lucide="user" class="w-4 h-4"></i><span>Profile</span></a>
-      </nav>
+      <a href="logout.php" class="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-rose-400 hover:text-rose-300"><i data-lucide="log-out" class="w-4 h-4"></i>Sign Out</a>
+    </div>
+  </div>
+</aside>
+
+<div class="flex-1 min-w-0">
+  <header class="h-16 bg-white border-b border-slate-200 flex items-center px-6 gap-4">
+    <h1 class="font-bold text-base">Ticket Status</h1>
+    <span class="ml-auto hidden sm:flex items-center gap-2 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-emerald-400"></span>All systems running</span>
+    <div class="relative"><i data-lucide="bell" class="w-5 h-5 text-amber-500"></i><span class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full grid place-items-center">3</span></div>
+    <div class="w-9 h-9 rounded-full bg-brand text-white text-sm font-bold grid place-items-center">AM</div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-5 md:p-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 class="font-head font-extrabold text-2xl md:text-3xl">Incident ticket status</h2>
+        <p class="text-sm text-slate-500 mt-1">Track and filter the current status of all support incidents.</p>
+      </div>
+      <div id="tabs" class="flex gap-1 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm" role="tablist" aria-label="Filter tickets by status"></div>
     </div>
 
-    <!-- Bottom Switcher -->
-    <div class="space-y-2 pt-4 border-t border-slate-800 text-xs">
-      <p class="text-[11px] text-slate-500">Switch View:</p>
-      <div class="grid grid-cols-2 gap-1">
-        <a href="switch_view.php?role=coordinator" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Coordinator</a>
-        <a href="switch_view.php?role=staff" class="p-1.5 bg-slate-800 text-center rounded hover:bg-blue-600 text-white text-[11px] transition">Staff</a>
-      </div>
-      <a href="logout.php" class="block p-2 text-center text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium">Sign Out</a>
-    </div>
-  </aside>
-
-  <main class="flex-1 p-8 max-w-5xl mx-auto space-y-4">
-    <div class="flex justify-between items-center">
-      <h2 class="text-lg font-bold text-slate-900">Incident Ticket Status</h2>
-      <div class="flex gap-1 text-xs bg-slate-200 p-1 rounded-xl">
-        <button type="button" onclick="renderTable('All')" id="btn-All" class="px-3 py-1 rounded-lg bg-white font-semibold text-blue-600 shadow-xs">All</button>
-        <button type="button" onclick="renderTable('Pending')" id="btn-Pending" class="px-3 py-1 rounded-lg text-slate-600">Pending</button>
-        <button type="button" onclick="renderTable('In Progress')" id="btn-InProgress" class="px-3 py-1 rounded-lg text-slate-600">In Progress</button>
-        <button type="button" onclick="renderTable('Resolved')" id="btn-Resolved" class="px-3 py-1 rounded-lg text-slate-600">Resolved</button>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
-      <table class="w-full text-left text-xs">
-        <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase tracking-wider text-[10px]">
-          <tr>
-            <th class="py-3 px-6">ID</th>
-            <th class="py-3 px-4">Title</th>
-            <th class="py-3 px-4">Category</th>
-            <th class="py-3 px-4">Priority</th>
-            <th class="py-3 px-4">Status</th>
-            <th class="py-3 px-4">Assigned Tech</th>
+    <div class="overflow-x-auto mt-4 -mx-2 px-2">
+      <table class="w-full min-w-[920px] border-separate border-spacing-y-3 text-sm">
+        <thead>
+          <tr class="text-left text-xs font-semibold text-slate-400">
+            <th class="px-5 pb-1 font-semibold">Ticket</th>
+            <th class="px-3 pb-1 font-semibold">Issue</th>
+            <th class="px-3 pb-1 font-semibold">Category</th>
+            <th class="px-3 pb-1 font-semibold">Priority</th>
+            <th class="px-3 pb-1 font-semibold w-48">Status</th>
+            <th class="px-5 pb-1 font-semibold">Assigned tech</th>
           </tr>
         </thead>
-        <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+        <tbody id="rows"></tbody>
       </table>
     </div>
+    <div id="empty" class="hidden text-center py-14 bg-white rounded-3xl border border-dashed border-slate-300">
+      <i data-lucide="inbox" class="w-10 h-10 mx-auto text-slate-300"></i>
+      <p class="font-head font-bold mt-3">No tickets here</p>
+      <p class="text-sm text-slate-500">Try another status.</p>
+    </div>
   </main>
+</div>
 
-  <script>
-    lucide.createIcons();
+<script>
+/* Replace this array with your PHP data, e.g. <?php echo json_encode($tickets); ?> */
+const tickets = [
+  { id:'#TX-2025', title:'Server room AC filters maintenance', branch:'Colombo Main Office', date:'2024-09-19', category:'Hardware', priority:'Medium', status:'Pending',     tech:null },
+  { id:'#TX-2024', title:'Printer not working',                branch:'Colombo Main Office', date:'2024-09-18', category:'Hardware', priority:'High',   status:'In Progress', tech:'K.P. Ratnasiri' },
+  { id:'#TX-2021', title:'Windows 11 update crash & Office suite', branch:'Colombo Main Office', date:'2024-09-15', category:'Software', priority:'Low', status:'Resolved', tech:'M.E. Perera' }
+];
 
-    // Default mock data for standalone/offline viewing
-    function getTickets() {
-      return [
-        { id: 'TX-2027', title: 'Printer not responding', branch: 'Colombo Head Office', category: 'Printer', priority: 'High', status: 'Pending', assignedTo: '' },
-        { id: 'TX-2025', title: 'Server room AC filters maintenance', branch: 'Head Office', category: 'Hardware', priority: 'Medium', status: 'Pending', assignedTo: '' },
-        { id: 'TX-2024', title: 'Printer not working', branch: 'Finance Dept', category: 'Hardware', priority: 'High', status: 'In Progress', assignedTo: 'K.P. Ratnasiri' },
-        { id: 'TX-2021', title: 'Windows 11 update crash & Office suite', branch: 'Finance', category: 'Software', priority: 'Low', status: 'Resolved', assignedTo: 'M.E. Perera' }
-      ];
-    }
+const catIcon = { Printer:'printer', Hardware:'cpu', Network:'wifi', Software:'app-window', Telephone:'phone' };
+const pri = {
+  High:   { hex:'#ef4444',   pill:'bg-red-50 text-red-700',     dot:'bg-red-500' },
+  Medium: { hex:'#fbbf24', pill:'bg-amber-50 text-amber-800', dot:'bg-amber-400' },
+  Low:    { hex:'#22c55e', pill:'bg-green-50 text-green-700', dot:'bg-green-500' }
+};
+const st = {
+  'Pending':     { pill:'bg-blue-50 text-blue-700',       fill:'bg-brand',       n:1 },
+  'In Progress': { pill:'bg-amber-50 text-amber-800',     fill:'bg-amber-400',   n:3 },
+  'Resolved':    { pill:'bg-emerald-50 text-emerald-700', fill:'bg-emerald-500', n:4 }
+};
+const initials = n => n.replace(/[^A-Za-z. ]/g,'').split(/[ .]+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+let filter = 'All';
 
-    function renderTable(filter = 'All') {
-      const all = getTickets();
-      const list = filter === 'All' ? all : all.filter(t => t.status === filter);
-      const tbody = document.getElementById('table-body');
-      
-      const tabs = ['All', 'Pending', 'In Progress', 'Resolved'];
-      tabs.forEach(tab => {
-        const id = 'btn-' + tab.replace(' ', '');
-        const btn = document.getElementById(id);
-        if (btn) {
-          if (tab === filter) {
-            btn.className = 'px-3 py-1 rounded-lg bg-white font-semibold text-blue-600 shadow-xs';
-          } else {
-            btn.className = 'px-3 py-1 rounded-lg text-slate-600';
-          }
-        }
-      });
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = ['All','Pending','In Progress','Resolved'].map(l => {
+    const n = l==='All' ? tickets.length : tickets.filter(t=>t.status===l).length;
+    const on = l===filter;
+    return `<button role="tab" aria-selected="${on}" data-f="${l}" class="px-4 py-2 rounded-xl text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-300 ${on?'bg-navy text-white shadow':'text-slate-500 hover:bg-slate-100'}">${l}<span class="ml-2 text-xs ${on?'text-blue-300':'text-slate-400'}">${n}</span></button>`;
+  }).join('');
+}
 
-      tbody.innerHTML = list.map(t => `
-        <tr class="hover:bg-slate-50 transition cursor-pointer" onclick="window.location.href='ticket.php?id=${t.id.replace('TX-','')}'">
-          <td class="py-3.5 px-6 font-mono font-bold text-blue-600">#${t.id}</td>
-          <td class="py-3.5 px-4 font-semibold text-slate-800">${t.title}<div class="text-[10px] text-slate-400 mt-0.5">${t.branch}</div></td>
-          <td class="py-3.5 px-4 text-slate-500">${t.category}</td>
-          <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${t.priority === 'High' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600'}">${t.priority}</span></td>
-          <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${t.status === 'Resolved' ? 'bg-emerald-50 text-emerald-700' : t.status === 'In Progress' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}">${t.status}</span></td>
-          <td class="py-3.5 px-4 text-slate-600">${t.assignedTo || '<span class="text-slate-400 italic">Unassigned</span>'}</td>
-        </tr>
-      `).join('');
-    }
-    renderTable();
-  </script>
+function renderRows(){
+  const rows = tickets.filter(t => filter==='All' || t.status===filter);
+  document.getElementById('empty').classList.toggle('hidden', rows.length>0);
+  document.getElementById('rows').innerHTML = rows.map(t => {
+    const p = pri[t.priority], s = st[t.status];
+    const cell = 'bg-white py-4 border-y border-slate-200 group-hover:bg-blue-50/60 transition';
+    const seg = [1,2,3,4].map(i=>`<span class="h-1.5 flex-1 rounded-full ${i<=s.n?s.fill:'bg-slate-200'}"></span>`).join('');
+    return `<tr class="group">
+      <td class="${cell} pl-5 pr-3 rounded-l-2xl" style="border-left:5px solid ${p.hex}">
+        <span class="font-mono text-xs font-bold text-brand bg-blue-50 px-2.5 py-1 rounded-lg">${t.id}</span></td>
+      <td class="${cell} px-3">
+        <p class="font-semibold text-slate-900">${t.title}</p>
+        <p class="text-xs text-slate-400 mt-0.5">${t.branch} &middot; ${t.date}</p></td>
+      <td class="${cell} px-3">
+        <span class="inline-flex items-center gap-2 text-slate-600"><span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 grid place-items-center"><i data-lucide="${catIcon[t.category]||'ticket'}" class="w-4 h-4"></i></span>${t.category}</span></td>
+      <td class="${cell} px-3">
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full ${p.pill}"><span class="w-2 h-2 rounded-full ${p.dot}"></span>${t.priority}</span></td>
+      <td class="${cell} px-3">
+        <span class="inline-block text-xs font-bold px-3 py-1 rounded-full ${s.pill}">${t.status}</span>
+        <div class="flex gap-1 mt-2 w-32" aria-hidden="true">${seg}</div></td>
+      <td class="${cell} pl-3 pr-5 rounded-r-2xl border-r border-slate-200">
+        ${t.tech
+          ? `<span class="inline-flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-navy text-white text-[11px] font-bold grid place-items-center">${initials(t.tech)}</span>${t.tech}</span>`
+          : `<span class="inline-flex items-center gap-2 text-xs italic text-slate-400 border border-dashed border-slate-300 rounded-full px-3 py-1.5"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i>Unassigned</span>`}</td>
+    </tr>`;
+  }).join('');
+}
+
+function render(){ renderTabs(); renderRows(); lucide.createIcons(); }
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]'); if(!b) return; filter = b.dataset.f; render();
+});
+render();
+</script>
 </body>
 </html>
+
+
