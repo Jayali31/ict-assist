@@ -85,13 +85,6 @@ $recentTicket = $rows[0] ?? null;
       <div class="orbit" style="--a:54deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white flex items-center justify-center shadow-lg"><i data-lucide="printer" class="w-[18px] h-[18px]"></i></span></div>
       <div class="orbit" style="--a:126deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-amber-300 flex items-center justify-center shadow-lg"><i data-lucide="lock" class="w-[18px] h-[18px]"></i></span></div>
       <div class="orbit" style="--a:198deg;--r:112px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-emerald-300 flex items-center justify-center shadow-lg"><i data-lucide="mail" class="w-[18px] h-[18px]"></i></span></div>
-      <!-- floating status cards -->
-      <div class="float-a absolute top-0 right-0 bg-white/10 backdrop-blur border border-white/25 rounded-xl px-3 py-2 text-white text-xs shadow-lg">
-        <p class="font-semibold flex items-center gap-1.5"><i data-lucide="printer" class="w-3.5 h-3.5"></i>#<?= $recentTicket ? e($recentTicket['ticket_no']) : 'TK-2024' ?></p><p class="text-blue-100"><?= $recentTicket ? e($recentTicket['status']) : 'In progress' ?></p>
-      </div>
-      <div class="float-b absolute -bottom-2 -left-6 bg-white/10 backdrop-blur border border-white/25 rounded-xl px-3 py-2 text-white text-xs shadow-lg">
-        <p class="font-semibold flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-300"></i><?= $c['Resolved'] ?> resolved</p><p class="text-blue-100">Fast support</p>
-      </div>
     </div>
   </section>
 
@@ -179,16 +172,16 @@ $recentTicket = $rows[0] ?? null;
       <section>
         <h3 class="sec-title">Quick actions</h3>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <a href="new_request.php" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.5s">
+          <a href="new_request.php" class="reveal lift card group rounded-2xl min-h-[170px] p-6 flex flex-col justify-center text-center" style="--d:0.5s">
             <span class="mx-auto w-12 h-12 rounded-2xl bg-blue-50 text-neon flex items-center justify-center transition group-hover:scale-110"><i data-lucide="plus" class="w-6 h-6"></i></span>
             <p class="text-sm font-bold text-slate-900 mt-3">New Request</p><p class="text-xs text-slate-500">Report a problem</p></a>
-          <a href="ticket_status.php" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.6s">
+          <a href="ticket_status.php" class="reveal lift card group rounded-2xl min-h-[170px] p-6 flex flex-col justify-center text-center" style="--d:0.6s">
             <span class="mx-auto w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="ticket" class="w-6 h-6"></i></span>
             <p class="text-sm font-bold text-slate-900 mt-3">My Tickets</p><p class="text-xs text-slate-500">Track progress</p></a>
-          <a href="notifications.php" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.7s">
+          <a href="notifications.php" class="reveal lift card group rounded-2xl min-h-[170px] p-6 flex flex-col justify-center text-center" style="--d:0.7s">
             <span class="mx-auto w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="bell" class="w-6 h-6"></i></span>
             <p class="text-sm font-bold text-slate-900 mt-3">Notifications</p><p class="text-xs text-slate-500">See updates</p></a>
-          <a href="ticket_status.php" class="reveal lift card group rounded-2xl p-5 text-center" style="--d:0.8s">
+          <a href="ticket_status.php" class="reveal lift card group rounded-2xl min-h-[170px] p-6 flex flex-col justify-center text-center" style="--d:0.8s">
             <span class="mx-auto w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="history" class="w-6 h-6"></i></span>
             <p class="text-sm font-bold text-slate-900 mt-3">History</p><p class="text-xs text-slate-500">Past requests</p></a>
         </div>
@@ -239,16 +232,6 @@ $recentTicket = $rows[0] ?? null;
         </div>
       </section>
 
-      <!-- Urgent Banner -->
-      <section class="reveal relative overflow-hidden rounded-3xl p-6 text-center bg-gradient-to-br from-[#0B1530] to-[#1F5AE6] text-white shadow-lg" style="--d:.7s">
-        <div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-blue-400/30 blur-2xl"></div>
-        <div class="relative w-14 h-14 mx-auto mb-3">
-          <span class="ping-ring absolute inset-0 rounded-full bg-rose-400/60"></span>
-          <span class="relative w-14 h-14 rounded-full bg-rose-500 text-white flex items-center justify-center"><i data-lucide="phone-call" class="w-6 h-6"></i></span>
-        </div>
-        <p class="relative text-sm text-blue-100">Urgent issue? Call the ICT Helpdesk</p>
-        <a href="tel:0112345678" class="relative inline-block font-display text-2xl font-bold text-white hover:text-amber-300 transition mt-1">011 234 5678</a>
-      </section>
     </aside>
   </div>
 

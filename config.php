@@ -90,14 +90,11 @@ function head($t){
   echo '@keyframes up { to { opacity: 1; transform: none; } }';
   echo '.lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }';
   echo '.lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(29,91,219,.25); }';
-  echo '.float-a { animation: floaty 5s ease-in-out infinite; }';
-  echo '.float-b { animation: floaty 6.5s ease-in-out infinite reverse; }';
-  echo '@keyframes floaty { 50% { transform: translateY(-8px); } }';
   echo '.ping-ring { animation: ping 2s cubic-bezier(0,0,.2,1) infinite; }';
   echo '@keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }';
   echo '.sec-title { display: flex; align-items: center; gap: .6rem; font-family: \'Space Grotesk\', sans-serif; font-weight: 700; color: #0f172a; font-size: 1rem; margin-bottom: .75rem; }';
   echo '.sec-title::before { content: \'\'; width: 4px; height: 18px; border-radius: 4px; background: linear-gradient(#1D5BDB, #60A5FA); }';
-  echo '@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; animation: none; } .float-a, .float-b, .ping-ring { animation: none; } .lift:hover { transform: none; } }';
+  echo '@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; animation: none; } .ping-ring { animation: none; } .lift:hover { transform: none; } }';
   echo '.flow { stroke-dasharray: 4 10; animation: flow 1.6s linear infinite; }';
   echo '@keyframes flow { to { stroke-dashoffset: -28; } }';
   echo '.orbit { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; animation: orbit var(--t, 28s) linear infinite; }';
