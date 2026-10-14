@@ -63,7 +63,7 @@
     <main class="flex-1 p-6 md:p-8 max-w-xl mx-auto w-full space-y-6">
 
       <!-- Card 1: Top Hero Profile Banner (Exact visual match to image) -->
-      <div id="hero-banner" class="rounded-3xl bg-gradient-to-r from-[#0b1b3d] via-[#0f2d6b] to-[#154fc7] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-blue-900/40">
+      <div id="hero-banner" class="rounded-3xl bg-gradient-to-r from-[#05080F] via-[#0B1A45] to-[#1F5AE6] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-blue-900/40">
         <!-- Large Circular Avatar -->
         <div id="hero-avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-800/80 border-2 border-white/20 flex items-center justify-center text-white font-extrabold text-2xl sm:text-3xl shrink-0 shadow-lg tracking-wider">
           JD
@@ -88,7 +88,7 @@
         </div>
 
         <!-- Glow Effect -->
-        <div class="absolute -top-12 -right-12 w-40 h-40 bg-blue-400/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-blue-400/30 rounded-full blur-3xl pointer-events-none"></div>
       </div>
 
       <!-- Card 2: Action Menu List (Exact visual match to image) -->
@@ -189,7 +189,7 @@
         <div id="sec-pwd" class="hidden bg-slate-50/60 p-5 border-t border-slate-100 space-y-2 text-xs">
           <input type="password" placeholder="Current Password" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white">
           <input type="password" placeholder="New Password" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white">
-          <button class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl text-xs">Update Password</button>
+          <button id="btn-update-pwd" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition">Update Password</button>
         </div>
 
         <!-- 5. Sign Out -->
@@ -216,9 +216,9 @@
             <span class="text-slate-400 ml-1">Switch view dynamically to see how profile adapts</span>
           </div>
           <div class="flex items-center gap-1.5 flex-wrap">
-            <button type="button" onclick="switchStaticRole('employee')" class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-lg font-semibold border border-blue-200">👤 Employee</button>
-            <button type="button" onclick="switchStaticRole('coordinator')" class="px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-semibold">📋 Coordinator</button>
-            <button type="button" onclick="switchStaticRole('staff')" class="px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-semibold">🛠️ Staff (Tech)</button>
+            <button type="button" id="btn-prev-emp" onclick="switchStaticRole('employee')" class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-lg font-semibold border border-blue-200">👤 Employee</button>
+            <button type="button" id="btn-prev-coord" onclick="switchStaticRole('coordinator')" class="px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-semibold">📋 Coordinator</button>
+            <button type="button" id="btn-prev-staff" onclick="switchStaticRole('staff')" class="px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-semibold">🛠️ Staff (Tech)</button>
           </div>
         </div>
       </div>
@@ -249,36 +249,82 @@
       const ticketTitle = document.getElementById('ticket-menu-title');
       const ticketSub = document.getElementById('ticket-menu-sub');
 
+      const heroBanner = document.getElementById('hero-banner');
+      const sideLogo = document.getElementById('side-logo');
+      const sideSub = document.getElementById('side-sub');
+      const sideRoleLabel = document.getElementById('side-role-label');
+      const btnEmp = document.getElementById('btn-prev-emp');
+      const btnCoord = document.getElementById('btn-prev-coord');
+      const btnStaff = document.getElementById('btn-prev-staff');
+      const btnPwd = document.getElementById('btn-update-pwd');
+      const notifChecks = document.querySelectorAll('#sec-notif input[type="checkbox"]');
+
       if (role === 'employee') {
+        if (heroBanner) heroBanner.className = "rounded-3xl bg-gradient-to-r from-[#05080F] via-[#0B1A45] to-[#1F5AE6] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-blue-900/40";
         heroAvatar.textContent = 'JD';
         topAvatar.textContent = 'JD';
+        if (topAvatar) topAvatar.className = "w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center shadow-xs";
+        if (sideLogo) sideLogo.className = "w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md";
+        if (sideSub) sideSub.textContent = "Employee Portal";
+        if (sideRoleLabel) sideRoleLabel.textContent = "Employee";
         heroName.textContent = 'M.M.J.C.Dewmini';
         topName.textContent = 'M.M.J.C.Dewmini';
         heroBadge.textContent = 'Employee';
         heroStatus.classList.add('hidden');
+        heroDept.className = "text-xs text-blue-200 mt-2 font-medium truncate";
         heroDept.textContent = 'Ministry of Health · Colombo Main Office';
         ticketTitle.textContent = 'My Ticket History';
         ticketSub.textContent = 'View and track all incident requests';
+
+        if (btnEmp) btnEmp.className = "px-2.5 py-1 bg-blue-50 text-blue-600 rounded-lg font-semibold border border-blue-200";
+        if (btnCoord) btnCoord.className = "px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-semibold";
+        if (btnStaff) btnStaff.className = "px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-semibold";
+        if (btnPwd) btnPwd.className = "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition";
+        notifChecks.forEach(c => c.className = "rounded border-slate-300 text-blue-600 focus:ring-blue-500");
       } else if (role === 'coordinator') {
+        if (heroBanner) heroBanner.className = "rounded-3xl bg-gradient-to-r from-[#1e103d] via-[#4c1d95] to-[#7e22ce] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-purple-800/40";
         heroAvatar.textContent = 'SJ';
         topAvatar.textContent = 'SJ';
+        if (topAvatar) topAvatar.className = "w-8 h-8 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center shadow-xs";
+        if (sideLogo) sideLogo.className = "w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-md";
+        if (sideSub) sideSub.textContent = "Coordinator Portal";
+        if (sideRoleLabel) sideRoleLabel.textContent = "Coordinator";
         heroName.textContent = 'Sarah Jayasinghe';
         topName.textContent = 'Sarah Jayasinghe';
         heroBadge.textContent = 'Coordinator';
         heroStatus.classList.add('hidden');
+        heroDept.className = "text-xs text-purple-200 mt-2 font-medium truncate";
         heroDept.textContent = 'ICT Support & Dispatch · Headquarters';
         ticketTitle.textContent = 'All Tickets & Incident Queue';
         ticketSub.textContent = 'Manage and dispatch queue incidents';
+
+        if (btnEmp) btnEmp.className = "px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-semibold";
+        if (btnCoord) btnCoord.className = "px-2.5 py-1 bg-purple-50 text-purple-600 rounded-lg font-semibold border border-purple-200";
+        if (btnStaff) btnStaff.className = "px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg font-semibold";
+        if (btnPwd) btnPwd.className = "bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition";
+        notifChecks.forEach(c => c.className = "rounded border-slate-300 text-purple-600 focus:ring-purple-500");
       } else if (role === 'staff') {
+        if (heroBanner) heroBanner.className = "rounded-3xl bg-gradient-to-r from-[#062c21] via-[#064e3b] to-[#059669] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-emerald-900/40";
         heroAvatar.textContent = 'KR';
         topAvatar.textContent = 'KR';
+        if (topAvatar) topAvatar.className = "w-8 h-8 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center shadow-xs";
+        if (sideLogo) sideLogo.className = "w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md";
+        if (sideSub) sideSub.textContent = "Technician Portal";
+        if (sideRoleLabel) sideRoleLabel.textContent = "Staff";
         heroName.textContent = 'K.P. Ratnasiri';
         topName.textContent = 'K.P. Ratnasiri';
         heroBadge.textContent = 'Staff (Technician)';
         heroStatus.classList.remove('hidden');
+        heroDept.className = "text-xs text-emerald-200 mt-2 font-medium truncate";
         heroDept.textContent = 'Hardware Maintenance · Field Services';
         ticketTitle.textContent = 'My Assigned Tasks History';
         ticketSub.textContent = 'View assigned incidents and progress';
+
+        if (btnEmp) btnEmp.className = "px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg font-semibold";
+        if (btnCoord) btnCoord.className = "px-2.5 py-1 bg-slate-100 text-slate-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg font-semibold";
+        if (btnStaff) btnStaff.className = "px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-lg font-semibold border border-emerald-200";
+        if (btnPwd) btnPwd.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition";
+        notifChecks.forEach(c => c.className = "rounded border-slate-300 text-emerald-600 focus:ring-emerald-500");
       }
     }
 

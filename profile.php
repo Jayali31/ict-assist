@@ -94,6 +94,41 @@ if ($u['role'] === 'coordinator') {
   $deptDisplay = ($tech ? $tech['specialization'] . ' Maintenance' : ($p['dept'] ?: 'Field Services'));
 }
 
+$isCoord = $u['role'] === 'coordinator';
+$isStaff = $u['role'] === 'staff';
+
+if ($isCoord) {
+  $heroGradient = 'from-[#1e103d] via-[#4c1d95] to-[#7e22ce] border-purple-800/40';
+  $heroGlow = 'bg-purple-400/25';
+  $heroSubtext = 'text-purple-200';
+  $themeBtn = 'bg-purple-600 hover:bg-purple-700';
+  $themeRing = 'focus:ring-purple-500';
+  $infoIconBg = 'bg-purple-100 text-purple-700';
+  $roleTagColor = 'text-purple-600';
+  $checkboxColor = 'text-purple-600 focus:ring-purple-500';
+  $cardHoverBorder = 'hover:border-purple-300';
+} elseif ($isStaff) {
+  $heroGradient = 'from-[#062c21] via-[#064e3b] to-[#059669] border-emerald-900/40';
+  $heroGlow = 'bg-emerald-400/25';
+  $heroSubtext = 'text-emerald-200';
+  $themeBtn = 'bg-emerald-600 hover:bg-emerald-700';
+  $themeRing = 'focus:ring-emerald-500';
+  $infoIconBg = 'bg-emerald-100 text-emerald-700';
+  $roleTagColor = 'text-emerald-600';
+  $checkboxColor = 'text-emerald-600 focus:ring-emerald-500';
+  $cardHoverBorder = 'hover:border-emerald-300';
+} else {
+  $heroGradient = 'from-[#05080F] via-[#0B1A45] to-[#1F5AE6] border-blue-900/40';
+  $heroGlow = 'bg-blue-400/30';
+  $heroSubtext = 'text-blue-200';
+  $themeBtn = 'bg-blue-600 hover:bg-blue-700';
+  $themeRing = 'focus:ring-blue-500';
+  $infoIconBg = 'bg-blue-100 text-blue-600';
+  $roleTagColor = 'text-blue-600';
+  $checkboxColor = 'text-blue-600 focus:ring-blue-500';
+  $cardHoverBorder = 'hover:border-blue-300';
+}
+
 head('Profile');
 ?>
 
@@ -115,7 +150,7 @@ head('Profile');
   <?php endif; ?>
 
   <!-- Card 1: Top Hero Profile Banner (Exact visual match to image) -->
-  <div class="rounded-3xl bg-gradient-to-r from-[#0b1b3d] via-[#0f2d6b] to-[#154fc7] text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border border-blue-900/40">
+  <div class="rounded-3xl bg-gradient-to-r <?= $heroGradient ?> text-white p-6 sm:p-7 shadow-xl relative overflow-hidden flex items-center space-x-5 sm:space-x-6 border">
     <!-- Large Circular Avatar -->
     <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-800/80 border-2 border-white/20 flex items-center justify-center text-white font-extrabold text-2xl sm:text-3xl shrink-0 shadow-lg tracking-wider">
       <?= e($avatarInitials) ?>
@@ -136,7 +171,7 @@ head('Profile');
         </span>
         <?php endif; ?>
       </div>
-      <p class="text-xs text-blue-200 mt-2 font-medium truncate">
+      <p class="text-xs <?= $heroSubtext ?> mt-2 font-medium truncate">
         <?= e($deptDisplay) ?>
         <?php if ($p['branch']): ?>
           · <?= e($p['branch']) ?>
@@ -145,7 +180,7 @@ head('Profile');
     </div>
 
     <!-- Subtle Background Glow Effect -->
-    <div class="absolute -top-12 -right-12 w-40 h-40 bg-blue-400/20 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="absolute -top-12 -right-12 w-40 h-40 <?= $heroGlow ?> rounded-full blur-3xl pointer-events-none"></div>
   </div>
 
   <!-- Card 2: Action Menu List (Exact visual match to image) -->
@@ -154,7 +189,7 @@ head('Profile');
     <!-- 1. My Information -->
     <button type="button" onclick="toggleSection('sec-info')" class="w-full text-left p-4 sm:p-5 flex items-center justify-between hover:bg-slate-50/80 transition cursor-pointer group">
       <div class="flex items-center space-x-3.5">
-        <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
+        <div class="w-11 h-11 rounded-2xl <?= $infoIconBg ?> flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition">
           <i data-lucide="user" class="w-5 h-5"></i>
         </div>
         <div>
@@ -173,7 +208,7 @@ head('Profile');
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
           <div>
             <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Full Name</label>
-            <input type="text" name="full_name" value="<?= e($p['full_name']) ?>" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <input type="text" name="full_name" value="<?= e($p['full_name']) ?>" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 <?= $themeRing ?> focus:outline-none">
           </div>
           <div>
             <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Display Name</label>
@@ -185,7 +220,7 @@ head('Profile');
           </div>
           <div>
             <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Phone Number</label>
-            <input type="text" name="phone" value="<?= e($p['phone']) ?>" placeholder="+94 7X XXX XXXX" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <input type="text" name="phone" value="<?= e($p['phone']) ?>" placeholder="+94 7X XXX XXXX" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 <?= $themeRing ?> focus:outline-none">
           </div>
           <div>
             <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Department</label>
@@ -210,7 +245,7 @@ head('Profile');
         <?php endif; ?>
 
         <div class="flex justify-end pt-2">
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition">
+          <button type="submit" class="<?= $themeBtn ?> text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition">
             Save Changes
           </button>
         </div>
@@ -262,17 +297,17 @@ head('Profile');
           foreach ($notifOptions as $k => $item):
             $isChecked = !empty($s[$k]);
           ?>
-          <label class="flex items-start justify-between p-2.5 bg-white rounded-xl border border-slate-200/80 cursor-pointer hover:border-blue-300 transition">
+          <label class="flex items-start justify-between p-2.5 bg-white rounded-xl border border-slate-200/80 cursor-pointer <?= $cardHoverBorder ?> transition">
             <div>
               <span class="text-xs font-semibold text-slate-800 block"><?= e($item[0]) ?></span>
               <span class="text-[11px] text-slate-400"><?= e($item[1]) ?></span>
             </div>
-            <input type="checkbox" name="<?= $k ?>" <?= $isChecked ? 'checked' : '' ?> class="mt-1 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+            <input type="checkbox" name="<?= $k ?>" <?= $isChecked ? 'checked' : '' ?> class="mt-1 rounded border-slate-300 <?= $checkboxColor ?> cursor-pointer">
           </label>
           <?php endforeach; ?>
         </div>
         <div class="flex justify-end pt-2">
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition">
+          <button type="submit" class="<?= $themeBtn ?> text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition">
             Save Preferences
           </button>
         </div>
@@ -300,18 +335,18 @@ head('Profile');
         <input type="hidden" name="pw" value="1">
         <div>
           <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Current Password</label>
-          <input type="password" name="cur" placeholder="••••••••" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="password" name="cur" placeholder="••••••••" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 <?= $themeRing ?> focus:outline-none">
         </div>
         <div>
           <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">New Password</label>
-          <input type="password" name="new" placeholder="At least 6 characters" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="password" name="new" placeholder="At least 6 characters" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 <?= $themeRing ?> focus:outline-none">
         </div>
         <div>
           <label class="block font-bold text-slate-500 uppercase tracking-wider mb-1 text-[10px]">Confirm New Password</label>
-          <input type="password" name="new2" placeholder="Confirm new password" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <input type="password" name="new2" placeholder="Confirm new password" required class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs focus:ring-2 <?= $themeRing ?> focus:outline-none">
         </div>
         <div class="flex justify-end pt-2">
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition">
+          <button type="submit" class="<?= $themeBtn ?> text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition">
             Update Password
           </button>
         </div>
@@ -339,7 +374,7 @@ head('Profile');
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div>
         <span class="font-bold text-slate-700">Role View Connection:</span>
-        <span class="text-slate-400 ml-1">Currently viewing profile as <strong class="text-blue-600 font-bold uppercase"><?= e($u['role']) ?></strong></span>
+        <span class="text-slate-400 ml-1">Currently viewing profile as <strong class="<?= $roleTagColor ?> font-bold uppercase"><?= e($u['role']) ?></strong></span>
       </div>
       <div class="flex items-center gap-1.5 flex-wrap">
         <?php if ($u['role'] !== 'employee'): ?>

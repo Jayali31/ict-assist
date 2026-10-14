@@ -36,11 +36,30 @@ head($t['ticket_no'].' - '.$t['title']); ?>
 </div>
 <h2>Timeline</h2><ul class="log"><?php foreach ($log as $l) echo '<li>'.e($l['note']).' <span class="muted">— '.e($l['name'] ?: 'System').', '.e($l['created_at']).'</span></li>'; ?></ul>
 <?php if ($u['role']=='coordinator' && $t['status']!='Resolved'): $techs = q("SELECT * FROM v_technician_stats")->fetchAll(); ?>
-<form method="post" class="card narrow"><?= tok() ?><h2>Assign Technician</h2>
-  <select name="tech_id"><?php foreach ($techs as $x) echo '<option value="'.$x['technician_id'].'"'.($x['specialization']==$t['category']?' selected':'').'>'.e($x['name'].' - '.$x['specialization'].' ('.$x['status'].', '.$x['active_count'].' active)').'</option>'; ?></select>
-  <button>Assign</button></form>
+<form method="post" class="card narrow border-l-4 border-l-purple-600 shadow-sm"><?= tok() ?>
+  <div class="flex items-center gap-2 mb-3">
+    <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+      <i data-lucide="user-check" class="w-4 h-4"></i>
+    </div>
+    <h2 class="text-base font-bold text-slate-900 m-0">Assign Technician</h2>
+  </div>
+  <p class="text-xs text-slate-500 mb-3">Select an available technician based on category specialization and active workload.</p>
+  <select name="tech_id" class="w-full mb-3 rounded-xl border-slate-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"><?php foreach ($techs as $x) echo '<option value="'.$x['technician_id'].'"'.($x['specialization']==$t['category']?' selected':'').'>'.e($x['name'].' - '.$x['specialization'].' ('.$x['status'].', '.$x['active_count'].' active)').'</option>'; ?></select>
+  <button class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-xs transition inline-flex items-center gap-2"><i data-lucide="send" class="w-3.5 h-3.5"></i>Assign Technician</button>
+</form>
 <?php endif; if ($u['role']=='staff' && $t['status']!='Resolved'): ?>
-<form method="post" class="card narrow"><?= tok() ?><h2>Update Progress</h2>
-  <select name="status"><option>In Progress</option><option>Resolved</option></select>
-  <textarea name="note" rows="3" placeholder="Diagnostic notes"></textarea><button>Update</button></form>
+<form method="post" class="card narrow border-l-4 border-l-emerald-600 shadow-sm"><?= tok() ?>
+  <div class="flex items-center gap-2 mb-3">
+    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+      <i data-lucide="wrench" class="w-4 h-4"></i>
+    </div>
+    <h2 class="text-base font-bold text-slate-900 m-0">Update Progress</h2>
+  </div>
+  <p class="text-xs text-slate-500 mb-3">Record diagnosis or resolution notes and advance the ticket status.</p>
+  <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Status</label>
+  <select name="status" class="w-full mb-3 rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"><option <?= $t['status'] === 'In Progress' ? 'selected' : '' ?>>In Progress</option><option <?= $t['status'] === 'Resolved' ? 'selected' : '' ?>>Resolved</option></select>
+  <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Diagnostic Notes</label>
+  <textarea name="note" rows="3" placeholder="Enter actions taken, parts replaced, or diagnostic resolution..." class="w-full mb-3 rounded-xl border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"></textarea>
+  <button class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-xs transition inline-flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5"></i>Update Incident</button>
+</form>
 <?php endif; foot();

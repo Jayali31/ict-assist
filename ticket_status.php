@@ -73,6 +73,7 @@ head('Ticket Status');
 </div>
 
 <script>
+const userRole = <?= json_encode($u['role']) ?>;
 const tickets = <?= json_encode($ticketsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 const catIcon = { Printer: 'printer', Hardware: 'cpu', Network: 'wifi', Software: 'app-window', Telephone: 'phone' };
 const priorities = {
@@ -81,7 +82,7 @@ const priorities = {
   Low: { hex: '#22c55e', pill: 'bg-green-50 text-green-700', dot: 'bg-green-500' }
 };
 const statuses = {
-  Pending: { pill: 'bg-blue-50 text-blue-700', fill: 'bg-blue-600', step: 1 },
+  Pending: { pill: userRole === 'coordinator' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-blue-50 text-blue-700', fill: userRole === 'coordinator' ? 'bg-purple-600' : 'bg-blue-600', step: 1 },
   'In Progress': { pill: 'bg-amber-50 text-amber-800', fill: 'bg-amber-400', step: 3 },
   Resolved: { pill: 'bg-emerald-50 text-emerald-700', fill: 'bg-emerald-500', step: 4 }
 };
@@ -95,33 +96,49 @@ function escapeHtml(value) {
 }
 
 function renderTabs() {
+  const isCoord = userRole === 'coordinator';
+  const isStaff = userRole === 'staff';
+  const outlineClass = isCoord ? 'focus-visible:outline-purple-400' : (isStaff ? 'focus-visible:outline-emerald-400' : 'focus-visible:outline-blue-300');
+  const badgeActive = isCoord ? 'text-purple-300' : (isStaff ? 'text-emerald-300' : 'text-blue-300');
+
   document.getElementById('tabs').innerHTML = statusFilters.map(status => {
     const count = status === 'All' ? tickets.length : tickets.filter(ticket => ticket.status === status).length;
     const selected = status === activeFilter;
-    return `<button type="button" role="tab" aria-selected="${selected}" data-filter="${status}" class="px-4 py-2 rounded-xl text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-300 ${selected ? 'bg-slate-900 text-white shadow' : 'text-slate-500 hover:bg-slate-100'}">${status}<span class="ml-2 text-xs ${selected ? 'text-blue-300' : 'text-slate-400'}">${count}</span></button>`;
+    const activeBg = isCoord ? 'bg-purple-900 text-white shadow' : (isStaff ? 'bg-emerald-800 text-white shadow' : 'bg-slate-900 text-white shadow');
+    return `<button type="button" role="tab" aria-selected="${selected}" data-filter="${status}" class="px-4 py-2 rounded-xl text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 ${outlineClass} ${selected ? activeBg : 'text-slate-500 hover:bg-slate-100'}">${status}<span class="ml-2 text-xs ${selected ? badgeActive : 'text-slate-400'}">${count}</span></button>`;
   }).join('');
 }
 
 function renderRows() {
+  const isCoord = userRole === 'coordinator';
+  const isStaff = userRole === 'staff';
   const rows = tickets.filter(ticket => activeFilter === 'All' || ticket.status === activeFilter);
   document.getElementById('empty').classList.toggle('hidden', rows.length > 0);
   document.getElementById('rows').innerHTML = rows.map(ticket => {
     const priority = priorities[ticket.priority] || priorities.Medium;
     const status = statuses[ticket.status] || statuses.Pending;
-    const cell = 'bg-white py-4 border-y border-slate-200 group-hover:bg-blue-50/60 transition';
+    const cellHover = isCoord ? 'group-hover:bg-purple-50/50' : (isStaff ? 'group-hover:bg-emerald-50/50' : 'group-hover:bg-blue-50/60');
+    const cell = `bg-white py-4 border-y border-slate-200 ${cellHover} transition`;
     const progress = [1, 2, 3, 4].map(step =>
       `<span class="h-1.5 flex-1 rounded-full ${step <= status.step ? status.fill : 'bg-slate-200'}"></span>`
     ).join('');
     const ticketUrl = `ticket.php?id=${encodeURIComponent(ticket.id)}`;
+    const badgeCls = isCoord 
+      ? 'font-mono text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg hover:underline hover:bg-purple-100'
+      : (isStaff ? 'font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg hover:underline hover:bg-emerald-100' : 'font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg hover:underline');
+    const titleHoverCls = isCoord ? 'hover:text-purple-700' : (isStaff ? 'hover:text-emerald-700' : 'hover:text-blue-700');
+    const avatarBg = isCoord ? 'bg-purple-900' : (isStaff ? 'bg-emerald-800' : 'bg-slate-900');
+    const unassignedCls = isCoord ? 'text-purple-500 bg-purple-50/60 border border-purple-200' : (isStaff ? 'text-emerald-600 bg-emerald-50/60 border border-emerald-200' : 'text-slate-400 border border-dashed border-slate-300');
+
     const assigned = ticket.assignedTo
-      ? `<span class="inline-flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-slate-900 text-white text-[11px] font-bold grid place-items-center">${escapeHtml(ticket.assignedTo.split(/[ .]+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase())}</span>${escapeHtml(ticket.assignedTo)}</span>`
-      : '<span class="inline-flex items-center gap-2 text-xs italic text-slate-400 border border-dashed border-slate-300 rounded-full px-3 py-1.5"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i>Unassigned</span>';
+      ? `<span class="inline-flex items-center gap-2"><span class="w-8 h-8 rounded-full ${avatarBg} text-white text-[11px] font-bold grid place-items-center">${escapeHtml(ticket.assignedTo.split(/[ .]+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase())}</span>${escapeHtml(ticket.assignedTo)}</span>`
+      : `<span class="inline-flex items-center gap-2 text-xs italic ${unassignedCls} rounded-full px-3 py-1.5"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i>Unassigned</span>`;
 
     return `<tr class="group">
       <td class="${cell} pl-5 pr-3 rounded-l-2xl" style="border-left:5px solid ${priority.hex}">
-        <a href="${ticketUrl}" class="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg hover:underline">#${escapeHtml(ticket.ticket_no)}</a></td>
+        <a href="${ticketUrl}" class="${badgeCls}">#${escapeHtml(ticket.ticket_no)}</a></td>
       <td class="${cell} px-3">
-        <a href="${ticketUrl}" class="font-semibold text-slate-900 hover:text-blue-700">${escapeHtml(ticket.title)}</a>
+        <a href="${ticketUrl}" class="font-semibold text-slate-900 ${titleHoverCls}">${escapeHtml(ticket.title)}</a>
         <p class="text-xs text-slate-400 mt-0.5">${escapeHtml(ticket.branch)} &middot; ${escapeHtml(ticket.created_at)}</p></td>
       <td class="${cell} px-3">
         <span class="inline-flex items-center gap-2 text-slate-600"><span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 grid place-items-center"><i data-lucide="${catIcon[ticket.category] || 'ticket'}" class="w-4 h-4"></i></span>${escapeHtml(ticket.category)}</span></td>

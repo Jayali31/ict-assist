@@ -35,7 +35,7 @@ $recentTicket = $rows[0] ?? null;
   <!-- Hero Banner -->
   <section class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#05080F] via-[#0B1A45] to-[#1F5AE6] shadow-lg p-6 sm:p-10 min-h-[380px] flex items-center">
     <!-- Background photo: fades in from the right -->
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=70" alt="" class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-40 mix-blend-screen" style="-webkit-mask-image:linear-gradient(to right,transparent,#000 60%);mask-image:linear-gradient(to right,transparent,#000 60%)" onerror="this.remove()">
+    <img src="assets/images/employee-hero.jpg" alt="Corporate Employee" class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-30 mix-blend-luminosity" style="-webkit-mask-image:linear-gradient(to right,transparent,#000 65%);mask-image:linear-gradient(to right,transparent,#000 65%)" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1400&q=70'">
     <div class="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-blue-400/30 blur-3xl"></div>
 
     <div class="relative max-w-xl z-10">
@@ -254,10 +254,10 @@ $recentTicket = $rows[0] ?? null;
 <?php elseif ($u['role'] === 'coordinator'): ?>
   <!-- Coordinator Hero Card -->
   <section class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1B1040] via-[#4A1D96] to-[#8B2FD0] shadow-lg p-6 sm:p-10 min-h-[320px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=1400&amp;q=70" alt=""
-         class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-30 mix-blend-screen"
-         style="-webkit-mask-image:linear-gradient(to right,transparent,#000 60%);mask-image:linear-gradient(to right,transparent,#000 60%)"
-         onerror="this.remove()">
+    <img src="assets/images/coordinator-hero.jpg" alt="IT Helpdesk Coordinator"
+         class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-30 mix-blend-luminosity"
+         style="-webkit-mask-image:linear-gradient(to right,transparent,#000 65%);mask-image:linear-gradient(to right,transparent,#000 65%)"
+         onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&amp;fit=crop&amp;w=1400&amp;q=70'">
     <div class="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-fuchsia-400/30 blur-3xl"></div>
     <div class="absolute -left-20 -bottom-24 w-72 h-72 rounded-full bg-violet-500/20 blur-3xl"></div>
 
@@ -346,48 +346,168 @@ $recentTicket = $rows[0] ?? null;
   </section>
 
 <?php elseif ($u['role'] === 'staff'): ?>
-  <!-- Staff Technician Console -->
-  <div class="rounded-3xl bg-[#064e3b] text-white p-8 shadow-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-    <div>
-      <span class="text-xs text-emerald-300 font-semibold tracking-wide">Technician Operations Console</span>
-      <h2 class="text-2xl font-extrabold mt-1"><?= e($u['name']) ?></h2>
-      <p class="text-xs text-emerald-200 mt-1"><?= count($rows) ?> assigned · <?= $c['In Progress'] ?> active · <?= $c['Resolved'] ?> resolved</p>
+  <!-- Staff Technician Hero Card -->
+  <section class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#04241a] via-[#064e3b] to-[#059669] shadow-lg p-6 sm:p-10 min-h-[320px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+    <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1400&q=70" alt=""
+         class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-25 mix-blend-screen"
+         style="-webkit-mask-image:linear-gradient(to right,transparent,#000 60%);mask-image:linear-gradient(to right,transparent,#000 60%)"
+         onerror="this.remove()">
+    <div class="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-emerald-400/25 blur-3xl"></div>
+    <div class="absolute -left-20 -bottom-24 w-72 h-72 rounded-full bg-teal-500/20 blur-3xl"></div>
+
+    <div class="relative z-10 max-w-xl">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span class="inline-flex items-center gap-2 text-xs font-medium text-emerald-50 bg-white/10 border border-white/20 rounded-full px-3 py-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>Technician Operations Console
+        </span>
+        <span id="today" class="text-xs text-emerald-100"></span>
+      </div>
+
+      <p class="text-sm font-medium text-emerald-100 mt-5">Welcome back,</p>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mt-1"><?= e($u['name']) ?></h2>
+      <p class="text-emerald-100 mt-3">Diagnose issues, record resolution notes, and keep assigned tickets moving toward completion.</p>
+
+      <div class="flex flex-wrap items-center gap-3 mt-6">
+        <a href="#tickets-section" class="inline-flex items-center gap-2 bg-white text-emerald-950 font-bold text-sm px-6 py-3.5 rounded-xl shadow-md hover:bg-emerald-50 transition">
+          <i data-lucide="wrench" class="w-4 h-4 text-emerald-700"></i>View Assigned Tasks
+        </a>
+        <?php if ($tech): ?>
+        <form method="post" class="inline-flex items-center gap-3 bg-white/10 border border-white/30 backdrop-blur-xs p-2 px-3.5 rounded-xl">
+          <?= tok() ?>
+          <span class="text-xs text-emerald-100">Status: <strong class="text-white"><?= e($tech['status']) ?></strong></span>
+          <button name="status" value="<?= $tech['status'] === 'Free' ? 'Busy' : 'Free' ?>" class="bg-white/20 hover:bg-white text-emerald-100 hover:text-emerald-950 font-semibold text-xs py-1.5 px-3 rounded-lg transition">
+            Set <?= $tech['status'] === 'Free' ? 'Busy' : 'Free' ?>
+          </button>
+        </form>
+        <?php endif; ?>
+      </div>
     </div>
-    <?php if ($tech): ?>
-    <form method="post" class="flex items-center gap-3 bg-white/10 p-2 px-3 rounded-2xl backdrop-blur-xs border border-white/15">
-      <?= tok() ?>
-      <span class="text-xs font-medium text-emerald-100">Status: <strong class="text-white font-bold"><?= e($tech['status']) ?></strong></span>
-      <button name="status" value="<?= $tech['status'] === 'Free' ? 'Busy' : 'Free' ?>" class="bg-white hover:bg-emerald-50 text-emerald-950 font-bold text-xs py-1.5 px-3 rounded-xl shadow-xs transition">
-        Set <?= $tech['status'] === 'Free' ? 'Busy' : 'Free' ?>
-      </button>
-    </form>
-    <?php endif; ?>
+
+    <!-- Rotating Animation Visual with Orbiting Service Icons (matches other 2 dashboards) -->
+    <div class="relative z-10 w-full lg:w-[290px] lg:h-[255px] shrink-0">
+      <div class="hidden lg:block absolute inset-0" aria-hidden="true">
+        <svg viewBox="0 0 290 255" class="w-full h-full" fill="none" style="overflow:visible">
+          <defs>
+            <radialGradient id="auraStaff"><stop offset="0" stop-color="#34D399" stop-opacity=".45"/><stop offset="1" stop-color="#34D399" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="145" cy="127" r="150" fill="url(#auraStaff)"/>
+          <circle class="spin-slow" cx="145" cy="127" r="140" stroke="#A7F3D0" stroke-opacity=".4" stroke-width="1.5" stroke-dasharray="3 9" style="transform-origin:145px 127px"/>
+          <circle cx="145" cy="127" r="105" stroke="#A7F3D0" stroke-opacity=".2" stroke-width="1"/>
+        </svg>
+        <div class="orbit" style="--a:-90deg;--r:140px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white flex items-center justify-center shadow-lg"><i data-lucide="wrench" class="w-[18px] h-[18px]"></i></span></div>
+        <div class="orbit" style="--a:30deg;--r:140px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-amber-300 flex items-center justify-center shadow-lg"><i data-lucide="cpu" class="w-[18px] h-[18px]"></i></span></div>
+        <div class="orbit" style="--a:150deg;--r:140px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-emerald-300 flex items-center justify-center shadow-lg"><i data-lucide="shield-check" class="w-[18px] h-[18px]"></i></span></div>
+      </div>
+
+      <div class="lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-max rounded-3xl bg-white/10 border border-white/25 backdrop-blur-md p-3 shadow-xl">
+        <div class="grid grid-cols-2 gap-2">
+          <div class="rounded-2xl bg-white/15 p-3 w-full lg:w-[78px]">
+            <i data-lucide="layers-3" class="w-4 h-4 text-emerald-100"></i>
+            <p id="statStaffTotal" class="font-display text-2xl font-bold text-white mt-2 leading-none"><?= count($rows) ?></p>
+            <p class="text-[11px] text-emerald-100 mt-1 leading-tight">Assigned tasks</p>
+          </div>
+          <div class="rounded-2xl bg-white/15 p-3 w-full lg:w-[78px]">
+            <i data-lucide="loader-circle" class="w-4 h-4 text-teal-300"></i>
+            <p id="statStaffProg" class="font-display text-2xl font-bold text-white mt-2 leading-none"><?= $c['In Progress'] ?></p>
+            <p class="text-[11px] text-emerald-100 mt-1 leading-tight">In progress</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="reveal lift card rounded-2xl p-5" style="--d:0.1s">
+      <div class="flex items-center justify-between"><span class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center"><i data-lucide="wrench" class="w-5 h-5"></i></span><span class="font-display text-4xl font-bold text-slate-900"><?= count($rows) ?></span></div>
+      <p class="text-sm font-medium text-slate-600 mt-3">Total assigned</p>
+    </div>
+    <div class="reveal lift card rounded-2xl p-5" style="--d:0.2s">
+      <div class="flex items-center justify-between"><span class="w-11 h-11 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center"><i data-lucide="clock-3" class="w-5 h-5"></i></span><span class="font-display text-4xl font-bold text-slate-900"><?= $c['Pending'] ?></span></div>
+      <p class="text-sm font-medium text-slate-600 mt-3">Awaiting action</p>
+    </div>
+    <div class="reveal lift card rounded-2xl p-5" style="--d:0.3s">
+      <div class="flex items-center justify-between"><span class="w-11 h-11 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center"><i data-lucide="loader-circle" class="w-5 h-5"></i></span><span class="font-display text-4xl font-bold text-slate-900"><?= $c['In Progress'] ?></span></div>
+      <p class="text-sm font-medium text-slate-600 mt-3">In progress</p>
+    </div>
+    <div class="reveal lift card rounded-2xl p-5" style="--d:0.4s">
+      <div class="flex items-center justify-between"><span class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center"><i data-lucide="circle-check" class="w-5 h-5"></i></span><span class="font-display text-4xl font-bold text-slate-900"><?= $c['Resolved'] ?></span></div>
+      <p class="text-sm font-medium text-slate-600 mt-3">Resolved</p>
+    </div>
+  </section>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <section class="reveal lift card rounded-3xl p-6" style="--d:.5s">
+        <?php if ($recentTicket): ?>
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0"><i data-lucide="ticket" class="w-6 h-6"></i></div>
+            <div>
+              <p class="text-xs font-bold text-emerald-700"><?= e($recentTicket['ticket_no']) ?> · Assigned task highlight</p>
+              <h3 class="text-lg font-bold text-slate-900"><?= e($recentTicket['title']) ?></h3>
+              <p class="text-sm text-slate-500"><?= e($recentTicket['department'] ?: 'General Office') ?> · <?= e(substr($recentTicket['created_at'], 0, 16)) ?></p>
+            </div>
+          </div>
+          <div><?= badge($recentTicket['status']) ?></div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-5">
+          <p class="text-xs text-slate-500">Priority: <?= badge($recentTicket['priority']) ?> <span class="ml-2">Category: <strong class="text-slate-700"><?= e($recentTicket['category']) ?></strong></span></p>
+          <a href="ticket.php?id=<?= $recentTicket['id'] ?>" class="inline-flex items-center gap-2 text-sm font-bold text-emerald-700 border border-emerald-200 hover:bg-emerald-50 px-4 py-2 rounded-lg transition">Update task<i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+        <?php else: ?>
+        <div class="text-center py-6 text-sm text-slate-400"><i data-lucide="check-circle-2" class="w-8 h-8 mx-auto mb-2 text-emerald-400"></i>No pending assigned tasks right now!</div>
+        <?php endif; ?>
+      </section>
+
+      <section>
+        <h3 class="sec-title">Technician tools</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <a href="#tickets-section" class="reveal lift card group rounded-2xl min-h-[150px] p-5 flex flex-col justify-center text-center" style="--d:.6s">
+            <span class="mx-auto w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="list-checks" class="w-6 h-6"></i></span>
+            <p class="text-sm font-bold text-slate-900 mt-3">Work Queue</p><p class="text-xs text-slate-500">Review all tasks</p>
+          </a>
+          <a href="ticket_status.php" class="reveal lift card group rounded-2xl min-h-[150px] p-5 flex flex-col justify-center text-center" style="--d:.7s">
+            <span class="mx-auto w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="clock" class="w-6 h-6"></i></span>
+            <p class="text-sm font-bold text-slate-900 mt-3">Task Status</p><p class="text-xs text-slate-500">Track task filters</p>
+          </a>
+          <a href="notifications.php" class="reveal lift card group rounded-2xl min-h-[150px] p-5 flex flex-col justify-center text-center" style="--d:.8s">
+            <span class="mx-auto w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="bell" class="w-6 h-6"></i></span>
+            <p class="text-sm font-bold text-slate-900 mt-3">Notifications</p><p class="text-xs text-slate-500">Assignment alerts</p>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <aside class="space-y-6">
+      <section>
+        <h3 class="sec-title">Task progress</h3>
+        <div class="card rounded-2xl p-5">
+          <div class="flex items-center justify-between text-sm"><span class="text-slate-600">Awaiting action</span><strong class="text-amber-600"><?= $c['Pending'] ?></strong></div>
+          <div class="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-amber-400" style="width:<?= count($rows) ? round(($c['Pending'] / count($rows)) * 100) : 0 ?>%"></div></div>
+          <div class="flex items-center justify-between text-sm mt-5"><span class="text-slate-600">Currently in progress</span><strong class="text-teal-600"><?= $c['In Progress'] ?></strong></div>
+          <div class="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-teal-500" style="width:<?= count($rows) ? round(($c['In Progress'] / count($rows)) * 100) : 0 ?>%"></div></div>
+          <div class="flex items-center justify-between text-sm mt-5"><span class="text-slate-600">Completed &amp; resolved</span><strong class="text-emerald-600"><?= $c['Resolved'] ?></strong></div>
+          <div class="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-emerald-500" style="width:<?= count($rows) ? round(($c['Resolved'] / count($rows)) * 100) : 0 ?>%"></div></div>
+        </div>
+      </section>
+      <?php if ($tech): ?>
+      <section class="reveal lift card rounded-2xl p-5 border-l-2 border-l-emerald-500" style="--d:.7s">
+        <div class="flex gap-3"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i><div><p class="text-sm font-bold text-slate-900">Specialization &amp; Duty</p><p class="text-xs text-slate-500 mt-1">Specialized in <strong class="text-slate-700"><?= e($tech['specialization']) ?></strong>. Current availability is <span class="font-bold <?= $tech['status'] === 'Free' ? 'text-emerald-600' : 'text-amber-600' ?>"><?= e($tech['status']) ?></span>.</p><a href="profile.php" class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 mt-3 hover:underline">Manage technician profile<i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a></div></div>
+      </section>
+      <?php endif; ?>
+    </aside>
   </div>
 
-  <div class="grid grid-cols-3 gap-4">
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs text-center">
-      <p class="text-xs text-slate-500 font-medium">Assigned Tasks</p>
-      <p class="text-2xl font-extrabold text-slate-800 mt-1"><?= count($rows) ?></p>
-    </div>
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs text-center">
-      <p class="text-xs text-emerald-600 font-medium">In Progress</p>
-      <p class="text-2xl font-extrabold text-emerald-600 mt-1"><?= $c['In Progress'] ?></p>
-    </div>
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs text-center">
-      <p class="text-xs text-blue-600 font-medium">Completed</p>
-      <p class="text-2xl font-extrabold text-blue-600 mt-1"><?= $c['Resolved'] ?></p>
-    </div>
-  </div>
-
-  <div id="tickets-section" class="pt-2">
+  <section id="tickets-section" class="pt-2">
     <div class="flex items-center justify-between mb-3">
       <div>
         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Work Queue</p>
-        <h3 class="text-sm font-bold text-slate-800">Your Assigned Incidents</h3>
+        <h3 class="font-display text-base font-bold text-slate-800">Your Assigned Incidents (<?= count($rows) ?>)</h3>
       </div>
+      <a href="ticket_status.php" class="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1"><i data-lucide="list-filter" class="w-3.5 h-3.5"></i>Filter status</a>
     </div>
     <?php ticketsTable($rows); ?>
-  </div>
+  </section>
 <?php endif; ?>
 
 <!-- Urgent Helpdesk Call Banner -->
@@ -399,9 +519,8 @@ $recentTicket = $rows[0] ?? null;
 <p class="text-center text-[11px] text-slate-400 pt-2">ICT Assist v1.0 (Web) · ICT Unit &copy; 2026</p>
 
 <script>
-  const todayEl = document.getElementById('today');
-  if (todayEl) {
-    todayEl.textContent = '· ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
-  }
+  document.querySelectorAll('#today').forEach(el => {
+    el.textContent = '· ' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  });
 </script>
 <?php foot(); ?>

@@ -19,11 +19,16 @@ head('Reports & Stats');
 <div class="space-y-6">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
     <div>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 mb-2">
+        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
+        <span>Coordinator Operations Analytics</span>
+      </span>
       <h2 class="text-xl font-bold text-slate-900">Incident Analytics &amp; Performance Reports</h2>
       <p class="text-xs text-slate-500">Real-time statistics across incident categories and technician dispatch.</p>
     </div>
-    <a href="dashboard.php" class="text-xs font-semibold text-purple-600 hover:text-purple-800 transition flex items-center gap-1 self-start sm:self-auto">
-      <span>&larr; Back to Dashboard</span>
+    <a href="dashboard.php" class="text-xs font-semibold text-purple-600 hover:text-purple-800 transition flex items-center gap-1 self-start sm:self-auto px-3.5 py-2 bg-purple-50 hover:bg-purple-100 rounded-xl border border-purple-200">
+      <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+      <span>Back to Dashboard</span>
     </a>
   </div>
 

@@ -6,7 +6,20 @@ $pdo = new PDO('mysql:host=localhost;dbname=ict_assist;charset=utf8mb4', 'root',
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES); }
 function q($sql, $p = []){ global $pdo; $s = $pdo->prepare($sql); $s->execute($p); return $s; }
-function me(){ return $_SESSION['u'] ?? null; }
+function me(){
+  if (empty($_SESSION['u']['id'])) return null;
+  static $cached = null;
+  if ($cached !== null) return $cached;
+  try {
+    $row = q("SELECT id, name, full_name, email, role, avatar FROM users WHERE id=? AND is_active=1", [$_SESSION['u']['id']])->fetch();
+    if ($row) {
+      $_SESSION['u'] = array_merge($_SESSION['u'], $row);
+      $cached = $_SESSION['u'];
+      return $cached;
+    }
+  } catch (Exception $e) {}
+  return $_SESSION['u'];
+}
 function need($role = null){
   if (!me()) { header('Location: login.html'); exit; }
   if ($role && me()['role'] !== $role) { http_response_code(403); exit('Forbidden'); }
@@ -63,6 +76,11 @@ function head($t){
   $initials = $u ? initials($u['name']) : 'US';
   $cur = basename($_SERVER['PHP_SELF'] ?? '');
 
+  $role = $u['role'] ?? 'employee';
+  $secBarGradient = $role === 'coordinator' ? 'linear-gradient(#7e22ce, #c084fc)' : ($role === 'staff' ? 'linear-gradient(#059669, #34d399)' : 'linear-gradient(#1D5BDB, #60A5FA)');
+  $liftShadow = $role === 'coordinator' ? 'rgba(126,34,206,.28)' : ($role === 'staff' ? 'rgba(5,150,105,.25)' : 'rgba(29,91,219,.25)');
+  $focusOutline = $role === 'coordinator' ? '#7e22ce' : ($role === 'staff' ? '#059669' : '#1D5BDB');
+
   echo '<!DOCTYPE html>';
   echo '<html lang="en">';
   echo '<head>';
@@ -89,11 +107,11 @@ function head($t){
   echo '.reveal { opacity: 0; transform: translateY(14px); animation: up .6s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: var(--d, 0s); }';
   echo '@keyframes up { to { opacity: 1; transform: none; } }';
   echo '.lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }';
-  echo '.lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(29,91,219,.25); }';
+  echo '.lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px '.$liftShadow.'; }';
   echo '.ping-ring { animation: ping 2s cubic-bezier(0,0,.2,1) infinite; }';
   echo '@keyframes ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }';
   echo '.sec-title { display: flex; align-items: center; gap: .6rem; font-family: \'Space Grotesk\', sans-serif; font-weight: 700; color: #0f172a; font-size: 1rem; margin-bottom: .75rem; }';
-  echo '.sec-title::before { content: \'\'; width: 4px; height: 18px; border-radius: 4px; background: linear-gradient(#1D5BDB, #60A5FA); }';
+  echo '.sec-title::before { content: \'\'; width: 4px; height: 18px; border-radius: 4px; background: '.$secBarGradient.'; }';
   echo '@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; animation: none; } .ping-ring { animation: none; } .lift:hover { transform: none; } }';
   echo '.flow { stroke-dasharray: 4 10; animation: flow 1.6s linear infinite; }';
   echo '@keyframes flow { to { stroke-dashoffset: -28; } }';
@@ -105,7 +123,7 @@ function head($t){
   echo '.chip-link:hover { background: #fff; color: #1D5BDB; transform: translateY(-2px); }';
   echo '@media (prefers-reduced-motion: reduce) { .flow, .orbit, .spin-slow { animation: none; } .orbit { transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); } }';
   echo 'summary::-webkit-details-marker { display: none; }';
-  echo 'a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid #1D5BDB; outline-offset: 2px; }';
+  echo 'a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid '.$focusOutline.'; outline-offset: 2px; }';
   echo '</style>';
   echo '</head>';
   echo '<body class="font-sans text-slate-700 min-h-screen lg:flex">';
@@ -165,14 +183,14 @@ function head($t){
     echo '    <p class="text-xs text-slate-400">Switch view</p>';
     echo '    <div class="grid grid-cols-2 gap-2">';
     if ($role === 'employee') {
-      echo '      <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-neon text-white text-xs font-medium transition">Coordinator</a>';
-      echo '      <a href="switch_view.php?role=staff" class="py-2 bg-white/10 text-center rounded-lg hover:bg-neon text-white text-xs font-medium transition">Staff</a>';
+      echo '      <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-purple-600 text-white text-xs font-medium transition">Coordinator</a>';
+      echo '      <a href="switch_view.php?role=staff" class="py-2 bg-white/10 text-center rounded-lg hover:bg-emerald-600 text-white text-xs font-medium transition">Staff</a>';
     } elseif ($role === 'coordinator') {
       echo '      <a href="switch_view.php?role=employee" class="py-2 bg-white/10 text-center rounded-lg hover:bg-purple-600 text-white text-xs font-medium transition">Employee</a>';
       echo '      <a href="switch_view.php?role=staff" class="py-2 bg-white/10 text-center rounded-lg hover:bg-purple-600 text-white text-xs font-medium transition">Staff</a>';
     } else {
-      echo '      <a href="switch_view.php?role=employee" class="py-2 bg-white/10 text-center rounded-lg hover:bg-emerald-600 text-white text-xs font-medium transition">Employee</a>';
-      echo '      <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-emerald-600 text-white text-xs font-medium transition">Coordinator</a>';
+      echo '      <a href="switch_view.php?role=employee" class="py-2 bg-white/10 text-center rounded-lg hover:bg-blue-600 text-white text-xs font-medium transition">Employee</a>';
+      echo '      <a href="switch_view.php?role=coordinator" class="py-2 bg-white/10 text-center rounded-lg hover:bg-purple-600 text-white text-xs font-medium transition">Coordinator</a>';
     }
     echo '    </div>';
     echo '    <a href="logout.php" class="flex items-center justify-center gap-2 p-2 text-rose-400 hover:bg-rose-500/10 rounded-xl transition font-medium"><i data-lucide="log-out" class="w-4 h-4"></i>Sign Out</a>';
@@ -195,7 +213,8 @@ function head($t){
       echo '        <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">'.$n.'</span>';
     }
     echo '      </a>';
-    echo '      <a href="profile.php" class="w-9 h-9 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center transition" aria-label="Profile">'.e($initials).'</a>';
+    $avatarBg = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
+    echo '      <a href="profile.php" class="w-9 h-9 rounded-full '.$avatarBg.' text-white text-xs font-bold flex items-center justify-center transition" aria-label="Profile">'.e($initials).'</a>';
     echo '    </div>';
     echo '  </header>';
   }
@@ -216,26 +235,31 @@ function foot(){
 }
 
 function ticketsTable($rows, $coordinator = false){
+  $u = me();
+  $role = $u['role'] ?? 'employee';
+  $isCoord = $coordinator || $role === 'coordinator';
+  $isStaff = $role === 'staff';
+
   if (!$rows) {
-    $emptyClass = $coordinator
+    $emptyClass = $isCoord
       ? 'bg-white p-8 rounded-2xl border border-violet-100 text-center text-xs text-slate-400 shadow-sm'
-      : 'bg-white p-6 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 shadow-xs';
+      : ($isStaff ? 'bg-white p-8 rounded-2xl border border-emerald-100 text-center text-xs text-slate-400 shadow-sm' : 'bg-white p-6 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 shadow-xs');
     echo '<div class="'.$emptyClass.'">No tickets found.</div>';
     return;
   }
-  $containerClass = $coordinator
+  $containerClass = $isCoord
     ? 'bg-white rounded-2xl border border-violet-100 shadow-sm overflow-hidden'
-    : 'bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden';
-  $headerClass = $coordinator
+    : ($isStaff ? 'bg-white rounded-2xl border border-emerald-100 shadow-sm overflow-hidden' : 'bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden');
+  $headerClass = $isCoord
     ? 'bg-violet-50/60 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-violet-100'
-    : 'bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200';
-  $rowClass = $coordinator
+    : ($isStaff ? 'bg-emerald-50/60 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-emerald-100' : 'bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200');
+  $rowClass = $isCoord
     ? 'hover:bg-violet-50/40 transition cursor-pointer'
-    : 'hover:bg-slate-50/80 transition cursor-pointer';
-  $ticketClass = $coordinator ? 'text-violet-700' : 'text-blue-600';
-  $titleHoverClass = $coordinator ? 'hover:text-violet-700' : 'hover:text-blue-600';
-  $tableClass = $coordinator ? 'w-full min-w-[900px] text-left text-xs border-collapse' : 'w-full text-left text-xs border-collapse';
-  $cellPadding = $coordinator ? 'py-3 px-4' : 'py-3.5 px-4';
+    : ($isStaff ? 'hover:bg-emerald-50/40 transition cursor-pointer' : 'hover:bg-slate-50/80 transition cursor-pointer');
+  $ticketClass = $isCoord ? 'text-violet-700' : ($isStaff ? 'text-emerald-700' : 'text-blue-600');
+  $titleHoverClass = $isCoord ? 'hover:text-violet-700' : ($isStaff ? 'hover:text-emerald-700' : 'hover:text-blue-600');
+  $tableClass = ($isCoord || $isStaff) ? 'w-full min-w-[900px] text-left text-xs border-collapse' : 'w-full text-left text-xs border-collapse';
+  $cellPadding = ($isCoord || $isStaff) ? 'py-3 px-4' : 'py-3.5 px-4';
 
   echo '<div class="'.$containerClass.'">';
   echo '  <div class="overflow-x-auto">';
@@ -254,13 +278,13 @@ function ticketsTable($rows, $coordinator = false){
   echo '      <tbody class="divide-y divide-slate-100">';
   foreach ($rows as $r) {
     echo '      <tr class="'.$rowClass.'" onclick="window.location.href=\'ticket.php?id='.$r['id'].'\'">';
-    echo '        <td class="'.$cellPadding.' font-bold '.$ticketClass.' whitespace-nowrap"><a href="ticket.php?id='.$r['id'].'" class="inline-flex items-center gap-2 hover:underline">'.($coordinator ? '<span class="w-1 h-5 rounded-full bg-violet-300"></span>' : '').e($r['ticket_no']).'</a></td>';
-    echo '        <td class="'.$cellPadding.' font-semibold text-slate-800'.($coordinator ? ' max-w-[280px]' : '').'"><a href="ticket.php?id='.$r['id'].'" class="'.$titleHoverClass.($coordinator ? ' block truncate' : '').'"'.($coordinator ? ' title="'.e($r['title']).'"' : '').'>'.e($r['title']).'</a></td>';
-    echo '        <td class="'.$cellPadding.' text-slate-600'.($coordinator ? ' whitespace-nowrap' : '').'">'.e($r['category']).'</td>';
-    echo '        <td class="'.$cellPadding.($coordinator ? ' whitespace-nowrap' : '').'">'.badge($r['priority']).'</td>';
-    echo '        <td class="'.$cellPadding.($coordinator ? ' whitespace-nowrap' : '').'">'.badge($r['status']).'</td>';
-    echo '        <td class="'.$cellPadding.' text-slate-500'.($coordinator ? ' whitespace-nowrap' : '').'">'.e($r['assigned_to'] ?: '—').'</td>';
-    echo '        <td class="'.$cellPadding.' text-slate-400'.($coordinator ? ' whitespace-nowrap' : '').'">'.e(substr($r['created_at'], 0, 10)).'</td>';
+    echo '        <td class="'.$cellPadding.' font-bold '.$ticketClass.' whitespace-nowrap"><a href="ticket.php?id='.$r['id'].'" class="inline-flex items-center gap-2 hover:underline">'.($isCoord ? '<span class="w-1 h-5 rounded-full bg-violet-300"></span>' : ($isStaff ? '<span class="w-1 h-5 rounded-full bg-emerald-400"></span>' : '')).e($r['ticket_no']).'</a></td>';
+    echo '        <td class="'.$cellPadding.' font-semibold text-slate-800'.(($isCoord || $isStaff) ? ' max-w-[280px]' : '').'"><a href="ticket.php?id='.$r['id'].'" class="'.$titleHoverClass.(($isCoord || $isStaff) ? ' block truncate' : '').'"'.(($isCoord || $isStaff) ? ' title="'.e($r['title']).'"' : '').'>'.e($r['title']).'</a></td>';
+    echo '        <td class="'.$cellPadding.' text-slate-600'.(($isCoord || $isStaff) ? ' whitespace-nowrap' : '').'">'.e($r['category']).'</td>';
+    echo '        <td class="'.$cellPadding.(($isCoord || $isStaff) ? ' whitespace-nowrap' : '').'">'.badge($r['priority']).'</td>';
+    echo '        <td class="'.$cellPadding.(($isCoord || $isStaff) ? ' whitespace-nowrap' : '').'">'.badge($r['status']).'</td>';
+    echo '        <td class="'.$cellPadding.' text-slate-500'.(($isCoord || $isStaff) ? ' whitespace-nowrap' : '').'">'.e($r['assigned_to'] ?: '—').'</td>';
+    echo '        <td class="'.$cellPadding.' text-slate-400'.(($isCoord || $isStaff) ? ' whitespace-nowrap' : '').'">'.e(substr($r['created_at'], 0, 10)).'</td>';
     echo '      </tr>';
   }
   echo '      </tbody>';

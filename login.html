@@ -223,18 +223,24 @@
         passwordInput.value = "Ict@12345";
         btnText.innerText = "Sign In as Employee";
         submitBtn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/25 transition flex items-center justify-center space-x-2";
+        emailInput.className = "w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-800";
+        passwordInput.className = "w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-800";
       } else if (role === 'coordinator') {
         tabCoord.className = "py-2.5 rounded-xl bg-white text-purple-600 shadow-xs font-bold transition";
         emailInput.value = "coordinator@ictassist.com";
         passwordInput.value = "Ict@12345";
         btnText.innerText = "Sign In as Coordinator";
         submitBtn.className = "w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-purple-600/25 transition flex items-center justify-center space-x-2";
+        emailInput.className = "w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-slate-800";
+        passwordInput.className = "w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-slate-800";
       } else if (role === 'staff') {
         tabStaff.className = "py-2.5 rounded-xl bg-white text-emerald-600 shadow-xs font-bold transition";
         emailInput.value = "ratnasiri@ictassist.com";
         passwordInput.value = "Ict@12345";
         btnText.innerText = "Sign In as Staff (Technician)";
         submitBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-emerald-600/25 transition flex items-center justify-center space-x-2";
+        emailInput.className = "w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-slate-800";
+        passwordInput.className = "w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-slate-800";
       }
     }
 

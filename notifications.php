@@ -50,10 +50,12 @@ head('Notifications');
   <?php foreach ($rows as $n):
     $isRead = (bool)$n['is_read'];
     $type = $n['type'] ?? 'info';
+    $isCoord = $u['role'] === 'coordinator';
+    $isStaff = $u['role'] === 'staff';
     
-    $borderCls = 'border-l-4 border-blue-500';
+    $borderCls = $isCoord ? 'border-l-4 border-purple-600' : ($isStaff ? 'border-l-4 border-emerald-600' : 'border-l-4 border-blue-500');
     $icon = 'info';
-    $iconColor = 'text-blue-500 bg-blue-50';
+    $iconColor = $isCoord ? 'text-purple-600 bg-purple-50' : ($isStaff ? 'text-emerald-600 bg-emerald-50' : 'text-blue-500 bg-blue-50');
     if ($type === 'warning') {
       $borderCls = 'border-l-4 border-amber-500';
       $icon = 'alert-triangle';
@@ -63,6 +65,7 @@ head('Notifications');
       $icon = 'check-circle';
       $iconColor = 'text-emerald-500 bg-emerald-50';
     }
+    $viewBtnCls = $isCoord ? 'text-purple-700 border-purple-200 hover:bg-purple-50' : ($isStaff ? 'text-emerald-700 border-emerald-200 hover:bg-emerald-50' : 'text-blue-600 border-blue-200 hover:bg-blue-50');
   ?>
   <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 <?= $borderCls ?> shadow-xs flex items-start justify-between gap-4 <?= $isRead ? 'opacity-75 hover:opacity-100' : '' ?> transition">
     <div class="flex items-start space-x-3.5">
@@ -81,7 +84,7 @@ head('Notifications');
       </div>
     </div>
     <?php if (!empty($n['ticket_id'])): ?>
-    <a href="ticket.php?id=<?= (int)$n['ticket_id'] ?>" class="shrink-0 text-xs font-semibold text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition flex items-center gap-1">
+    <a href="ticket.php?id=<?= (int)$n['ticket_id'] ?>" class="shrink-0 text-xs font-semibold <?= $viewBtnCls ?> border px-3 py-1.5 rounded-lg transition flex items-center gap-1">
       <span>View</span>
       <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
     </a>
