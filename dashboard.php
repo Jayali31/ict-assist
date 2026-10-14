@@ -252,25 +252,65 @@ $recentTicket = $rows[0] ?? null;
   <p class="text-center text-xs text-slate-500 pt-2">ICT Assist v1.0 (Web) · ICT Unit</p>
 
 <?php elseif ($u['role'] === 'coordinator'): ?>
-  <!-- Coordinator Dashboard -->
-  <section class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1e103d] via-[#4c1d95] to-[#7e22ce] shadow-lg p-6 sm:p-10 min-h-[300px] flex items-center">
-    <div class="absolute -right-16 -top-24 w-80 h-80 rounded-full bg-purple-300/20 blur-3xl"></div>
-    <div class="absolute right-16 bottom-[-7rem] w-72 h-72 rounded-full bg-fuchsia-400/20 blur-3xl"></div>
-    <div class="relative max-w-2xl z-10">
-      <span class="inline-flex items-center gap-2 text-xs font-medium text-purple-100 bg-white/10 border border-white/20 rounded-full px-3 py-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Coordinator Operations</span>
-      <span id="today" class="hidden sm:inline-flex ml-2 text-xs text-purple-200"></span>
-      <p class="text-sm font-medium text-purple-200 mt-4">Welcome back,</p>
+  <!-- Coordinator Hero Card -->
+  <section class="reveal relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1B1040] via-[#4A1D96] to-[#8B2FD0] shadow-lg p-6 sm:p-10 min-h-[320px] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=1400&amp;q=70" alt=""
+         class="absolute inset-y-0 right-0 w-3/4 h-full object-cover opacity-30 mix-blend-screen"
+         style="-webkit-mask-image:linear-gradient(to right,transparent,#000 60%);mask-image:linear-gradient(to right,transparent,#000 60%)"
+         onerror="this.remove()">
+    <div class="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-fuchsia-400/30 blur-3xl"></div>
+    <div class="absolute -left-20 -bottom-24 w-72 h-72 rounded-full bg-violet-500/20 blur-3xl"></div>
+
+    <div class="relative z-10 max-w-xl">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span class="inline-flex items-center gap-2 text-xs font-medium text-purple-50 bg-white/10 border border-white/20 rounded-full px-3 py-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Coordinator Operations
+        </span>
+        <span id="today" class="text-xs text-purple-100"></span>
+      </div>
+
+      <p class="text-sm font-medium text-purple-100 mt-5">Welcome back,</p>
       <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mt-1"><?= e($u['name']) ?></h2>
       <p class="text-purple-100 mt-3">Monitor incidents, coordinate dispatch, and keep every support request moving.</p>
+
       <div class="flex flex-wrap gap-3 mt-6">
-        <a href="#tickets-section" class="inline-flex items-center gap-2 bg-white text-purple-800 font-bold text-sm px-6 py-3.5 rounded-xl shadow-md hover:bg-purple-50 transition"><i data-lucide="inbox" class="w-4 h-4"></i>Review Incident Queue</a>
-        <a href="reports.php" class="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-medium text-sm px-6 py-3.5 rounded-xl hover:bg-white/20 transition"><i data-lucide="chart-no-axes-column-increasing" class="w-4 h-4"></i>View Reports</a>
+        <a href="#tickets-section" class="inline-flex items-center gap-2 bg-white text-purple-700 font-bold text-sm px-6 py-3.5 rounded-xl shadow-md hover:bg-purple-50 transition">
+          <i data-lucide="inbox" class="w-4 h-4"></i>Review Incident Queue
+        </a>
+        <a href="reports.php" class="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-medium text-sm px-6 py-3.5 rounded-xl hover:bg-white/20 transition">
+          <i data-lucide="bar-chart-2" class="w-4 h-4"></i>View Reports
+        </a>
       </div>
     </div>
-    <div class="hidden lg:flex absolute right-12 top-1/2 -translate-y-1/2 w-64 h-48 items-center justify-center rounded-3xl border border-white/15 bg-white/10 backdrop-blur-sm" aria-hidden="true">
-      <div class="grid grid-cols-2 gap-3 p-5 w-full">
-        <div class="rounded-2xl bg-white/10 p-4"><i data-lucide="inbox" class="w-5 h-5 text-purple-200"></i><p class="font-display text-3xl font-bold text-white mt-3"><?= count($rows) ?></p><p class="text-xs text-purple-200">Total incidents</p></div>
-        <div class="rounded-2xl bg-white/10 p-4"><i data-lucide="clock-3" class="w-5 h-5 text-amber-300"></i><p class="font-display text-3xl font-bold text-white mt-3"><?= $c['Pending'] ?></p><p class="text-xs text-purple-200">Awaiting dispatch</p></div>
+
+    <div class="relative z-10 w-full lg:w-[290px] lg:h-[255px] shrink-0">
+      <div class="hidden lg:block absolute inset-0" aria-hidden="true">
+        <svg viewBox="0 0 290 255" class="w-full h-full" fill="none" style="overflow:visible">
+          <defs>
+            <radialGradient id="aura"><stop offset="0" stop-color="#E879F9" stop-opacity=".45"/><stop offset="1" stop-color="#E879F9" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="145" cy="127" r="150" fill="url(#aura)"/>
+          <circle class="spin-slow" cx="145" cy="127" r="140" stroke="#E9D5FF" stroke-opacity=".4" stroke-width="1.5" stroke-dasharray="3 9" style="transform-origin:145px 127px"/>
+          <circle cx="145" cy="127" r="105" stroke="#E9D5FF" stroke-opacity=".2" stroke-width="1"/>
+        </svg>
+        <div class="orbit" style="--a:-90deg;--r:140px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white flex items-center justify-center shadow-lg"><i data-lucide="headphones" class="w-[18px] h-[18px]"></i></span></div>
+        <div class="orbit" style="--a:30deg;--r:140px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-amber-300 flex items-center justify-center shadow-lg"><i data-lucide="truck" class="w-[18px] h-[18px]"></i></span></div>
+        <div class="orbit" style="--a:150deg;--r:140px;--t:30s"><span class="w-10 h-10 rounded-full bg-white/15 backdrop-blur border border-white/30 text-emerald-300 flex items-center justify-center shadow-lg"><i data-lucide="shield-check" class="w-[18px] h-[18px]"></i></span></div>
+      </div>
+
+      <div class="lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-max rounded-3xl bg-white/10 border border-white/25 backdrop-blur-md p-3 shadow-xl">
+        <div class="grid grid-cols-2 gap-2">
+          <div class="rounded-2xl bg-white/15 p-3 w-full lg:w-[78px]">
+            <i data-lucide="inbox" class="w-4 h-4 text-purple-100"></i>
+            <p id="statTotal" class="font-display text-2xl font-bold text-white mt-2 leading-none"><?= count($rows) ?></p>
+            <p class="text-[11px] text-purple-100 mt-1 leading-tight">Total incidents</p>
+          </div>
+          <div class="rounded-2xl bg-white/15 p-3 w-full lg:w-[78px]">
+            <i data-lucide="clock" class="w-4 h-4 text-amber-300"></i>
+            <p id="statAwaiting" class="font-display text-2xl font-bold text-white mt-2 leading-none"><?= $c['Pending'] ?></p>
+            <p class="text-[11px] text-purple-100 mt-1 leading-tight">Awaiting dispatch</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -294,67 +334,6 @@ $recentTicket = $rows[0] ?? null;
     </div>
   </section>
 
-  <div class="grid lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-6">
-      <section class="reveal lift card rounded-3xl p-6" style="--d:.5s">
-        <?php if ($recentTicket): ?>
-        <div class="flex justify-between items-start gap-4">
-          <div class="flex gap-4">
-            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0"><i data-lucide="ticket" class="w-6 h-6"></i></div>
-            <div>
-              <p class="text-xs font-bold text-purple-700"><?= e($recentTicket['ticket_no']) ?> · Incident queue highlight</p>
-              <h3 class="text-lg font-bold text-slate-900"><?= e($recentTicket['title']) ?></h3>
-              <p class="text-sm text-slate-500"><?= e($recentTicket['department'] ?: 'Unassigned department') ?> · <?= e(substr($recentTicket['created_at'], 0, 16)) ?></p>
-            </div>
-          </div>
-          <div><?= badge($recentTicket['status']) ?></div>
-        </div>
-        <div class="flex flex-wrap items-center justify-between gap-3 mt-5">
-          <p class="text-xs text-slate-500">Priority: <?= badge($recentTicket['priority']) ?> <span class="ml-2">Assigned to: <strong class="text-slate-700"><?= e($recentTicket['assigned_to'] ?: 'Awaiting assignment') ?></strong></span></p>
-          <a href="ticket.php?id=<?= $recentTicket['id'] ?>" class="inline-flex items-center gap-2 text-sm font-bold text-purple-700 border border-purple-200 hover:bg-purple-50 px-4 py-2 rounded-lg transition">Review incident<i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-        </div>
-        <?php else: ?>
-        <div class="text-center py-6 text-sm text-slate-400"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>No incidents are waiting in the queue.</div>
-        <?php endif; ?>
-      </section>
-
-      <section>
-        <h3 class="sec-title">Coordinator tools</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <a href="#tickets-section" class="reveal lift card group rounded-2xl min-h-[150px] p-5 flex flex-col justify-center text-center" style="--d:.6s">
-            <span class="mx-auto w-12 h-12 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="list-checks" class="w-6 h-6"></i></span>
-            <p class="text-sm font-bold text-slate-900 mt-3">Incident Queue</p><p class="text-xs text-slate-500">Review all tickets</p>
-          </a>
-          <a href="reports.php" class="reveal lift card group rounded-2xl min-h-[150px] p-5 flex flex-col justify-center text-center" style="--d:.7s">
-            <span class="mx-auto w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="chart-no-axes-column-increasing" class="w-6 h-6"></i></span>
-            <p class="text-sm font-bold text-slate-900 mt-3">Reports &amp; Stats</p><p class="text-xs text-slate-500">Track service performance</p>
-          </a>
-          <a href="notifications.php" class="reveal lift card group rounded-2xl min-h-[150px] p-5 flex flex-col justify-center text-center" style="--d:.8s">
-            <span class="mx-auto w-12 h-12 rounded-2xl bg-fuchsia-50 text-fuchsia-600 flex items-center justify-center transition group-hover:scale-110"><i data-lucide="bell" class="w-6 h-6"></i></span>
-            <p class="text-sm font-bold text-slate-900 mt-3">Notifications</p><p class="text-xs text-slate-500">See the latest updates</p>
-          </a>
-        </div>
-      </section>
-    </div>
-
-    <aside class="space-y-6">
-      <section>
-        <h3 class="sec-title">Queue overview</h3>
-        <div class="card rounded-2xl p-5">
-          <div class="flex items-center justify-between text-sm"><span class="text-slate-600">Pending dispatch</span><strong class="text-amber-600"><?= $c['Pending'] ?></strong></div>
-          <div class="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-amber-400" style="width:<?= count($rows) ? round(($c['Pending'] / count($rows)) * 100) : 0 ?>%"></div></div>
-          <div class="flex items-center justify-between text-sm mt-5"><span class="text-slate-600">Being handled</span><strong class="text-violet-600"><?= $c['In Progress'] ?></strong></div>
-          <div class="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-violet-500" style="width:<?= count($rows) ? round(($c['In Progress'] / count($rows)) * 100) : 0 ?>%"></div></div>
-          <div class="flex items-center justify-between text-sm mt-5"><span class="text-slate-600">Completed</span><strong class="text-emerald-600"><?= $c['Resolved'] ?></strong></div>
-          <div class="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden"><div class="h-full rounded-full bg-emerald-500" style="width:<?= count($rows) ? round(($c['Resolved'] / count($rows)) * 100) : 0 ?>%"></div></div>
-        </div>
-      </section>
-      <section class="reveal lift card rounded-2xl p-5 border-l-2 border-l-purple-500" style="--d:.7s">
-        <div class="flex gap-3"><i data-lucide="chart-no-axes-column-increasing" class="w-5 h-5 text-purple-600 shrink-0 mt-0.5"></i><div><p class="text-sm font-bold text-slate-900">Service performance</p><p class="text-xs text-slate-500 mt-1">View reports for a closer look at ticket activity and resolution progress.</p><a href="reports.php" class="inline-flex items-center gap-1 text-xs font-bold text-purple-700 mt-3 hover:underline">Open reports<i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a></div></div>
-      </section>
-    </aside>
-  </div>
-
   <section id="tickets-section" class="pt-2">
     <div class="flex items-center justify-between mb-3">
       <div>
@@ -363,7 +342,7 @@ $recentTicket = $rows[0] ?? null;
       </div>
       <a href="reports.php" class="text-xs font-bold text-purple-700 hover:underline flex items-center gap-1"><i data-lucide="chart-no-axes-column-increasing" class="w-3.5 h-3.5"></i>View reports</a>
     </div>
-    <?php ticketsTable($rows); ?>
+    <?php ticketsTable($rows, true); ?>
   </section>
 
 <?php elseif ($u['role'] === 'staff'): ?>

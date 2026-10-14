@@ -215,15 +215,32 @@ function foot(){
   echo '</body></html>';
 }
 
-function ticketsTable($rows){
+function ticketsTable($rows, $coordinator = false){
   if (!$rows) {
-    echo '<div class="bg-white p-6 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 shadow-xs">No tickets found.</div>';
+    $emptyClass = $coordinator
+      ? 'bg-white p-8 rounded-2xl border border-violet-100 text-center text-xs text-slate-400 shadow-sm'
+      : 'bg-white p-6 rounded-2xl border border-slate-200 text-center text-xs text-slate-400 shadow-xs';
+    echo '<div class="'.$emptyClass.'">No tickets found.</div>';
     return;
   }
-  echo '<div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">';
+  $containerClass = $coordinator
+    ? 'bg-white rounded-2xl border border-violet-100 shadow-sm overflow-hidden'
+    : 'bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden';
+  $headerClass = $coordinator
+    ? 'bg-violet-50/60 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-violet-100'
+    : 'bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200';
+  $rowClass = $coordinator
+    ? 'hover:bg-violet-50/40 transition cursor-pointer'
+    : 'hover:bg-slate-50/80 transition cursor-pointer';
+  $ticketClass = $coordinator ? 'text-violet-700' : 'text-blue-600';
+  $titleHoverClass = $coordinator ? 'hover:text-violet-700' : 'hover:text-blue-600';
+  $tableClass = $coordinator ? 'w-full min-w-[900px] text-left text-xs border-collapse' : 'w-full text-left text-xs border-collapse';
+  $cellPadding = $coordinator ? 'py-3 px-4' : 'py-3.5 px-4';
+
+  echo '<div class="'.$containerClass.'">';
   echo '  <div class="overflow-x-auto">';
-  echo '    <table class="w-full text-left text-xs border-collapse">';
-  echo '      <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">';
+  echo '    <table class="'.$tableClass.'">';
+  echo '      <thead class="'.$headerClass.'">';
   echo '        <tr>';
   echo '          <th class="py-3 px-4">Ticket</th>';
   echo '          <th class="py-3 px-4">Title</th>';
@@ -236,14 +253,14 @@ function ticketsTable($rows){
   echo '      </thead>';
   echo '      <tbody class="divide-y divide-slate-100">';
   foreach ($rows as $r) {
-    echo '      <tr class="hover:bg-slate-50/80 transition cursor-pointer" onclick="window.location.href=\'ticket.php?id='.$r['id'].'\'">';
-    echo '        <td class="py-3.5 px-4 font-bold text-blue-600"><a href="ticket.php?id='.$r['id'].'" class="hover:underline">'.e($r['ticket_no']).'</a></td>';
-    echo '        <td class="py-3.5 px-4 font-semibold text-slate-800"><a href="ticket.php?id='.$r['id'].'" class="hover:text-blue-600">'.e($r['title']).'</a></td>';
-    echo '        <td class="py-3.5 px-4 text-slate-600">'.e($r['category']).'</td>';
-    echo '        <td class="py-3.5 px-4">'.badge($r['priority']).'</td>';
-    echo '        <td class="py-3.5 px-4">'.badge($r['status']).'</td>';
-    echo '        <td class="py-3.5 px-4 text-slate-500">'.e($r['assigned_to'] ?: '—').'</td>';
-    echo '        <td class="py-3.5 px-4 text-slate-400">'.e(substr($r['created_at'], 0, 10)).'</td>';
+    echo '      <tr class="'.$rowClass.'" onclick="window.location.href=\'ticket.php?id='.$r['id'].'\'">';
+    echo '        <td class="'.$cellPadding.' font-bold '.$ticketClass.' whitespace-nowrap"><a href="ticket.php?id='.$r['id'].'" class="inline-flex items-center gap-2 hover:underline">'.($coordinator ? '<span class="w-1 h-5 rounded-full bg-violet-300"></span>' : '').e($r['ticket_no']).'</a></td>';
+    echo '        <td class="'.$cellPadding.' font-semibold text-slate-800'.($coordinator ? ' max-w-[280px]' : '').'"><a href="ticket.php?id='.$r['id'].'" class="'.$titleHoverClass.($coordinator ? ' block truncate' : '').'"'.($coordinator ? ' title="'.e($r['title']).'"' : '').'>'.e($r['title']).'</a></td>';
+    echo '        <td class="'.$cellPadding.' text-slate-600'.($coordinator ? ' whitespace-nowrap' : '').'">'.e($r['category']).'</td>';
+    echo '        <td class="'.$cellPadding.($coordinator ? ' whitespace-nowrap' : '').'">'.badge($r['priority']).'</td>';
+    echo '        <td class="'.$cellPadding.($coordinator ? ' whitespace-nowrap' : '').'">'.badge($r['status']).'</td>';
+    echo '        <td class="'.$cellPadding.' text-slate-500'.($coordinator ? ' whitespace-nowrap' : '').'">'.e($r['assigned_to'] ?: '—').'</td>';
+    echo '        <td class="'.$cellPadding.' text-slate-400'.($coordinator ? ' whitespace-nowrap' : '').'">'.e(substr($r['created_at'], 0, 10)).'</td>';
     echo '      </tr>';
   }
   echo '      </tbody>';
