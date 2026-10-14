@@ -31,7 +31,7 @@ CREATE TABLE categories (
 -- ---------------------------------------------------------------------
 CREATE TABLE users (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name          VARCHAR(100) NOT NULL,            -- display name e.g. A.M. Emandi
+  name          VARCHAR(100) NOT NULL,            -- display name e.g. A.M.Rathnasiri
   full_name     VARCHAR(150) NOT NULL,
   email         VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
@@ -186,8 +186,8 @@ INSERT INTO departments (name) VALUES
 
 -- users: 1 employee, 2 coordinator, 3-6 technicians, 7-8 other employees
 INSERT INTO users (id,name,full_name,email,password_hash,role,role_title,department_id,branch_id,phone,avatar) VALUES
- (1,'A.M. Emandi','M.M.J.C. Deermini','a.m.emandi@ictassist.com','$2y$10$uIUHDJEKpRjAbLL2i.8J1eV6CJNHgQKHBnXh/l6zZNo5JnIACWHZC','employee','Employee',
-    (SELECT id FROM departments WHERE name='Accounts & Finance'),(SELECT id FROM branches WHERE name='Colombo Main Office'),'+94 77 123 4567','AE'),
+ (1,'A.M.Rathnasiri','M.M.J.C. Deermini','a.m.emandi@ictassist.com','$2y$10$uIUHDJEKpRjAbLL2i.8J1eV6CJNHgQKHBnXh/l6zZNo5JnIACWHZC','employee','Employee',
+    (SELECT id FROM departments WHERE name='Accounts & Finance'),(SELECT id FROM branches WHERE name='Colombo Main Office'),'+94 77 123 4567','AR'),
  (2,'Sarah Jayasinghe','Sarah Jayasinghe','coordinator@ictassist.com','$2y$10$uIUHDJEKpRjAbLL2i.8J1eV6CJNHgQKHBnXh/l6zZNo5JnIACWHZC','coordinator','Helpdesk Coordinator',
     (SELECT id FROM departments WHERE name='ICT Support & Dispatch'),(SELECT id FROM branches WHERE name='Headquarters'),'+94 71 987 6543','SJ'),
  (3,'K.P. Ratnasiri','K.P. Ratnasiri','ratnasiri@ictassist.com','$2y$10$uIUHDJEKpRjAbLL2i.8J1eV6CJNHgQKHBnXh/l6zZNo5JnIACWHZC','staff','Hardware Technician',
@@ -242,4 +242,3 @@ INSERT INTO notifications (user_id,ticket_id,title,subtitle,type,is_read,created
  (3,2024,'New task assigned #TX-2024','Printer not working at Colombo Main Office (High priority)','warning',0,NOW()),
  (3,2026,'New incident pending #TX-2026','VPN Connection failing across subnet at Kandy Branch','info',0,NOW()),
  (3,2021,'Ticket #TX-2021 resolved','Windows 11 update issue completed and verified','success',1,DATE_SUB(NOW(), INTERVAL 1 DAY));
-
