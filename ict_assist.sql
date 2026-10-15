@@ -41,6 +41,7 @@ CREATE TABLE users (
   branch_id     INT UNSIGNED NULL,
   phone         VARCHAR(30)  NULL,
   avatar        VARCHAR(5)   NULL,                -- initials e.g. AE
+  profile_image VARCHAR(255) NULL,                -- uploaded profile picture path
   is_active     TINYINT(1) NOT NULL DEFAULT 1,
   created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_users_dept   FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL,
@@ -138,7 +139,9 @@ SELECT t.id,
        d.name  AS department,
        b.name  AS branch,
        u.name  AS created_by,
+       u.profile_image AS created_by_photo,
        tu.name AS assigned_to,
+       tu.profile_image AS assigned_to_photo,
        t.assigned_tech_id,
        t.attachment, t.created_at, t.updated_at, t.resolved_at
 FROM tickets t
@@ -162,14 +165,14 @@ FROM categories c LEFT JOIN tickets t ON t.category_id = c.id
 GROUP BY c.id, c.name;
 
 CREATE VIEW v_technician_stats AS
-SELECT te.id AS technician_id, u.name, u.avatar, te.specialization, te.status,
+SELECT te.id AS technician_id, u.name, u.avatar, u.profile_image, te.specialization, te.status,
        COALESCE(SUM(t.status = 'In Progress'),0) AS active_count,
        COALESCE(SUM(t.status = 'Resolved'),0)    AS resolved_count,
        COUNT(t.id)                   AS assigned_total
 FROM technicians te
 JOIN users u ON u.id = te.user_id
 LEFT JOIN tickets t ON t.assigned_tech_id = te.id
-GROUP BY te.id, u.name, u.avatar, te.specialization, te.status;
+GROUP BY te.id, u.name, u.avatar, u.profile_image, te.specialization, te.status;
 
 -- ---------------------------------------------------------------------
 -- Seed data (taken from src/data/initialData.js)

@@ -11,7 +11,7 @@ function me(){
   static $cached = null;
   if ($cached !== null) return $cached;
   try {
-    $row = q("SELECT id, name, full_name, email, role, avatar FROM users WHERE id=? AND is_active=1", [$_SESSION['u']['id']])->fetch();
+    $row = q("SELECT id, name, full_name, email, role, avatar, profile_image FROM users WHERE id=? AND is_active=1", [$_SESSION['u']['id']])->fetch();
     if ($row) {
       $_SESSION['u'] = array_merge($_SESSION['u'], $row);
       $cached = $_SESSION['u'];
@@ -180,6 +180,18 @@ function head($t){
 
     echo '  <!-- Bottom Switcher -->';
     echo '  <div class="space-y-2 pt-4 border-t border-white/10 text-sm">';
+    echo '    <a href="profile.php" class="flex items-center gap-3 p-2.5 mb-2 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition group">';
+    if (!empty($u['profile_image']) && file_exists(__DIR__ . '/uploads/' . $u['profile_image'])) {
+      echo '      <span class="w-10 h-10 rounded-full overflow-hidden border border-white/20 shrink-0 block"><img src="uploads/'.e($u['profile_image']).'" alt="'.e($u['name']).'" class="w-full h-full object-cover"></span>';
+    } else {
+      $avatarBg = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
+      echo '      <span class="w-10 h-10 rounded-full '.$avatarBg.' text-white text-xs font-bold flex items-center justify-center shrink-0">'.e($initials).'</span>';
+    }
+    echo '      <span class="leading-tight min-w-0">';
+    echo '        <span class="block text-xs font-bold text-white truncate group-hover:text-blue-200 transition">'.e($u['full_name'] ?: $u['name']).'</span>';
+    echo '        <span class="block text-[11px] text-slate-400 capitalize">'.e($role).'</span>';
+    echo '      </span>';
+    echo '    </a>';
     echo '    <p class="text-xs text-slate-400">Switch view</p>';
     echo '    <div class="grid grid-cols-2 gap-2">';
     if ($role === 'employee') {
@@ -214,7 +226,11 @@ function head($t){
     }
     echo '      </a>';
     $avatarBg = $role === 'coordinator' ? 'bg-purple-600' : ($role === 'staff' ? 'bg-emerald-600' : 'bg-blue-600');
-    echo '      <a href="profile.php" class="w-9 h-9 rounded-full '.$avatarBg.' text-white text-xs font-bold flex items-center justify-center transition" aria-label="Profile">'.e($initials).'</a>';
+    if (!empty($u['profile_image']) && file_exists(__DIR__ . '/uploads/' . $u['profile_image'])) {
+      echo '      <a href="profile.php" class="w-9 h-9 rounded-full overflow-hidden border border-slate-200 block transition hover:scale-105 shrink-0 shadow-xs ring-2 ring-slate-100" aria-label="Profile"><img src="uploads/'.e($u['profile_image']).'" alt="'.e($u['name']).'" class="w-full h-full object-cover"></a>';
+    } else {
+      echo '      <a href="profile.php" class="w-9 h-9 rounded-full '.$avatarBg.' text-white text-xs font-bold flex items-center justify-center transition hover:scale-105 shrink-0" aria-label="Profile">'.e($initials).'</a>';
+    }
     echo '    </div>';
     echo '  </header>';
   }

@@ -24,6 +24,7 @@ foreach ($rows as $r) {
     'branch'     => $r['branch'] ?: 'Main Branch',
     'department' => $r['department'] ?: '',
     'assignedTo' => $r['assigned_to'] ?: '',
+    'assignedPhoto' => $r['assigned_to_photo'] ?: '',
     'created_at' => substr($r['created_at'], 0, 10)
   ];
 }
@@ -130,8 +131,12 @@ function renderRows() {
     const avatarBg = isCoord ? 'bg-purple-900' : (isStaff ? 'bg-emerald-800' : 'bg-slate-900');
     const unassignedCls = isCoord ? 'text-purple-500 bg-purple-50/60 border border-purple-200' : (isStaff ? 'text-emerald-600 bg-emerald-50/60 border border-emerald-200' : 'text-slate-400 border border-dashed border-slate-300');
 
+    const techAvatar = ticket.assignedPhoto
+      ? `<img src="uploads/${escapeHtml(ticket.assignedPhoto)}" alt="${escapeHtml(ticket.assignedTo)}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0">`
+      : `<span class="w-8 h-8 rounded-full ${avatarBg} text-white text-[11px] font-bold grid place-items-center shrink-0">${escapeHtml(ticket.assignedTo.split(/[ .]+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase())}</span>`;
+
     const assigned = ticket.assignedTo
-      ? `<span class="inline-flex items-center gap-2"><span class="w-8 h-8 rounded-full ${avatarBg} text-white text-[11px] font-bold grid place-items-center">${escapeHtml(ticket.assignedTo.split(/[ .]+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase())}</span>${escapeHtml(ticket.assignedTo)}</span>`
+      ? `<span class="inline-flex items-center gap-2">${techAvatar}${escapeHtml(ticket.assignedTo)}</span>`
       : `<span class="inline-flex items-center gap-2 text-xs italic ${unassignedCls} rounded-full px-3 py-1.5"><i data-lucide="user-plus" class="w-3.5 h-3.5"></i>Unassigned</span>`;
 
     return `<tr class="group">

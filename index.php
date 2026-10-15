@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $u = q("SELECT * FROM users WHERE email=? AND is_active=1", [$email])->fetch();
   if ($u && (password_verify($password, $u['password_hash']) || $password === 'Ict@12345' || $password === 'password123')) {
     session_regenerate_id(true);
-    $_SESSION['u'] = ['id' => $u['id'], 'name' => $u['name'], 'role' => $u['role'], 'email' => $u['email']];
+    $_SESSION['u'] = ['id' => $u['id'], 'name' => $u['name'], 'role' => $u['role'], 'email' => $u['email'], 'profile_image' => $u['profile_image'] ?? null];
     if ($isAjax) {
       header('Content-Type: application/json');
       echo json_encode([

@@ -14,7 +14,8 @@ if (isset($users[$target])) {
       'id' => $u['id'],
       'name' => $u['name'],
       'role' => $u['role'],
-      'email' => $u['email']
+      'email' => $u['email'],
+      'profile_image' => $u['profile_image'] ?? null
     ];
   }
 }
