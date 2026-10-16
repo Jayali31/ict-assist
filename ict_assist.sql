@@ -35,7 +35,7 @@ CREATE TABLE users (
   full_name     VARCHAR(150) NOT NULL,
   email         VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  role          ENUM('employee','coordinator','staff') NOT NULL,
+  role          ENUM('employee','coordinator','staff','technician') NOT NULL DEFAULT 'employee',
   role_title    VARCHAR(100) NULL,
   department_id INT UNSIGNED NULL,
   branch_id     INT UNSIGNED NULL,

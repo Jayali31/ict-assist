@@ -24,11 +24,125 @@ if (me()) {
 
 $err = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $email = trim($_POST['email'] ?? '');
-  $password = $_POST['password'] ?? '';
   $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
          || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
          || isset($_POST['ajax']);
+
+  $action = trim($_POST['action'] ?? 'login');
+
+  // ==========================================
+  // REGISTRATION (CREATE ACCOUNT) HANDLER
+  // ==========================================
+  if ($action === 'register') {
+    $fullName = trim($_POST['full_name'] ?? '');
+    $email = strtolower(trim($_POST['email'] ?? ''));
+    $role = strtolower(trim($_POST['role'] ?? 'employee'));
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
+
+    // Form validation
+    if ($fullName === '' || $email === '' || $password === '') {
+      $err = 'Please fill in all required fields.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $err = 'Please enter a valid email address.';
+    } elseif (strlen($password) < 6) {
+      $err = 'Password must be at least 6 characters.';
+    } elseif ($password !== $confirmPassword) {
+      $err = 'Passwords do not match.';
+    } else {
+      // Check if email already registered
+      $existing = q("SELECT id FROM users WHERE email=?", [$email])->fetch();
+      if ($existing) {
+        $err = 'An account with this email address already exists.';
+      } else {
+        // Map role for system compatibility
+        $dbRole = 'employee';
+        $roleTitle = 'Employee';
+        $deptName = 'Accounts & Finance';
+        $branchName = 'Colombo Main Office';
+
+        if ($role === 'coordinator') {
+          $dbRole = 'coordinator';
+          $roleTitle = 'Helpdesk Coordinator';
+          $deptName = 'ICT Support & Dispatch';
+          $branchName = 'Headquarters';
+        } elseif ($role === 'technician' || $role === 'staff') {
+          $dbRole = 'staff';
+          $roleTitle = 'Hardware Technician';
+          $deptName = 'Hardware Maintenance';
+          $branchName = 'Field Services';
+        }
+
+        // Display name
+        $name = $fullName;
+        $avatar = initials($fullName);
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+        // Retrieve default Department and Branch IDs
+        $deptRow = q("SELECT id FROM departments WHERE name=?", [$deptName])->fetch();
+        $deptId = $deptRow ? $deptRow['id'] : 1;
+
+        $branchRow = q("SELECT id FROM branches WHERE name=?", [$branchName])->fetch();
+        $branchId = $branchRow ? $branchRow['id'] : 1;
+
+        // Insert new user
+        q("INSERT INTO users (name, full_name, email, password_hash, role, role_title, department_id, branch_id, avatar, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)", [
+          $name, $fullName, $email, $passwordHash, $dbRole, $roleTitle, $deptId, $branchId, $avatar
+        ]);
+        $newUserId = (int)$pdo->lastInsertId();
+
+        // If technician, insert into technicians table
+        if ($dbRole === 'staff') {
+          q("INSERT INTO technicians (user_id, specialization, status) VALUES (?, 'Hardware', 'Free')", [$newUserId]);
+        }
+
+        // Insert notification preferences
+        q("INSERT INTO notification_settings (user_id) VALUES (?)", [$newUserId]);
+
+        // Create welcome notification
+        notify($newUserId, null, 'Welcome to ICT Assist!', 'Your account has been successfully created. You can now submit or manage tickets.', 'success');
+
+        // Regenerate session and log the user in immediately
+        session_regenerate_id(true);
+        $_SESSION['u'] = [
+          'id' => $newUserId,
+          'name' => $name,
+          'role' => $dbRole,
+          'email' => $email,
+          'profile_image' => null
+        ];
+
+        if ($isAjax) {
+          header('Content-Type: application/json');
+          echo json_encode([
+            'success' => true,
+            'redirect' => 'dashboard.php',
+            'message' => 'Account created successfully! Welcome to ICT Assist.',
+            'user' => $_SESSION['u']
+          ]);
+          exit;
+        }
+
+        header('Location: dashboard.php');
+        exit;
+      }
+    }
+
+    if ($isAjax) {
+      header('Content-Type: application/json');
+      http_response_code(422);
+      echo json_encode(['success' => false, 'error' => $err]);
+      exit;
+    }
+    header('Location: login.html?tab=register&error=' . urlencode($err));
+    exit;
+  }
+
+  // ==========================================
+  // SIGN IN HANDLER
+  // ==========================================
+  $email = trim($_POST['email'] ?? '');
+  $password = $_POST['password'] ?? '';
 
   $u = q("SELECT * FROM users WHERE email=? AND is_active=1", [$email])->fetch();
   if ($u && (password_verify($password, $u['password_hash']) || $password === 'Ict@12345' || $password === 'password123')) {
@@ -61,3 +175,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // If unauthenticated GET request, redirect to login.html
 header('Location: login.html');
 exit;
+
